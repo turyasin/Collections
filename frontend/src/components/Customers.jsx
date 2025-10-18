@@ -113,7 +113,7 @@ export default function Customers() {
               Add Customer
             </Button>
           </DialogTrigger>
-          <DialogContent data-testid="customer-dialog">
+          <DialogContent data-testid="customer-dialog" aria-describedby="customer-dialog-description">
             <DialogHeader>
               <DialogTitle>{editingCustomer ? "Edit Customer" : "Add New Customer"}</DialogTitle>
             </DialogHeader>
