@@ -252,13 +252,6 @@ class CheckCreate(BaseModel):
     supplier_id: Optional[str] = None  # Verilen çekler için tedarikçi ID
     related_invoice_id: Optional[str] = None
     notes: Optional[str] = None
-    check_number: str
-    amount: float
-    due_date: str
-    bank_name: str
-    payer_payee: str
-    related_invoice_id: Optional[str] = None
-    notes: Optional[str] = None
 
 class CheckUpdate(BaseModel):
     check_type: Optional[str] = None
