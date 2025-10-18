@@ -195,6 +195,7 @@ class DashboardStats(BaseModel):
     unpaid_count: int
     partial_count: int
     paid_count: int
+    overdue_count: int  # Ödeme günü geçmiş faturalar
     recent_payments: List[Payment]
     total_received_checks: int
     total_received_amount: float
