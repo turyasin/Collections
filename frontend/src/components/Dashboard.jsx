@@ -88,8 +88,8 @@ export default function Dashboard() {
   return (
     <div className="space-y-8 animate-fade-in" data-testid="dashboard">
       <div>
-        <h1 className="text-4xl font-bold text-slate-900 mb-2">Dashboard</h1>
-        <p className="text-slate-600">Overview of your invoices and payments</p>
+        <h1 className="text-4xl font-bold text-slate-900 mb-2">Kontrol Paneli</h1>
+        <p className="text-slate-600">Faturalarınızın ve ödemelerinizin özeti</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
