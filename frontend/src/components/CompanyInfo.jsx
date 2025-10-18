@@ -310,12 +310,14 @@ export default function CompanyInfo() {
           </div>
         </div>
 
-        <div className="flex justify-end gap-2">
-          <Button type="submit" disabled={saving} className="bg-blue-600 hover:bg-blue-700">
-            <Save className="w-4 h-4 mr-2" />
-            {saving ? "Kaydediliyor..." : "Kaydet"}
-          </Button>
-        </div>
+        {isAdmin && (
+          <div className="flex justify-end gap-2">
+            <Button type="submit" disabled={saving} className="bg-blue-600 hover:bg-blue-700">
+              <Save className="w-4 h-4 mr-2" />
+              {saving ? "Kaydediliyor..." : "Kaydet"}
+            </Button>
+          </div>
+        )}
       </form>
     </div>
   );
