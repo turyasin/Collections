@@ -153,7 +153,7 @@ export default function Dashboard() {
       </div>
 
       <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-        <h2 className="text-xl font-bold text-slate-900 mb-4">Recent Payments</h2>
+        <h2 className="text-xl font-bold text-slate-900 mb-4">Son Ödemeler</h2>
         {stats?.recent_payments?.length > 0 ? (
           <div className="space-y-3">
             {stats.recent_payments.map((payment) => (
@@ -163,22 +163,22 @@ export default function Dashboard() {
                 className="flex items-center justify-between p-4 bg-slate-50 rounded-lg"
               >
                 <div>
-                  <p className="font-semibold text-slate-900">{payment.customer_name || "N/A"}</p>
+                  <p className="font-semibold text-slate-900">{payment.customer_name || "Bilinmiyor"}</p>
                   <p className="text-sm text-slate-600">
-                    Invoice #{payment.invoice_number} • Check #{payment.check_number}
+                    Fatura #{payment.invoice_number} • Çek #{payment.check_number}
                   </p>
                 </div>
                 <div className="text-right">
                   <p className="font-bold text-green-600">₺{payment.amount.toFixed(2)}</p>
                   <p className="text-xs text-slate-500">
-                    {new Date(payment.payment_date).toLocaleDateString()}
+                    {new Date(payment.payment_date).toLocaleDateString('tr-TR')}
                   </p>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-slate-500 text-center py-4">No payments yet</p>
+          <p className="text-slate-500 text-center py-4">Henüz ödeme yok</p>
         )}
       </div>
     </div>
