@@ -18,6 +18,8 @@ export default function Payments() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [formData, setFormData] = useState({ invoice_id: "", check_number: "", check_date: "", bank_name: "", amount: "" });
 
   useEffect(() => {
