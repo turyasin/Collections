@@ -114,6 +114,41 @@ class InvoiceTrackerAPITester:
             self.log_test("User Registration", False, f"Registration failed: {response}", response)
             return False
 
+    def test_admin_user_registration(self):
+        """Test admin user registration using admin email"""
+        admin_email = "turyasin@gmail.com"
+        user_data = {
+            "username": "admin_user",
+            "email": admin_email,
+            "password": "AdminPassword123!"
+        }
+        
+        success, response = self.make_request('POST', '/auth/register', user_data, 200)
+        
+        if success and 'token' in response:
+            self.admin_token = response['token']
+            self.admin_user_id = response.get('user', {}).get('id')
+            is_admin = response.get('user', {}).get('is_admin', False)
+            self.log_test("Admin User Registration", True, f"Admin user created with email: {admin_email}, is_admin: {is_admin}")
+            return True
+        else:
+            # Admin user might already exist, try to login
+            login_data = {
+                "email": admin_email,
+                "password": "AdminPassword123!"
+            }
+            success, response = self.make_request('POST', '/auth/login', login_data, 200)
+            
+            if success and 'token' in response:
+                self.admin_token = response['token']
+                self.admin_user_id = response.get('user', {}).get('id')
+                is_admin = response.get('user', {}).get('is_admin', False)
+                self.log_test("Admin User Registration", True, f"Admin user logged in with email: {admin_email}, is_admin: {is_admin}")
+                return True
+            else:
+                self.log_test("Admin User Registration", False, f"Admin registration/login failed: {response}", response)
+                return False
+
     def test_user_login(self):
         """Test user login with existing credentials"""
         if not self.token:
