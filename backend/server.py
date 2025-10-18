@@ -133,7 +133,8 @@ class Invoice(BaseModel):
     paid_amount: float = 0.0
     due_date: str
     status: str = "unpaid"
-    period_type: str = "Aylık"  # "Aylık", "3 Aylık", "Yıllık"
+    month: Optional[str] = None  # Auto-calculated: "Ocak 2025"
+    quarter: Optional[str] = None  # Auto-calculated: "Q1 2025"
     notes: Optional[str] = None
     created_by: Optional[str] = None
     created_by_username: Optional[str] = None
