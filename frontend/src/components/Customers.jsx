@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, Users, Building } from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -15,22 +16,41 @@ const getAuthHeaders = () => ({
 });
 
 export default function Customers() {
+  const [activeTab, setActiveTab] = useState("customers");
+  
+  // Customers state
   const [customers, setCustomers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [customersLoading, setCustomersLoading] = useState(true);
+  const [customerDialogOpen, setCustomerDialogOpen] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [formData, setFormData] = useState({
+  const [customerSearchTerm, setCustomerSearchTerm] = useState("");
+  const [customerFormData, setCustomerFormData] = useState({
     name: "",
     email: "",
     phone: "",
     address: "",
   });
 
+  // Suppliers state
+  const [suppliers, setSuppliers] = useState([]);
+  const [suppliersLoading, setSuppliersLoading] = useState(true);
+  const [supplierDialogOpen, setSupplierDialogOpen] = useState(false);
+  const [editingSupplier, setEditingSupplier] = useState(null);
+  const [supplierSearchTerm, setSupplierSearchTerm] = useState("");
+  const [supplierFormData, setSupplierFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    discount_rate: 0,
+  });
+
   useEffect(() => {
     fetchCustomers();
+    fetchSuppliers();
   }, []);
 
+  // Customer functions
   const fetchCustomers = async () => {
     try {
       const response = await axios.get(`${API}/customers`, getAuthHeaders());
@@ -38,157 +58,409 @@ export default function Customers() {
     } catch (error) {
       toast.error("Müşteriler yüklenemedi");
     } finally {
-      setLoading(false);
+      setCustomersLoading(false);
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleCustomerSubmit = async (e) => {
     e.preventDefault();
     try {
       if (editingCustomer) {
-        await axios.put(`${API}/customers/${editingCustomer.id}`, formData, getAuthHeaders());
+        await axios.put(`${API}/customers/${editingCustomer.id}`, customerFormData, getAuthHeaders());
         toast.success("Müşteri güncellendi");
       } else {
-        await axios.post(`${API}/customers`, formData, getAuthHeaders());
+        await axios.post(`${API}/customers`, customerFormData, getAuthHeaders());
         toast.success("Müşteri eklendi");
       }
-      setDialogOpen(false);
-      resetForm();
+      setCustomerDialogOpen(false);
+      setEditingCustomer(null);
+      setCustomerFormData({ name: "", email: "", phone: "", address: "" });
       fetchCustomers();
     } catch (error) {
-      toast.error(error.response?.data?.detail || "Müşteri kaydedilemedi");
+      toast.error(error.response?.data?.detail || "İşlem başarısız");
     }
   };
 
-  const handleEdit = (customer) => {
+  const handleCustomerEdit = (customer) => {
     setEditingCustomer(customer);
-    setFormData({
+    setCustomerFormData({
       name: customer.name,
       email: customer.email || "",
       phone: customer.phone || "",
       address: customer.address || "",
     });
-    setDialogOpen(true);
+    setCustomerDialogOpen(true);
   };
 
-  const handleDelete = async (id) => {
+  const handleCustomerDelete = async (id) => {
     if (!window.confirm("Bu müşteriyi silmek istediğinizden emin misiniz?")) return;
     try {
       await axios.delete(`${API}/customers/${id}`, getAuthHeaders());
       toast.success("Müşteri silindi");
       fetchCustomers();
     } catch (error) {
-      toast.error("Müşteri silinemedi");
+      toast.error("Silme işlemi başarısız");
     }
   };
 
-  const resetForm = () => {
-    setFormData({ name: "", email: "", phone: "", address: "" });
-    setEditingCustomer(null);
-  };
-
   const filteredCustomers = customers.filter((customer) =>
-    customer.name.toLowerCase().includes(searchTerm.toLowerCase())
+    customer.name.toLowerCase().includes(customerSearchTerm.toLowerCase())
   );
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
+  // Supplier functions
+  const fetchSuppliers = async () => {
+    try {
+      const response = await axios.get(`${API}/suppliers`, getAuthHeaders());
+      setSuppliers(response.data);
+    } catch (error) {
+      toast.error("Tedarikçiler yüklenemedi");
+    } finally {
+      setSuppliersLoading(false);
+    }
+  };
+
+  const handleSupplierSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (editingSupplier) {
+        await axios.put(`${API}/suppliers/${editingSupplier.id}`, supplierFormData, getAuthHeaders());
+        toast.success("Tedarikçi güncellendi");
+      } else {
+        await axios.post(`${API}/suppliers`, supplierFormData, getAuthHeaders());
+        toast.success("Tedarikçi eklendi");
+      }
+      setSupplierDialogOpen(false);
+      setEditingSupplier(null);
+      setSupplierFormData({ name: "", email: "", phone: "", address: "", discount_rate: 0 });
+      fetchSuppliers();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || "İşlem başarısız");
+    }
+  };
+
+  const handleSupplierEdit = (supplier) => {
+    setEditingSupplier(supplier);
+    setSupplierFormData({
+      name: supplier.name,
+      email: supplier.email || "",
+      phone: supplier.phone || "",
+      address: supplier.address || "",
+      discount_rate: supplier.discount_rate || 0,
+    });
+    setSupplierDialogOpen(true);
+  };
+
+  const handleSupplierDelete = async (id) => {
+    if (!window.confirm("Bu tedarikçiyi silmek istediğinizden emin misiniz?")) return;
+    try {
+      await axios.delete(`${API}/suppliers/${id}`, getAuthHeaders());
+      toast.success("Tedarikçi silindi");
+      fetchSuppliers();
+    } catch (error) {
+      toast.error("Silme işlemi başarısız");
+    }
+  };
+
+  const filteredSuppliers = suppliers.filter((supplier) =>
+    supplier.name.toLowerCase().includes(supplierSearchTerm.toLowerCase())
+  );
 
   return (
-    <div className="space-y-6 animate-fade-in" data-testid="customers-page">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">Müşteriler</h1>
-          <p className="text-slate-600">Müşteri veritabanınızı yönetin</p>
-        </div>
-        <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
-          <DialogTrigger asChild>
-            <Button data-testid="add-customer-button" className="bg-blue-600 hover:bg-blue-700">
-              <Plus className="w-4 h-4 mr-2" />
-              Müşteri Ekle
-            </Button>
-          </DialogTrigger>
-          <DialogContent data-testid="customer-dialog" aria-describedby="customer-dialog-description">
-            <DialogHeader>
-              <DialogTitle>{editingCustomer ? "Müşteri Düzenle" : "Yeni Müşteri"}</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Ad *</Label>
-                <Input id="name" data-testid="customer-name-input" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" data-testid="customer-email-input" type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">Telefon</Label>
-                <Input id="phone" data-testid="customer-phone-input" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="address">Adres</Label>
-                <Input id="address" data-testid="customer-address-input" value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })} />
-              </div>
-              <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>İptal</Button>
-                <Button type="submit" data-testid="save-customer-button" className="bg-blue-600 hover:bg-blue-700">{editingCustomer ? "Güncelle" : "Kaydet"}</Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <h1 className="text-3xl font-bold text-slate-900">Müşteriler ve Tedarikçiler</h1>
       </div>
 
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-        <Input data-testid="search-customers-input" placeholder="Müşteri ara..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10" />
-      </div>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-2 max-w-md">
+          <TabsTrigger value="customers" className="flex items-center gap-2">
+            <Users className="w-4 h-4" />
+            Müşteriler
+          </TabsTrigger>
+          <TabsTrigger value="suppliers" className="flex items-center gap-2">
+            <Building className="w-4 h-4" />
+            Tedarikçi Firmalar
+          </TabsTrigger>
+        </TabsList>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <table className="custom-table">
-          <thead>
-            <tr>
-              <th>Ad</th>
-              <th>Email</th>
-              <th>Telefon</th>
-              <th>Adres</th>
-              <th>Ekleyen</th>
-              <th>İşlemler</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredCustomers.length > 0 ? (
-              filteredCustomers.map((customer) => (
-                <tr key={customer.id} data-testid={`customer-row-${customer.id}`}>
-                  <td className="font-semibold text-slate-900">{customer.name}</td>
-                  <td className="text-slate-600">{customer.email || "—"}</td>
-                  <td className="text-slate-600">{customer.phone || "—"}</td>
-                  <td className="text-slate-600">{customer.address || "—"}</td>
-                  <td className="text-slate-600 text-sm">{customer.created_by_username || "—"}</td>
-                  <td>
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline" data-testid={`edit-customer-${customer.id}`} onClick={() => handleEdit(customer)}>
-                        <Pencil className="w-4 h-4" />
+        {/* Customers Tab */}
+        <TabsContent value="customers" className="space-y-4">
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+                <Input
+                  placeholder="Müşteri ara..."
+                  value={customerSearchTerm}
+                  onChange={(e) => setCustomerSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <Dialog open={customerDialogOpen} onOpenChange={setCustomerDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    onClick={() => {
+                      setEditingCustomer(null);
+                      setCustomerFormData({ name: "", email: "", phone: "", address: "" });
+                    }}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    <Plus className="w-5 h-5 mr-2" />
+                    Müşteri Ekle
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>{editingCustomer ? "Müşteri Düzenle" : "Yeni Müşteri"}</DialogTitle>
+                  </DialogHeader>
+                  <form onSubmit={handleCustomerSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="customer-name">Müşteri Adı *</Label>
+                      <Input
+                        id="customer-name"
+                        value={customerFormData.name}
+                        onChange={(e) => setCustomerFormData({ ...customerFormData, name: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="customer-email">E-posta</Label>
+                      <Input
+                        id="customer-email"
+                        type="email"
+                        value={customerFormData.email}
+                        onChange={(e) => setCustomerFormData({ ...customerFormData, email: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="customer-phone">Telefon</Label>
+                      <Input
+                        id="customer-phone"
+                        value={customerFormData.phone}
+                        onChange={(e) => setCustomerFormData({ ...customerFormData, phone: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="customer-address">Adres</Label>
+                      <Input
+                        id="customer-address"
+                        value={customerFormData.address}
+                        onChange={(e) => setCustomerFormData({ ...customerFormData, address: e.target.value })}
+                      />
+                    </div>
+                    <div className="flex justify-end gap-2">
+                      <Button type="button" variant="outline" onClick={() => setCustomerDialogOpen(false)}>
+                        İptal
                       </Button>
-                      <Button size="sm" variant="outline" data-testid={`delete-customer-${customer.id}`} className="text-red-600 hover:bg-red-50" onClick={() => handleDelete(customer.id)}>
-                        <Trash2 className="w-4 h-4" />
+                      <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+                        {editingCustomer ? "Güncelle" : "Ekle"}
                       </Button>
                     </div>
-                  </td>
-                </tr>
-              ))
+                  </form>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            {customersLoading ? (
+              <div className="text-center py-8">Yükleniyor...</div>
+            ) : filteredCustomers.length === 0 ? (
+              <div className="text-center py-8 text-slate-500">Müşteri bulunamadı</div>
             ) : (
-              <tr>
-                <td colSpan="6" className="text-center py-8 text-slate-500">Müşteri bulunamadı</td>
-              </tr>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-slate-200">
+                      <th className="text-left py-3 px-4 font-semibold text-slate-700">Müşteri Adı</th>
+                      <th className="text-left py-3 px-4 font-semibold text-slate-700">E-posta</th>
+                      <th className="text-left py-3 px-4 font-semibold text-slate-700">Telefon</th>
+                      <th className="text-left py-3 px-4 font-semibold text-slate-700">Adres</th>
+                      <th className="text-right py-3 px-4 font-semibold text-slate-700">İşlemler</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredCustomers.map((customer) => (
+                      <tr key={customer.id} className="border-b border-slate-100 hover:bg-slate-50">
+                        <td className="py-3 px-4">{customer.name}</td>
+                        <td className="py-3 px-4">{customer.email || "-"}</td>
+                        <td className="py-3 px-4">{customer.phone || "-"}</td>
+                        <td className="py-3 px-4">{customer.address || "-"}</td>
+                        <td className="py-3 px-4 text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleCustomerEdit(customer)}
+                              className="hover:bg-blue-50"
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleCustomerDelete(customer.id)}
+                              className="hover:bg-red-50 text-red-600"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
-          </tbody>
-        </table>
-      </div>
+          </div>
+        </TabsContent>
+
+        {/* Suppliers Tab */}
+        <TabsContent value="suppliers" className="space-y-4">
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+                <Input
+                  placeholder="Tedarikçi ara..."
+                  value={supplierSearchTerm}
+                  onChange={(e) => setSupplierSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <Dialog open={supplierDialogOpen} onOpenChange={setSupplierDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    onClick={() => {
+                      setEditingSupplier(null);
+                      setSupplierFormData({ name: "", email: "", phone: "", address: "", discount_rate: 0 });
+                    }}
+                    className="bg-green-600 hover:bg-green-700"
+                  >
+                    <Plus className="w-5 h-5 mr-2" />
+                    Tedarikçi Ekle
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>{editingSupplier ? "Tedarikçi Düzenle" : "Yeni Tedarikçi"}</DialogTitle>
+                  </DialogHeader>
+                  <form onSubmit={handleSupplierSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="supplier-name">Firma Adı *</Label>
+                      <Input
+                        id="supplier-name"
+                        value={supplierFormData.name}
+                        onChange={(e) => setSupplierFormData({ ...supplierFormData, name: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="supplier-discount">İskonto Oranı (%)</Label>
+                      <Input
+                        id="supplier-discount"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max="100"
+                        value={supplierFormData.discount_rate}
+                        onChange={(e) => setSupplierFormData({ ...supplierFormData, discount_rate: parseFloat(e.target.value) || 0 })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="supplier-email">E-posta</Label>
+                      <Input
+                        id="supplier-email"
+                        type="email"
+                        value={supplierFormData.email}
+                        onChange={(e) => setSupplierFormData({ ...supplierFormData, email: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="supplier-phone">Telefon</Label>
+                      <Input
+                        id="supplier-phone"
+                        value={supplierFormData.phone}
+                        onChange={(e) => setSupplierFormData({ ...supplierFormData, phone: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="supplier-address">Adres</Label>
+                      <Input
+                        id="supplier-address"
+                        value={supplierFormData.address}
+                        onChange={(e) => setSupplierFormData({ ...supplierFormData, address: e.target.value })}
+                      />
+                    </div>
+                    <div className="flex justify-end gap-2">
+                      <Button type="button" variant="outline" onClick={() => setSupplierDialogOpen(false)}>
+                        İptal
+                      </Button>
+                      <Button type="submit" className="bg-green-600 hover:bg-green-700">
+                        {editingSupplier ? "Güncelle" : "Ekle"}
+                      </Button>
+                    </div>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            {suppliersLoading ? (
+              <div className="text-center py-8">Yükleniyor...</div>
+            ) : filteredSuppliers.length === 0 ? (
+              <div className="text-center py-8 text-slate-500">Tedarikçi bulunamadı</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-slate-200">
+                      <th className="text-left py-3 px-4 font-semibold text-slate-700">Firma Adı</th>
+                      <th className="text-left py-3 px-4 font-semibold text-slate-700">İskonto %</th>
+                      <th className="text-left py-3 px-4 font-semibold text-slate-700">E-posta</th>
+                      <th className="text-left py-3 px-4 font-semibold text-slate-700">Telefon</th>
+                      <th className="text-left py-3 px-4 font-semibold text-slate-700">Adres</th>
+                      <th className="text-right py-3 px-4 font-semibold text-slate-700">İşlemler</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredSuppliers.map((supplier) => (
+                      <tr key={supplier.id} className="border-b border-slate-100 hover:bg-slate-50">
+                        <td className="py-3 px-4 font-medium">{supplier.name}</td>
+                        <td className="py-3 px-4">
+                          <span className="inline-block bg-green-100 text-green-700 px-2 py-1 rounded text-sm font-medium">
+                            %{supplier.discount_rate || 0}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4">{supplier.email || "-"}</td>
+                        <td className="py-3 px-4">{supplier.phone || "-"}</td>
+                        <td className="py-3 px-4">{supplier.address || "-"}</td>
+                        <td className="py-3 px-4 text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleSupplierEdit(supplier)}
+                              className="hover:bg-green-50"
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleSupplierDelete(supplier.id)}
+                              className="hover:bg-red-50 text-red-600"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
