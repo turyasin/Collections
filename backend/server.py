@@ -1230,17 +1230,17 @@ async def export_weekly_schedule_xlsx(schedule):
         ws[f'C{ws.max_row}'].font = Font(bold=True)
         ws.append([])
     
-    for column in ws.columns:
-        max_length = 0
-        column_letter = column[0].column_letter
-        for cell in column:
-            try:
-                if len(str(cell.value)) > max_length:
-                    max_length = len(str(cell.value))
-            except:
-                pass
-        adjusted_width = min(max_length + 2, 50)
-        ws.column_dimensions[column_letter].width = adjusted_width
+#     for column in ws.columns:
+#         max_length = 0
+#         column_letter = column[0].column_letter
+#         for cell in column:
+#             try:
+#                 if len(str(cell.value)) > max_length:
+#                     max_length = len(str(cell.value))
+#             except:
+#                 pass
+#         adjusted_width = min(max_length + 2, 50)
+#         ws.column_dimensions[column_letter].width = adjusted_width
     
     output = BytesIO()
     wb.save(output)
