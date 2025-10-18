@@ -154,7 +154,8 @@ export default function Invoices() {
   const filteredInvoices = invoices.filter((invoice) => {
     const matchesSearch = invoice.invoice_number.toLowerCase().includes(searchTerm.toLowerCase()) || (invoice.customer_name || "").toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || invoice.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesPeriod = periodFilter === "all" || invoice.period_type === periodFilter;
+    return matchesSearch && matchesStatus && matchesPeriod;
   });
 
   if (loading) return <div className="flex items-center justify-center h-96"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>;
