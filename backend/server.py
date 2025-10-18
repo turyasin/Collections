@@ -318,6 +318,19 @@ async def login(credentials: UserLogin):
     user_data = User(**user).model_dump()
     return {"token": token, "user": user_data}
 
+# User routes
+@api_router.get("/users", response_model=List[User])
+async def get_users(user_id: str = Depends(get_current_user)):
+    users = await db.users.find({}, {"_id": 0, "password": 0}).to_list(1000)
+    return users
+
+@api_router.get("/users/me", response_model=User)
+async def get_current_user_info(user_id: str = Depends(get_current_user)):
+    user = await db.users.find_one({"id": user_id}, {"_id": 0, "password": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
 # Customer routes
 @api_router.get("/customers", response_model=List[Customer])
 async def get_customers(user_id: str = Depends(get_current_user)):
