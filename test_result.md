@@ -220,15 +220,18 @@ backend:
 
   - task: "Dashboard export endpoint (xlsx, docx, pdf)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added GET /api/export/dashboard-stats endpoint. Exports comprehensive dashboard statistics including invoices, checks, and payments summary in all three formats."
+      - working: true
+        agent: "testing"
+        comment: "All dashboard export formats tested successfully. XLSX: Excel file exported (5446 bytes). DOCX: Word file exported (36865 bytes). PDF: PDF file exported (2516 bytes). All files contain comprehensive dashboard statistics with proper Turkish formatting and ₺ symbols."
 
   - task: "Logo upload endpoint"
     implemented: true
