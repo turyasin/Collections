@@ -140,6 +140,18 @@ function App() {
               )
             }
           />
+          <Route
+            path="/company-info"
+            element={
+              isAuthenticated ? (
+                <Layout onLogout={handleLogout}>
+                  <CompanyInfo />
+                </Layout>
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
         </Routes>
       </BrowserRouter>
     </div>
