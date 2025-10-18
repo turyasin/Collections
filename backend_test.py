@@ -1071,8 +1071,8 @@ class InvoiceTrackerAPITester:
             print("❌ Authentication failed - stopping tests")
             return False
         
-        # Register admin user for logo management tests
-        self.test_admin_user_registration()
+        # Setup admin user for logo management tests
+        self.test_admin_user_setup()
         
         # Customer tests
         self.test_create_customer()
