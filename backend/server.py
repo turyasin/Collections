@@ -480,6 +480,13 @@ async def get_dashboard_stats(user_id: str = Depends(get_current_user)):
         recent_payments=payments
     )
 
+# Email notification endpoint (for testing)
+@api_router.post("/notifications/check-reminders")
+async def trigger_reminder_check(user_id: str = Depends(get_current_user)):
+    """Manually trigger invoice reminder check"""
+    await check_upcoming_invoices()
+    return {"message": "Invoice reminder check completed"}
+
 app.include_router(api_router)
 
 app.add_middleware(
