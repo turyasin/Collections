@@ -665,6 +665,20 @@ async def create_payment(payment: PaymentCreate, user_id: str = Depends(get_curr
     payment_obj.month = get_month_year(payment_obj.payment_date)
     payment_obj.quarter = get_quarter_year(payment_obj.payment_date)
     
+    # Populate bank account info if bank_account_id is provided
+    if payment_obj.bank_account_id:
+        company_info = await db.company_info.find_one({}, {"_id": 0})
+        if company_info:
+            for account in company_info.get("bank_accounts", []):
+                if account.get("id") == payment_obj.bank_account_id:
+                    payment_obj.bank_account_name = account.get("bank_name")
+                    payment_obj.currency = account.get("currency", "TRY")
+                    break
+    
+    # Default currency if not set
+    if not payment_obj.currency:
+        payment_obj.currency = "TRY"
+    
     customer = await db.customers.find_one({"id": invoice["customer_id"]}, {"_id": 0})
     if customer:
         payment_obj.customer_name = customer["name"]
