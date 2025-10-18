@@ -238,7 +238,7 @@ export default function CompanyInfo() {
               <div key={account.id} className="border border-slate-200 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-semibold text-slate-700">Hesap {index + 1}</h3>
-                  {formData.bank_accounts.length > 5 && (
+                  {isAdmin && formData.bank_accounts.length > 5 && (
                     <Button
                       type="button"
                       variant="outline"
@@ -257,6 +257,7 @@ export default function CompanyInfo() {
                       value={account.bank_name}
                       onChange={(e) => updateBankAccount(index, "bank_name", e.target.value)}
                       placeholder="Örn: Ziraat Bankası"
+                      disabled={!isAdmin}
                     />
                   </div>
                   <div className="space-y-2">
@@ -265,6 +266,7 @@ export default function CompanyInfo() {
                       value={account.branch}
                       onChange={(e) => updateBankAccount(index, "branch", e.target.value)}
                       placeholder="Örn: Kadıköy Şubesi"
+                      disabled={!isAdmin}
                     />
                   </div>
                   <div className="space-y-2">
@@ -272,8 +274,9 @@ export default function CompanyInfo() {
                     <Select
                       value={account.currency}
                       onValueChange={(value) => updateBankAccount(index, "currency", value)}
+                      disabled={!isAdmin}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger disabled={!isAdmin}>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -289,6 +292,7 @@ export default function CompanyInfo() {
                       value={account.iban}
                       onChange={(e) => updateBankAccount(index, "iban", e.target.value)}
                       placeholder="TR00 0000 0000 0000 0000 0000 00"
+                      disabled={!isAdmin}
                     />
                   </div>
                   <div className="space-y-2">
@@ -297,6 +301,7 @@ export default function CompanyInfo() {
                       value={account.account_holder}
                       onChange={(e) => updateBankAccount(index, "account_holder", e.target.value)}
                       placeholder="Firma Adı"
+                      disabled={!isAdmin}
                     />
                   </div>
                 </div>
