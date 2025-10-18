@@ -876,6 +876,7 @@ async def export_invoices_docx(invoices):
         doc.add_paragraph(f'Ödenen: ₺{inv.get("paid_amount", 0):,.2f}')
         doc.add_paragraph(f'Vade Tarihi: {inv.get("due_date", "")}')
         doc.add_paragraph(f'Durum: {inv.get("status", "")}')
+        doc.add_paragraph(f'Periyot: {inv.get("period_type", "Aylık")}')
         if inv.get("notes"):
             doc.add_paragraph(f'Notlar: {inv.get("notes", "")}')
         doc.add_paragraph(f'Oluşturan: {inv.get("created_by_username", "")}')
