@@ -239,7 +239,7 @@ export default function Payments() {
               <Button data-testid="add-payment-button" className="bg-blue-600 hover:bg-blue-700"><Plus className="w-4 h-4 mr-2" />Ödeme Kaydet</Button>
             </DialogTrigger>
             <DialogContent data-testid="payment-dialog" aria-describedby="payment-dialog-description">
-              <DialogHeader><DialogTitle>Çek Ödemesi Kaydet</DialogTitle></DialogHeader>
+              <DialogHeader><DialogTitle>Ödeme Kaydet</DialogTitle></DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="invoice">Fatura *</Label>
@@ -255,19 +255,35 @@ export default function Payments() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="check_number">Çek No *</Label>
-                  <Input id="check_number" data-testid="check-number-input" value={formData.check_number} onChange={(e) => setFormData({ ...formData, check_number: e.target.value })} required />
+                  <Label htmlFor="payment_method">Ödeme Yöntemi *</Label>
+                  <Select value={formData.payment_method} onValueChange={(value) => setFormData({ ...formData, payment_method: value })} required>
+                    <SelectTrigger data-testid="payment-method-select"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Nakit">Nakit</SelectItem>
+                      <SelectItem value="Kredi Kartı">Kredi Kartı</SelectItem>
+                      <SelectItem value="Havale/EFT">Havale/EFT</SelectItem>
+                      <SelectItem value="Çek">Çek</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
+                {formData.payment_method === "Çek" && (
+                  <>
+                    <div className="space-y-2">
+                      <Label htmlFor="check_number">Çek No *</Label>
+                      <Input id="check_number" data-testid="check-number-input" value={formData.check_number} onChange={(e) => setFormData({ ...formData, check_number: e.target.value })} required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="check_date">Çek Tarihi *</Label>
+                      <Input id="check_date" data-testid="check-date-input" type="date" value={formData.check_date} onChange={(e) => setFormData({ ...formData, check_date: e.target.value })} required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="bank_name">Banka *</Label>
+                      <Input id="bank_name" data-testid="bank-name-input" value={formData.bank_name} onChange={(e) => setFormData({ ...formData, bank_name: e.target.value })} required />
+                    </div>
+                  </>
+                )}
               <div className="space-y-2">
-                <Label htmlFor="check_date">Çek Tarihi *</Label>
-                <Input id="check_date" data-testid="check-date-input" type="date" value={formData.check_date} onChange={(e) => setFormData({ ...formData, check_date: e.target.value })} required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="bank_name">Banka *</Label>
-                <Input id="bank_name" data-testid="bank-name-input" value={formData.bank_name} onChange={(e) => setFormData({ ...formData, bank_name: e.target.value })} required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="amount">Amount *</Label>
+                <Label htmlFor="amount">Tutar *</Label>
                 <Input id="amount" data-testid="payment-amount-input" type="number" step="0.01" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} required />
                 <p className="text-xs text-slate-500">Ay ve çeyrek otomatik hesaplanacaktır</p>
               </div>
