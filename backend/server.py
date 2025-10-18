@@ -158,6 +158,83 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
+# Email notification functions
+async def send_invoice_reminder_email(invoice_number: str, customer_name: str, amount: float, due_date: str):
+    """Send email reminder for upcoming invoice due date"""
+    if not SENDGRID_API_KEY or SENDGRID_API_KEY == 'your-sendgrid-api-key-here':
+        logger.warning(f"SendGrid API key not configured. Skipping email for invoice {invoice_number}")
+        return False
+    
+    try:
+        message = Mail(
+            from_email='noreply@invoicetracker.com',
+            to_emails=ADMIN_EMAIL,
+            subject=f'Invoice Reminder: {invoice_number} - Due in 2 Days',
+            html_content=f'''
+            <html>
+            <body style="font-family: Arial, sans-serif; padding: 20px;">
+                <h2 style="color: #2563eb;">Invoice Payment Reminder</h2>
+                <p>This is a reminder that the following invoice is due in 2 days:</p>
+                <div style="background-color: #f1f5f9; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                    <p><strong>Invoice Number:</strong> {invoice_number}</p>
+                    <p><strong>Customer:</strong> {customer_name}</p>
+                    <p><strong>Amount:</strong> ₺{amount:.2f}</p>
+                    <p><strong>Due Date:</strong> {due_date}</p>
+                </div>
+                <p style="color: #dc2626;">Please ensure payment collection is scheduled.</p>
+                <hr style="margin: 20px 0;">
+                <p style="color: #64748b; font-size: 12px;">This is an automated reminder from Invoice Tracker</p>
+            </body>
+            </html>
+            '''
+        )
+        
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
+        response = sg.send(message)
+        logger.info(f"Email sent successfully for invoice {invoice_number}. Status: {response.status_code}")
+        return True
+    except Exception as e:
+        logger.error(f"Failed to send email for invoice {invoice_number}: {str(e)}")
+        return False
+
+async def check_upcoming_invoices():
+    """Check for invoices due in 2 days and send reminders"""
+    try:
+        logger.info("Running daily invoice reminder check...")
+        
+        # Calculate date 2 days from now
+        target_date = (datetime.now(timezone.utc) + timedelta(days=2)).date()
+        target_date_str = target_date.isoformat()
+        
+        # Find unpaid and partial invoices due on target date
+        invoices = await db.invoices.find({
+            "status": {"$in": ["unpaid", "partial"]},
+            "due_date": target_date_str
+        }, {"_id": 0}).to_list(1000)
+        
+        if not invoices:
+            logger.info(f"No invoices due on {target_date_str}")
+            return
+        
+        logger.info(f"Found {len(invoices)} invoices due on {target_date_str}")
+        
+        # Send email for each invoice
+        for invoice in invoices:
+            # Get customer name
+            customer = await db.customers.find_one({"id": invoice["customer_id"]}, {"_id": 0})
+            customer_name = customer["name"] if customer else "Unknown Customer"
+            
+            await send_invoice_reminder_email(
+                invoice_number=invoice["invoice_number"],
+                customer_name=customer_name,
+                amount=invoice["amount"],
+                due_date=invoice["due_date"]
+            )
+        
+        logger.info("Daily invoice reminder check completed")
+    except Exception as e:
+        logger.error(f"Error in check_upcoming_invoices: {str(e)}")
+
 # Auth routes
 @api_router.post("/auth/register", response_model=dict)
 async def register(user: UserCreate):
