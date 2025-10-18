@@ -348,7 +348,7 @@ export default function Checks() {
                       <SelectContent>
                         {suppliers.map((supplier) => (
                           <SelectItem key={supplier.id} value={supplier.id}>
-                            {supplier.name} (İskonto: %{supplier.discount_rate || 0})
+                            {supplier.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
