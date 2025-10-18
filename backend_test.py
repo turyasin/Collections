@@ -1163,30 +1163,35 @@ class InvoiceTrackerAPITester:
         print("=" * 60)
         
         # Phase 2 - Logo Management tests
-        # First test getting logo when none exists
+        # Test getting logo (might exist or not)
         self.test_logo_get_public()
-        
-        # Test logo upload as admin
-        self.test_logo_upload_admin()
-        
-        # Test getting logo after upload
-        self.test_logo_get_public()
-        
-        # Test non-PNG file upload (should fail)
-        self.test_logo_upload_non_png()
         
         # Create non-admin user for permission tests
         self.test_create_non_admin_user()
         
-        # Test non-admin access (should fail)
+        # Test non-admin access (should fail with 403)
         self.test_logo_upload_non_admin()
         self.test_logo_delete_non_admin()
         
-        # Test logo deletion as admin
-        self.test_logo_delete_admin()
-        
-        # Test getting logo after deletion (should return 404)
-        self.test_logo_get_after_deletion()
+        # Test admin functionality if admin token is available
+        if hasattr(self, 'admin_token') and self.admin_token:
+            # Test logo upload as admin
+            self.test_logo_upload_admin()
+            
+            # Test getting logo after upload
+            self.test_logo_get_public()
+            
+            # Test non-PNG file upload (should fail)
+            self.test_logo_upload_non_png()
+            
+            # Test logo deletion as admin
+            self.test_logo_delete_admin()
+            
+            # Test getting logo after deletion (should return 404)
+            self.test_logo_get_after_deletion()
+        else:
+            # Log that admin tests are skipped
+            self.log_test("Logo Management Admin Tests", False, "Admin tests skipped - no admin credentials available. Endpoints exist and properly reject non-admin users.")
         
         print("\n" + "=" * 60)
         print("🔄 Testing Advanced Functionality...")
