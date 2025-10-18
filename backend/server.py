@@ -155,6 +155,8 @@ class Check(BaseModel):
     payer_payee: str  # Alıcı veya veren kişi/firma
     status: str = "pending"  # pending, collected, paid, bounced
     notes: Optional[str] = None
+    created_by: Optional[str] = None
+    created_by_username: Optional[str] = None
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class CheckCreate(BaseModel):
