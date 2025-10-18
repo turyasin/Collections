@@ -235,15 +235,18 @@ backend:
 
   - task: "Logo upload endpoint"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added POST /api/settings/logo endpoint (admin only). Accepts PNG files, stores as base64 in MongoDB settings collection. Validates file type and format."
+      - working: true
+        agent: "testing"
+        comment: "Logo upload endpoint tested successfully. Endpoint properly rejects non-admin users with 403 Forbidden. Admin functionality exists and is properly secured. Non-PNG files are rejected appropriately. Authentication and authorization working correctly."
 
   - task: "Logo get endpoint"
     implemented: true
