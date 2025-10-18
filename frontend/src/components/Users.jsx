@@ -187,6 +187,19 @@ export default function Users() {
               Kayıt: {new Date(user.created_at).toLocaleDateString('tr-TR')}
             </div>
 
+            {/* Delete Button - Only for admin and not for current user */}
+            {isAdmin && user.id !== currentUser?.id && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full mt-3 text-red-600 hover:bg-red-50 hover:text-red-700 border-red-300"
+                onClick={() => handleDeleteUser(user.id, user.username)}
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Kullanıcıyı Sil
+              </Button>
+            )}
+
             {user.id === currentUser?.id && (
               <div className="mt-2 text-xs text-blue-600 font-medium">
                 (Siz)
