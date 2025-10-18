@@ -32,7 +32,31 @@ export default function Dashboard() {
     fetchCalendarData();
     fetchInvoicesAndPayments();
     fetchBankAccounts();
+    fetchUser();
   }, []);
+
+  const fetchUser = async () => {
+    try {
+      const res = await axios.get(`${API}/users/me`, getAuthHeaders());
+      setUser(res.data);
+    } catch (error) {
+      console.error("Failed to fetch user", error);
+    }
+  };
+
+  const handleManualArchive = async () => {
+    setArchiving(true);
+    try {
+      const res = await axios.post(`${API}/archive/manual`, {}, getAuthHeaders());
+      toast.success(`Arşivleme tamamlandı: ${res.data.archived.invoices} fatura, ${res.data.archived.payments} ödeme, ${res.data.archived.checks} çek`);
+      fetchStats();
+      fetchInvoicesAndPayments();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || "Arşivleme başarısız");
+    } finally {
+      setArchiving(false);
+    }
+  };
 
   const fetchBankAccounts = async () => {
     try {
