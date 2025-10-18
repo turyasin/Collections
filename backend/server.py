@@ -104,19 +104,22 @@ class CustomerCreate(BaseModel):
 class Invoice(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    customer_id: str
+    invoice_type: str  # "incoming" (gelen - borç) veya "outgoing" (giden - alacak)
+    customer_id: str  # Tedarikçi ID (gelen fatura) veya Müşteri ID (giden fatura)
     customer_name: Optional[str] = None
     invoice_number: str
     amount: float
     paid_amount: float = 0.0
     due_date: str
-    status: str = "unpaid"
+    status: str = "unpaid"  # unpaid, partial, paid
+    payment_method: Optional[str] = None  # "check", "cash", "bank_transfer", "credit_card"
     notes: Optional[str] = None
     created_by: Optional[str] = None
     created_by_username: Optional[str] = None
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class InvoiceCreate(BaseModel):
+    invoice_type: str  # "incoming" or "outgoing"
     customer_id: str
     invoice_number: str
     amount: float
@@ -124,30 +127,61 @@ class InvoiceCreate(BaseModel):
     notes: Optional[str] = None
 
 class InvoiceUpdate(BaseModel):
+    invoice_type: Optional[str] = None
     customer_id: Optional[str] = None
     invoice_number: Optional[str] = None
     amount: Optional[float] = None
     due_date: Optional[str] = None
     notes: Optional[str] = None
 
+# Yeni Payment modeli - daha kapsamlı
 class Payment(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     invoice_id: str
     invoice_number: Optional[str] = None
     customer_name: Optional[str] = None
-    check_number: str
-    check_date: str
-    bank_name: str
+    payment_type: str  # "payment" (ödeme - gelen fatura için) veya "collection" (tahsilat - giden fatura için)
+    payment_method: str  # "check", "cash", "bank_transfer", "credit_card"
     amount: float
+    payment_date: str
+    reference_number: Optional[str] = None  # Çek no, dekont no, vs.
+    bank_name: Optional[str] = None  # Sadece check ve bank_transfer için
+    notes: Optional[str] = None
     created_by: Optional[str] = None
     created_by_username: Optional[str] = None
-    payment_date: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class PaymentCreate(BaseModel):
     invoice_id: str
-    check_number: str
+    payment_method: str  # "check", "cash", "bank_transfer", "credit_card"
+    amount: float
+    payment_date: str
+    reference_number: Optional[str] = None
+    bank_name: Optional[str] = None
+    notes: Optional[str] = None
+
+# Taksit Planı Modeli
+class InstallmentPlan(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    invoice_id: str
+    invoice_number: Optional[str] = None
+    total_amount: float
+    installment_count: int
+    installment_amount: float
+    start_date: str
+    interval_days: int = 30  # Taksitler arası gün sayısı (default 30 gün)
+    installments: List[dict] = []  # [{due_date, amount, paid, payment_id}]
+    created_by: Optional[str] = None
+    created_by_username: Optional[str] = None
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class InstallmentPlanCreate(BaseModel):
+    invoice_id: str
+    installment_count: int
+    start_date: str
+    interval_days: int = 30
     check_date: str
     bank_name: str
     amount: float
