@@ -30,7 +30,7 @@ export default function Payments() {
       const response = await axios.get(`${API}/payments`, getAuthHeaders());
       setPayments(response.data);
     } catch (error) {
-      toast.error("Failed to load payments");
+      toast.error("Ödemeler yüklenemedi");
     } finally {
       setLoading(false);
     }
@@ -42,7 +42,7 @@ export default function Payments() {
       const unpaidInvoices = response.data.filter((inv) => inv.status === "unpaid" || inv.status === "partial");
       setInvoices(unpaidInvoices);
     } catch (error) {
-      toast.error("Failed to load invoices");
+      toast.error("Faturalar yüklenemedi");
     }
   };
 
@@ -51,25 +51,25 @@ export default function Payments() {
     try {
       const payload = { ...formData, amount: parseFloat(formData.amount) };
       await axios.post(`${API}/payments`, payload, getAuthHeaders());
-      toast.success("Payment recorded successfully");
+      toast.success("Ödeme kaydedildi");
       setDialogOpen(false);
       resetForm();
       fetchPayments();
       fetchInvoices();
     } catch (error) {
-      toast.error(error.response?.data?.detail || "Failed to record payment");
+      toast.error(error.response?.data?.detail || "Ödeme kaydedilemedi");
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this payment?")) return;
+    if (!window.confirm("Bu ödemeyi silmek istediğinizden emin misiniz?")) return;
     try {
       await axios.delete(`${API}/payments/${id}`, getAuthHeaders());
-      toast.success("Payment deleted successfully");
+      toast.success("Ödeme silindi");
       fetchPayments();
       fetchInvoices();
     } catch (error) {
-      toast.error("Failed to delete payment");
+      toast.error("Ödeme silinemedi");
     }
   };
 
@@ -90,39 +90,39 @@ export default function Payments() {
     <div className="space-y-6 animate-fade-in" data-testid="payments-page">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">Payments</h1>
-          <p className="text-slate-600">Record and track check payments</p>
+          <h1 className="text-4xl font-bold text-slate-900 mb-2">Ödemeler</h1>
+          <p className="text-slate-600">Çek ödemelerini kaydedin ve takip edin</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
           <DialogTrigger asChild>
-            <Button data-testid="add-payment-button" className="bg-blue-600 hover:bg-blue-700"><Plus className="w-4 h-4 mr-2" />Record Payment</Button>
+            <Button data-testid="add-payment-button" className="bg-blue-600 hover:bg-blue-700"><Plus className="w-4 h-4 mr-2" />Ödeme Kaydet</Button>
           </DialogTrigger>
           <DialogContent data-testid="payment-dialog" aria-describedby="payment-dialog-description">
-            <DialogHeader><DialogTitle>Record Check Payment</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle>Çek Ödemesi Kaydet</DialogTitle></DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="invoice">Invoice *</Label>
+                <Label htmlFor="invoice">Fatura *</Label>
                 <Select value={formData.invoice_id} onValueChange={(value) => setFormData({ ...formData, invoice_id: value })} required>
-                  <SelectTrigger data-testid="invoice-select"><SelectValue placeholder="Select invoice" /></SelectTrigger>
+                  <SelectTrigger data-testid="invoice-select"><SelectValue placeholder="Fatura seçin" /></SelectTrigger>
                   <SelectContent>
                     {invoices.map((invoice) => (
                       <SelectItem key={invoice.id} value={invoice.id}>
-                        {invoice.invoice_number} - {invoice.customer_name} (₺{(invoice.amount - (invoice.paid_amount || 0)).toFixed(2)} remaining)
+                        {invoice.invoice_number} - {invoice.customer_name} (₺{(invoice.amount - (invoice.paid_amount || 0)).toFixed(2)} kalan)
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="check_number">Check Number *</Label>
+                <Label htmlFor="check_number">Çek No *</Label>
                 <Input id="check_number" data-testid="check-number-input" value={formData.check_number} onChange={(e) => setFormData({ ...formData, check_number: e.target.value })} required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="check_date">Check Date *</Label>
+                <Label htmlFor="check_date">Çek Tarihi *</Label>
                 <Input id="check_date" data-testid="check-date-input" type="date" value={formData.check_date} onChange={(e) => setFormData({ ...formData, check_date: e.target.value })} required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="bank_name">Bank Name *</Label>
+                <Label htmlFor="bank_name">Banka *</Label>
                 <Input id="bank_name" data-testid="bank-name-input" value={formData.bank_name} onChange={(e) => setFormData({ ...formData, bank_name: e.target.value })} required />
               </div>
               <div className="space-y-2">
@@ -131,7 +131,7 @@ export default function Payments() {
               </div>
               <div className="flex justify-end gap-2">
                 <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-                <Button type="submit" data-testid="save-payment-button" className="bg-blue-600 hover:bg-blue-700">Record Payment</Button>
+                <Button type="submit" data-testid="save-payment-button" className="bg-blue-600 hover:bg-blue-700">Ödeme Kaydet</Button>
               </div>
             </form>
           </DialogContent>
@@ -140,13 +140,13 @@ export default function Payments() {
 
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-        <Input data-testid="search-payments-input" placeholder="Search payments..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10" />
+        <Input data-testid="search-payments-input" placeholder="Ödeme ara..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10" />
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <table className="custom-table">
           <thead>
-            <tr><th>Invoice #</th><th>Customer</th><th>Check Number</th><th>Check Date</th><th>Bank</th><th>Amount</th><th>Payment Date</th><th>Actions</th></tr>
+            <tr><th>Fatura #</th><th>Müşteri</th><th>Çek No</th><th>Çek Tarihi</th><th>Banka</th><th>Tutar</th><th>Ödeme Tarihi</th><th>İşlemler</th></tr>
           </thead>
           <tbody>
             {filteredPayments.length > 0 ? (
@@ -167,7 +167,7 @@ export default function Payments() {
                 </tr>
               ))
             ) : (
-              <tr><td colSpan="8" className="text-center py-8 text-slate-500">No payments found</td></tr>
+              <tr><td colSpan="8" className="text-center py-8 text-slate-500">Ödeme bulunamadı</td></tr>
             )}
           </tbody>
         </table>
