@@ -28,7 +28,17 @@ export default function Payments() {
   useEffect(() => {
     fetchPayments();
     fetchInvoices();
+    fetchBankAccounts();
   }, []);
+
+  const fetchBankAccounts = async () => {
+    try {
+      const res = await axios.get(`${API}/api/company-info/banks`, getAuthHeaders());
+      setBankAccounts(res.data || []);
+    } catch (error) {
+      console.error("Failed to fetch bank accounts", error);
+    }
+  };
 
   const fetchPayments = async () => {
     try {
