@@ -286,18 +286,31 @@ async def check_upcoming_invoices():
         
         logger.info(f"Found {len(invoices)} invoices due on {target_date_str}")
         
-        # Send email for each invoice
+        # Get users who want to receive notifications
+        notification_users = await db.users.find({
+            "receive_notifications": True
+        }, {"_id": 0, "email": 1, "username": 1}).to_list(1000)
+        
+        if not notification_users:
+            logger.info("No users configured to receive notifications")
+            return
+        
+        # Send email for each invoice to all notification users
         for invoice in invoices:
             # Get customer name
             customer = await db.customers.find_one({"id": invoice["customer_id"]}, {"_id": 0})
             customer_name = customer["name"] if customer else "Unknown Customer"
             
-            await send_invoice_reminder_email(
-                invoice_number=invoice["invoice_number"],
-                customer_name=customer_name,
-                amount=invoice["amount"],
-                due_date=invoice["due_date"]
-            )
+            # Send to all notification users
+            for user in notification_users:
+                await send_invoice_reminder_email(
+                    invoice_number=invoice["invoice_number"],
+                    customer_name=customer_name,
+                    amount=invoice["amount"],
+                    due_date=invoice["due_date"],
+                    recipient_email=user["email"],
+                    recipient_name=user["username"]
+                )
         
         logger.info("Daily invoice reminder check completed")
     except Exception as e:
