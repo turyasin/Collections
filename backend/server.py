@@ -164,7 +164,8 @@ class Payment(BaseModel):
     check_date: str
     bank_name: str
     amount: float
-    period_type: str = "Aylık"  # "Aylık", "3 Aylık", "Yıllık"
+    month: Optional[str] = None  # Auto-calculated: "Ocak 2025"
+    quarter: Optional[str] = None  # Auto-calculated: "Q1 2025"
     created_by: Optional[str] = None
     created_by_username: Optional[str] = None
     payment_date: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
