@@ -1486,6 +1486,38 @@ class InvoiceTrackerAPITester:
             self.log_test("Logo Management Admin Tests", True, "Admin tests skipped - no admin credentials available. Endpoints exist and properly reject non-admin users.")
         
         print("\n" + "=" * 60)
+        print("🔄 Testing Phase 3 Features - Period Type Classification...")
+        print("=" * 60)
+        
+        # Phase 3 - Period Type Classification tests
+        # Login as admin for period type testing
+        if self.test_admin_login_for_period_tests():
+            # Test existing data migration
+            self.test_existing_invoices_period_type()
+            self.test_existing_payments_period_type()
+            
+            # Test invoice period type functionality
+            self.test_create_invoice_with_quarterly_period()
+            self.test_update_invoice_to_yearly_period()
+            self.test_invoice_default_period_type()
+            
+            # Test payment period type functionality
+            self.test_create_payment_with_quarterly_period()
+            self.test_payment_default_period_type()
+            
+            # Test validation
+            self.test_period_type_validation()
+            
+            # Test export includes period_type (optional)
+            self.test_export_invoices_includes_period_type()
+            self.test_export_payments_includes_period_type()
+            
+            # Restore original token
+            self.restore_original_token()
+        else:
+            print("⚠️ Admin login failed - skipping period type tests")
+        
+        print("\n" + "=" * 60)
         print("🔄 Testing Advanced Functionality...")
         print("=" * 60)
         
