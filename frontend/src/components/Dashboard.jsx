@@ -311,9 +311,21 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8 animate-fade-in" data-testid="dashboard">
-      <div>
-        <h1 className="text-4xl font-bold text-slate-900 mb-2">Kontrol Paneli</h1>
-        <p className="text-slate-600">Faturalarınızın ve ödemelerinizin özeti</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-4xl font-bold text-slate-900 mb-2">Kontrol Paneli</h1>
+          <p className="text-slate-600">Faturalarınızın ve ödemelerinizin özeti</p>
+        </div>
+        {user?.is_admin && (
+          <Button
+            onClick={handleManualArchive}
+            disabled={archiving}
+            className="bg-slate-600 hover:bg-slate-700"
+          >
+            <Archive className="w-4 h-4 mr-2" />
+            {archiving ? "Arşivleniyor..." : "Arşivle"}
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
