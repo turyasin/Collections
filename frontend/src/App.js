@@ -9,6 +9,7 @@ import Payments from "@/components/Payments";
 import Checks from "@/components/Checks";
 import WeeklySchedule from "@/components/WeeklySchedule";
 import Users from "@/components/Users";
+import Settings from "@/components/Settings";
 import Layout from "@/components/Layout";
 
 function App() {
