@@ -334,7 +334,7 @@ export default function Dashboard() {
       {/* Month and Quarter Statistics */}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-slate-900">Ay ve Çeyrek Bazlı İstatistikler</h2>
+          <h2 className="text-xl font-bold text-slate-900">Finansal Durum Filtresi</h2>
           <div className="flex gap-2">
             <Select value={monthFilter} onValueChange={setMonthFilter}>
               <SelectTrigger className="w-40">
@@ -355,6 +355,19 @@ export default function Dashboard() {
                 <SelectItem value="all">Tüm Çeyrekler</SelectItem>
                 {uniqueQuarters.map(quarter => (
                   <SelectItem key={quarter} value={quarter}>{quarter}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={bankFilter} onValueChange={setBankFilter}>
+              <SelectTrigger className="w-48">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tüm Bankalar</SelectItem>
+                {bankAccounts.map(account => (
+                  <SelectItem key={account.id} value={account.id}>
+                    {account.bank_name} ({account.currency})
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
