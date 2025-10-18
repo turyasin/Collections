@@ -340,25 +340,29 @@ export default function Invoices() {
           </thead>
           <tbody>
             {filteredInvoices.length > 0 ? (
-              filteredInvoices.map((invoice) => (
-                <tr key={invoice.id} data-testid={`invoice-row-${invoice.id}`}>
-                  <td className="font-semibold text-slate-900">{invoice.invoice_number}</td>
-                  <td className="text-slate-600">{invoice.customer_name || "N/A"}</td>
-                  <td className="text-slate-900 font-semibold">{invoice.amount.toFixed(2)}</td>
-                  <td className="text-slate-600 font-semibold">{invoice.currency || "TRY"}</td>
-                  <td className="text-green-600 font-semibold">{invoice.paid_amount?.toFixed(2) || "0.00"}</td>
-                  <td className="text-slate-600">{new Date(invoice.due_date).toLocaleDateString()}</td>
-                  <td className="text-slate-600">{invoice.month || "—"}</td>
-                  <td className="text-slate-600">{invoice.quarter || "—"}</td>
-                  <td><span className={`status-badge status-${invoice.status}`} data-testid={`invoice-status-${invoice.id}`}>{invoice.status}</span></td><td className="text-slate-600 text-sm">{invoice.created_by_username || "—"}</td>
-                  <td>
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline" data-testid={`edit-invoice-${invoice.id}`} onClick={() => handleEdit(invoice)}><Pencil className="w-4 h-4" /></Button>
-                      <Button size="sm" variant="outline" data-testid={`delete-invoice-${invoice.id}`} className="text-red-600 hover:bg-red-50" onClick={() => handleDelete(invoice.id)}><Trash2 className="w-4 h-4" /></Button>
-                    </div>
-                  </td>
-                </tr>
-              ))
+              filteredInvoices.map((invoice) => {
+                const isOverdue = invoice.status !== "paid" && new Date(invoice.due_date) < new Date();
+                const rowClass = isOverdue ? "bg-red-50" : "";
+                return (
+                  <tr key={invoice.id} data-testid={`invoice-row-${invoice.id}`} className={rowClass}>
+                    <td className="font-semibold text-slate-900">{invoice.invoice_number}</td>
+                    <td className="text-slate-600">{invoice.customer_name || "N/A"}</td>
+                    <td className="text-slate-900 font-semibold">{invoice.amount.toFixed(2)}</td>
+                    <td className="text-slate-600 font-semibold">{invoice.currency || "TRY"}</td>
+                    <td className="text-green-600 font-semibold">{invoice.paid_amount?.toFixed(2) || "0.00"}</td>
+                    <td className={isOverdue ? "text-red-600 font-bold" : "text-slate-600"}>{new Date(invoice.due_date).toLocaleDateString()}</td>
+                    <td className="text-slate-600">{invoice.month || "—"}</td>
+                    <td className="text-slate-600">{invoice.quarter || "—"}</td>
+                    <td><span className={`status-badge status-${invoice.status}`} data-testid={`invoice-status-${invoice.id}`}>{invoice.status}</span></td><td className="text-slate-600 text-sm">{invoice.created_by_username || "—"}</td>
+                    <td>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline" data-testid={`edit-invoice-${invoice.id}`} onClick={() => handleEdit(invoice)}><Pencil className="w-4 h-4" /></Button>
+                        <Button size="sm" variant="outline" data-testid={`delete-invoice-${invoice.id}`} className="text-red-600 hover:bg-red-50" onClick={() => handleDelete(invoice.id)}><Trash2 className="w-4 h-4" /></Button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
             ) : (
               <tr><td colSpan="11" className="text-center py-8 text-slate-500">Fatura bulunamadı</td></tr>
             )}
