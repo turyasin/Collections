@@ -32,6 +32,9 @@ export default function Layout({ children, onLogout, user }) {
 
         <nav className="px-3 space-y-1">
           {navItems.map((item) => {
+            // Hide admin-only items if user is not admin
+            if (item.adminOnly && !user?.is_admin) return null;
+            
             const Icon = item.icon;
             return (
               <Link
