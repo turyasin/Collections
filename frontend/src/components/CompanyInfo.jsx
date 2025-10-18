@@ -12,6 +12,7 @@ const API = process.env.REACT_APP_BACKEND_URL || import.meta.env.VITE_BACKEND_UR
 export default function CompanyInfo() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [formData, setFormData] = useState({
     company_name: "",
     tax_number: "",
