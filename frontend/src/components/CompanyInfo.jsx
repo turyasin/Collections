@@ -36,9 +36,6 @@ export default function CompanyInfo() {
     try {
       const res = await axios.get(`${API}/users/me`, getAuthHeaders());
       setIsAdmin(res.data.is_admin || false);
-      if (!res.data.is_admin) {
-        toast.error("Bu sayfaya erişim yetkiniz yok");
-      }
     } catch (error) {
       console.error("Failed to check admin status", error);
     }
