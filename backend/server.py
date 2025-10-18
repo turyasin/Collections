@@ -572,6 +572,48 @@ async def delete_customer(customer_id: str, user_id: str = Depends(get_current_u
         raise HTTPException(status_code=404, detail="Customer not found")
     return {"message": "Customer deleted"}
 
+# Supplier routes
+@api_router.get("/suppliers", response_model=List[Supplier])
+async def get_suppliers(user_id: str = Depends(get_current_user)):
+    suppliers = await db.suppliers.find({}, {"_id": 0}).to_list(1000)
+    return suppliers
+
+@api_router.post("/suppliers", response_model=Supplier)
+async def create_supplier(supplier: SupplierCreate, user_id: str = Depends(get_current_user)):
+    # Get current user info
+    current_user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    
+    supplier_obj = Supplier(**supplier.model_dump())
+    supplier_obj.created_by = user_id
+    supplier_obj.created_by_username = current_user.get("username", "Unknown") if current_user else "Unknown"
+    
+    await db.suppliers.insert_one(supplier_obj.model_dump())
+    return supplier_obj
+
+@api_router.get("/suppliers/{supplier_id}", response_model=Supplier)
+async def get_supplier(supplier_id: str, user_id: str = Depends(get_current_user)):
+    supplier = await db.suppliers.find_one({"id": supplier_id}, {"_id": 0})
+    if not supplier:
+        raise HTTPException(status_code=404, detail="Supplier not found")
+    return supplier
+
+@api_router.put("/suppliers/{supplier_id}", response_model=Supplier)
+async def update_supplier(supplier_id: str, supplier: SupplierCreate, user_id: str = Depends(get_current_user)):
+    result = await db.suppliers.find_one({"id": supplier_id}, {"_id": 0})
+    if not result:
+        raise HTTPException(status_code=404, detail="Supplier not found")
+    
+    await db.suppliers.update_one({"id": supplier_id}, {"$set": supplier.model_dump(exclude_unset=True)})
+    updated = await db.suppliers.find_one({"id": supplier_id}, {"_id": 0})
+    return updated
+
+@api_router.delete("/suppliers/{supplier_id}")
+async def delete_supplier(supplier_id: str, user_id: str = Depends(get_current_user)):
+    result = await db.suppliers.delete_one({"id": supplier_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Supplier not found")
+    return {"message": "Supplier deleted"}
+
 # Invoice routes
 @api_router.get("/invoices", response_model=List[Invoice])
 async def get_invoices(status: Optional[str] = None, user_id: str = Depends(get_current_user)):
