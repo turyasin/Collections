@@ -370,6 +370,24 @@ export default function Dashboard() {
             <p className="text-2xl font-bold text-red-900">₺{calculateStats().totalOutstanding.toFixed(2)}</p>
           </div>
         </div>
+        
+        {/* Check Statistics under Financial Status */}
+        <div className="mt-6">
+          <h3 className="text-lg font-bold text-slate-900 mb-3">Çek Durumu</h3>
+          <div className="grid grid-cols-2 gap-4">
+            {checkStats.map((stat, index) => (
+              <div key={index} className="p-4 bg-slate-50 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-semibold text-slate-900">{stat.title}</h4>
+                  <div className={`w-3 h-3 rounded-full ${stat.color}`}></div>
+                </div>
+                <p className="text-xl font-bold text-slate-900">{stat.amount}</p>
+                <p className="text-sm text-slate-600 mt-1">{stat.total} adet çek</p>
+                <p className="text-sm text-orange-600">Bekleyen Ödeme: {stat.pending} adet</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Invoice Status */}
