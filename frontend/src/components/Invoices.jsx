@@ -270,8 +270,8 @@ export default function Invoices() {
                   <Input id="notes" data-testid="invoice-notes-input" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} />
                 </div>
                 <div className="flex justify-end gap-2">
-                  <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-                  <Button type="submit" data-testid="save-invoice-button" className="bg-blue-600 hover:bg-blue-700">{editingInvoice ? "Update" : "Create"}</Button>
+                  <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>İptal</Button>
+                  <Button type="submit" data-testid="save-invoice-button" className="bg-blue-600 hover:bg-blue-700">{editingInvoice ? "Güncelle" : "Oluştur"}</Button>
                 </div>
               </form>
             </DialogContent>
