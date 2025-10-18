@@ -133,6 +133,7 @@ class Invoice(BaseModel):
     paid_amount: float = 0.0
     due_date: str
     status: str = "unpaid"
+    currency: str = "TRY"  # "TRY", "USD", "EUR"
     month: Optional[str] = None  # Auto-calculated: "Ocak 2025"
     quarter: Optional[str] = None  # Auto-calculated: "Q1 2025"
     notes: Optional[str] = None
