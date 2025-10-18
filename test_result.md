@@ -101,3 +101,192 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: |
+  Add import/export functionality to the control panel for Faturalar (Invoices), Çekler (Checks), 
+  Ödemeler (Payments), and Haftalık Planlar (Weekly Plans). Support .xlsx, .docx, and .pdf formats 
+  for export. Support .xlsx format for import.
+
+backend:
+  - task: "Export Invoices endpoint (xlsx, docx, pdf)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added GET /api/export/invoices endpoint with format parameter. Supports xlsx, docx, and pdf formats. Uses helper functions for each format with proper styling and Turkish Lira formatting."
+
+  - task: "Export Checks endpoint (xlsx, docx, pdf)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added GET /api/export/checks endpoint with format parameter. Translates check types to Turkish (Alınan/Verilen) in exports."
+
+  - task: "Export Payments endpoint (xlsx, docx, pdf)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added GET /api/export/payments endpoint with format parameter. Includes invoice and customer information in exports."
+
+  - task: "Export Weekly Schedule endpoint (xlsx, docx, pdf)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added GET /api/export/weekly-schedule endpoint. Exports 4-week payment schedule with received/issued checks and due invoices."
+
+  - task: "Import Invoices endpoint (xlsx)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added POST /api/import/invoices endpoint. Uses FastAPI UploadFile for file upload. Reads Excel file and inserts records with current user as creator."
+
+  - task: "Import Checks endpoint (xlsx)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added POST /api/import/checks endpoint. Handles check type, amount, due dates, and bank information from Excel."
+
+  - task: "Import Payments endpoint (xlsx)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added POST /api/import/payments endpoint. Links payments to invoices and includes check information."
+
+frontend:
+  - task: "Export/Import UI for Invoices page"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/Invoices.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added Export (Download) and Import (Upload) buttons with dialog modals. Export offers 3 format choices. Import accepts .xlsx files with validation."
+
+  - task: "Export/Import UI for Checks page"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/Checks.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added Export and Import functionality with proper Turkish labels. Color-coded buttons (green for export, purple for import)."
+
+  - task: "Export/Import UI for Payments page"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/Payments.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added Export and Import buttons with file upload handling. Includes field descriptions for import template."
+
+  - task: "Export UI for Weekly Schedule page"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/WeeklySchedule.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added Export button only (no import needed for weekly schedule as it's dynamically generated). Users can export current 4-week schedule."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 0
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Export Invoices endpoint (xlsx, docx, pdf)"
+    - "Export Checks endpoint (xlsx, docx, pdf)"
+    - "Export Payments endpoint (xlsx, docx, pdf)"
+    - "Export Weekly Schedule endpoint (xlsx, docx, pdf)"
+    - "Import Invoices endpoint (xlsx)"
+    - "Import Checks endpoint (xlsx)"
+    - "Import Payments endpoint (xlsx)"
+  stuck_tasks: []
+  test_all: true
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: |
+      Implementation complete for import/export functionality across all requested pages.
+      
+      Backend changes:
+      - Added 7 new endpoints for export (3 formats each for invoices, checks, payments, weekly schedule)
+      - Added 3 import endpoints for invoices, checks, and payments (xlsx only)
+      - Used openpyxl, python-docx, and reportlab libraries already installed
+      - All exports include proper Turkish text, currency formatting (₺), and user information
+      - Import endpoints validate Excel structure and assign current user as creator
+      
+      Frontend changes:
+      - Added Export/Import UI to Invoices.jsx, Checks.jsx, Payments.jsx
+      - Added Export-only UI to WeeklySchedule.jsx (no import needed)
+      - Used Download and Upload lucide icons
+      - Color-coded buttons: green (export), purple (import), blue (add new)
+      - Dialog modals for format selection and file upload
+      - File validation (.xlsx only for import)
+      - Success/error toast notifications in Turkish
+      
+      Authentication: All endpoints require valid JWT token (user must be logged in)
+      
+      Please test all export endpoints with different formats and import endpoints with valid Excel files.
+      Test scenarios:
+      1. Export each data type in xlsx, docx, and pdf formats
+      2. Verify exported files contain correct data with Turkish formatting
+      3. Import Excel files for invoices, checks, and payments
+      4. Verify imported records are created with correct user attribution
+      5. Test error handling for invalid files/formats
