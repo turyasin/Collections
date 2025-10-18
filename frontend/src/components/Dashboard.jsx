@@ -24,6 +24,8 @@ export default function Dashboard() {
   const [invoices, setInvoices] = useState([]);
   const [payments, setPayments] = useState([]);
   const [bankAccounts, setBankAccounts] = useState([]);
+  const [user, setUser] = useState(null);
+  const [archiving, setArchiving] = useState(false);
 
   useEffect(() => {
     fetchStats();
