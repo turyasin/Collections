@@ -313,7 +313,7 @@ export default function Dashboard() {
     <div className="space-y-8 animate-fade-in" data-testid="dashboard">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">Kontrol Paneli</h1>
+          <h1 className="text-3xl font-bold text-slate-900 mb-3 mt-2">Kontrol Paneli</h1>
           <p className="text-slate-600">Faturalarınızın ve ödemelerinizin özeti</p>
         </div>
         {user?.is_admin && (
