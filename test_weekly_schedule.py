@@ -8,7 +8,7 @@ import sys
 from datetime import datetime
 
 def test_weekly_schedule_exports():
-    base_url = "https://finansal-takip.preview.emergentagent.com"
+    base_url = "https://invoice-manager-147.preview.emergentagent.com"
     api_url = f"{base_url}/api"
     
     # First register/login to get a token
