@@ -68,6 +68,23 @@ export default function Dashboard() {
     }
   };
 
+  const calculatePeriodStats = () => {
+    const filteredInvoices = periodFilter === "all" ? invoices : invoices.filter(inv => inv.period_type === periodFilter);
+    const filteredPayments = periodFilter === "all" ? payments : payments.filter(pay => pay.period_type === periodFilter);
+
+    const totalInvoiceAmount = filteredInvoices.reduce((sum, inv) => sum + inv.amount, 0);
+    const totalPaidAmount = filteredPayments.reduce((sum, pay) => sum + pay.amount, 0);
+    const totalOutstanding = filteredInvoices.reduce((sum, inv) => sum + (inv.amount - (inv.paid_amount || 0)), 0);
+
+    return {
+      invoiceCount: filteredInvoices.length,
+      paymentCount: filteredPayments.length,
+      totalInvoiceAmount,
+      totalPaidAmount,
+      totalOutstanding
+    };
+  };
+
   const renderCalendar = () => {
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
