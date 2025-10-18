@@ -313,24 +313,6 @@ export default function Dashboard() {
         })}
       </div>
 
-      {/* Check Statistics */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-        <h2 className="text-xl font-bold text-slate-900 mb-4">Çek Durumu</h2>
-        <div className="grid grid-cols-2 gap-4">
-          {checkStats.map((stat, index) => (
-            <div key={index} className="p-4 bg-slate-50 rounded-lg">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold text-slate-900">{stat.title}</h3>
-                <div className={`w-3 h-3 rounded-full ${stat.color}`}></div>
-              </div>
-              <p className="text-2xl font-bold text-slate-900">{stat.amount}</p>
-              <p className="text-sm text-slate-600 mt-1">Toplam: {stat.total} adet</p>
-              <p className="text-sm text-orange-600">Bekleyen: {stat.pending} adet</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Month and Quarter Statistics */}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
         <div className="flex items-center justify-between mb-4">
