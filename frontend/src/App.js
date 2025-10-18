@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "@/App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import axios from "axios";
 import Login from "@/components/Login";
 import Dashboard from "@/components/Dashboard";
 import Customers from "@/components/Customers";
@@ -14,21 +15,41 @@ import CompanyInfo from "@/components/CompanyInfo";
 import Archive from "@/components/Archive";
 import Layout from "@/components/Layout";
 
+const API = process.env.REACT_APP_BACKEND_URL || import.meta.env.VITE_BACKEND_URL;
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsAuthenticated(!!token);
+    if (token) {
+      setIsAuthenticated(true);
+      fetchCurrentUser();
+    }
   }, []);
+
+  const fetchCurrentUser = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(`${API}/api/users/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setCurrentUser(res.data);
+    } catch (error) {
+      console.error("Failed to fetch current user", error);
+    }
+  };
 
   const handleLogin = () => {
     setIsAuthenticated(true);
+    fetchCurrentUser();
   };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsAuthenticated(false);
+    setCurrentUser(null);
   };
 
   return (
