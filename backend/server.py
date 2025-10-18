@@ -908,7 +908,7 @@ async def export_invoices_pdf(invoices):
     elements.append(Spacer(1, 20))
     
     # Table data
-    data = [['Fatura No', 'Müşteri', 'Tutar (₺)', 'Ödenen (₺)', 'Vade', 'Durum', 'Oluşturan']]
+    data = [['Fatura No', 'Müşteri', 'Tutar (₺)', 'Ödenen (₺)', 'Vade', 'Durum', 'Periyot', 'Oluşturan']]
     for inv in invoices:
         data.append([
             inv.get("invoice_number", ""),
@@ -917,6 +917,7 @@ async def export_invoices_pdf(invoices):
             f"₺{inv.get('paid_amount', 0):,.2f}",
             inv.get("due_date", ""),
             inv.get("status", ""),
+            inv.get("period_type", "Aylık"),
             inv.get("created_by_username", "")[:15]
         ])
     
