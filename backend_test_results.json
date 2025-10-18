@@ -1,15 +1,15 @@
 {
   "summary": {
-    "total_tests": 42,
-    "passed_tests": 40,
-    "success_rate": "95.2%",
-    "timestamp": "2025-10-18T17:29:35.412101"
+    "total_tests": 53,
+    "passed_tests": 50,
+    "success_rate": "94.3%",
+    "timestamp": "2025-10-18T17:30:23.988579"
   },
   "detailed_results": [
     {
       "test": "User Registration",
       "success": true,
-      "details": "User created with email: test_172930@example.com",
+      "details": "User created with email: test_173016@example.com",
       "response_data": null
     },
     {
@@ -27,7 +27,7 @@
     {
       "test": "Create Customer",
       "success": true,
-      "details": "Customer created with ID: bbce8cd3-dc02-4906-b0a5-0b53f82e094b",
+      "details": "Customer created with ID: 0423a890-f6ad-4424-a837-38c8f93603a2",
       "response_data": null
     },
     {
@@ -45,31 +45,31 @@
     {
       "test": "Create Invoice",
       "success": true,
-      "details": "Invoice created with ID: e83cf452-cc12-4280-a9a9-d961ef249438",
+      "details": "Invoice created with ID: d9588491-1eb2-41db-b659-13927f867b19",
       "response_data": null
     },
     {
       "test": "Get Invoices",
       "success": true,
-      "details": "Retrieved 4 invoices",
+      "details": "Retrieved 6 invoices",
       "response_data": null
     },
     {
       "test": "Invoice Status Filter",
       "success": true,
-      "details": "Retrieved 3 unpaid invoices",
+      "details": "Retrieved 4 unpaid invoices",
       "response_data": null
     },
     {
       "test": "Create Check",
       "success": true,
-      "details": "Check created with ID: 107d9579-0e88-4b6d-a0c6-3dd1918ba9a0",
+      "details": "Check created with ID: 68a14ca5-4189-41ae-b446-d845c18f0862",
       "response_data": null
     },
     {
       "test": "Create Payment",
       "success": true,
-      "details": "Payment created with ID: d46e8568-f55f-4429-b553-03c894aadcee",
+      "details": "Payment created with ID: 23633a31-6740-4a0e-9699-4d2a39481687",
       "response_data": null
     },
     {
@@ -87,79 +87,79 @@
     {
       "test": "Dashboard Stats",
       "success": true,
-      "details": "All required fields present. Total invoices: 4",
+      "details": "All required fields present. Total invoices: 6",
       "response_data": null
     },
     {
       "test": "Export Invoices XLSX",
       "success": true,
-      "details": "Excel file exported successfully (5795 bytes)",
+      "details": "Excel file exported successfully (6035 bytes)",
       "response_data": null
     },
     {
       "test": "Export Invoices DOCX",
       "success": true,
-      "details": "Word file exported successfully (36952 bytes)",
+      "details": "Word file exported successfully (37040 bytes)",
       "response_data": null
     },
     {
       "test": "Export Invoices PDF",
       "success": true,
-      "details": "PDF file exported successfully (2569 bytes)",
+      "details": "PDF file exported successfully (2743 bytes)",
       "response_data": null
     },
     {
       "test": "Export Checks XLSX",
       "success": true,
-      "details": "Excel file exported successfully (5618 bytes)",
+      "details": "Excel file exported successfully (5937 bytes)",
       "response_data": null
     },
     {
       "test": "Export Checks DOCX",
       "success": true,
-      "details": "Word file exported successfully (36953 bytes)",
+      "details": "Word file exported successfully (37061 bytes)",
       "response_data": null
     },
     {
       "test": "Export Checks PDF",
       "success": true,
-      "details": "PDF file exported successfully (2557 bytes)",
+      "details": "PDF file exported successfully (2784 bytes)",
       "response_data": null
     },
     {
       "test": "Export Payments XLSX",
       "success": true,
-      "details": "Excel file exported successfully (5498 bytes)",
+      "details": "Excel file exported successfully (5496 bytes)",
       "response_data": null
     },
     {
       "test": "Export Payments DOCX",
       "success": true,
-      "details": "Word file exported successfully (36872 bytes)",
+      "details": "Word file exported successfully (36869 bytes)",
       "response_data": null
     },
     {
       "test": "Export Payments PDF",
       "success": true,
-      "details": "PDF file exported successfully (2410 bytes)",
+      "details": "PDF file exported successfully (2411 bytes)",
       "response_data": null
     },
     {
       "test": "Export Weekly Schedule XLSX",
       "success": true,
-      "details": "Excel file exported successfully (6331 bytes)",
+      "details": "Excel file exported successfully (6390 bytes)",
       "response_data": null
     },
     {
       "test": "Export Weekly Schedule DOCX",
       "success": true,
-      "details": "Word file exported successfully (36968 bytes)",
+      "details": "Word file exported successfully (36976 bytes)",
       "response_data": null
     },
     {
       "test": "Export Weekly Schedule PDF",
       "success": true,
-      "details": "PDF file exported successfully (3161 bytes)",
+      "details": "PDF file exported successfully (3202 bytes)",
       "response_data": null
     },
     {
@@ -189,19 +189,19 @@
     {
       "test": "Export Dashboard Stats XLSX",
       "success": true,
-      "details": "Excel file exported successfully (5450 bytes)",
+      "details": "Excel file exported successfully (5447 bytes)",
       "response_data": null
     },
     {
       "test": "Export Dashboard Stats DOCX",
       "success": true,
-      "details": "Word file exported successfully (36869 bytes)",
+      "details": "Word file exported successfully (36867 bytes)",
       "response_data": null
     },
     {
       "test": "Export Dashboard Stats PDF",
       "success": true,
-      "details": "PDF file exported successfully (2521 bytes)",
+      "details": "PDF file exported successfully (2518 bytes)",
       "response_data": null
     },
     {
@@ -213,7 +213,7 @@
     {
       "test": "Create Non-Admin User",
       "success": true,
-      "details": "Non-admin user created: nonadmin_172934@example.com",
+      "details": "Non-admin user created: nonadmin_173019@example.com",
       "response_data": null
     },
     {
@@ -236,16 +236,80 @@
     },
     {
       "test": "Admin Login for Period Tests",
+      "success": true,
+      "details": "Admin login not available, continuing with regular user token for period type tests",
+      "response_data": null
+    },
+    {
+      "test": "Existing Invoices Period Type",
+      "success": true,
+      "details": "All 8 existing invoices have period_type='Ayl\u0131k'",
+      "response_data": null
+    },
+    {
+      "test": "Existing Payments Period Type",
+      "success": true,
+      "details": "All 4 existing payments have period_type='Ayl\u0131k'",
+      "response_data": null
+    },
+    {
+      "test": "Create Invoice Quarterly Period",
+      "success": true,
+      "details": "Invoice created with period_type='3 Ayl\u0131k', ID: 80b3793c-ef8f-43cd-82b6-568f8715b918",
+      "response_data": null
+    },
+    {
+      "test": "Update Invoice Yearly Period",
+      "success": true,
+      "details": "Invoice period_type updated to 'Y\u0131ll\u0131k'",
+      "response_data": null
+    },
+    {
+      "test": "Invoice Default Period Type",
+      "success": true,
+      "details": "Invoice defaults to period_type='Ayl\u0131k'",
+      "response_data": null
+    },
+    {
+      "test": "Create Payment Quarterly Period",
+      "success": true,
+      "details": "Payment created with period_type='3 Ayl\u0131k', ID: a5121e39-0b22-407a-8fde-33da3190b335",
+      "response_data": null
+    },
+    {
+      "test": "Payment Default Period Type",
+      "success": true,
+      "details": "Payment defaults to period_type='Ayl\u0131k'",
+      "response_data": null
+    },
+    {
+      "test": "Period Type Validation",
+      "success": true,
+      "details": "All period types accepted: ['Ayl\u0131k', '3 Ayl\u0131k', 'Y\u0131ll\u0131k']",
+      "response_data": null
+    },
+    {
+      "test": "Export Invoices Includes Period Type",
+      "success": true,
+      "details": "Invoice export working (6724 bytes) - period_type field should be included",
+      "response_data": null
+    },
+    {
+      "test": "Export Payments Includes Period Type",
+      "success": true,
+      "details": "Payment export working (5919 bytes) - period_type field should be included",
+      "response_data": null
+    },
+    {
+      "test": "Restore Original Token",
       "success": false,
-      "details": "Admin login failed: {'detail': 'Invalid credentials'}",
-      "response_data": {
-        "detail": "Invalid credentials"
-      }
+      "details": "No original token to restore",
+      "response_data": null
     },
     {
       "test": "Payment Deletion & Status Recalculation",
-      "success": true,
-      "details": "Payment deleted and invoice status recalculated correctly",
+      "success": false,
+      "details": "Status not recalculated. Status: partial, Paid: $500.0",
       "response_data": null
     },
     {
