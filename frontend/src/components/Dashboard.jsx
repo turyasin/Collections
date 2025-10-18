@@ -68,6 +68,23 @@ export default function Dashboard() {
     },
   ];
 
+  const checkStats = [
+    {
+      title: "Alınan Çekler",
+      total: stats?.total_received_checks || 0,
+      amount: `₺${stats?.total_received_amount?.toFixed(2) || "0.00"}`,
+      pending: stats?.pending_received_checks || 0,
+      color: "bg-green-500",
+    },
+    {
+      title: "Verilen Çekler",
+      total: stats?.total_issued_checks || 0,
+      amount: `₺${stats?.total_issued_amount?.toFixed(2) || "0.00"}`,
+      pending: stats?.pending_issued_checks || 0,
+      color: "bg-red-500",
+    },
+  ];
+
   return (
     <div className="space-y-8 animate-fade-in" data-testid="dashboard">
       <div>
