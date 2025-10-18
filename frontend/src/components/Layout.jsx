@@ -6,10 +6,10 @@ export default function Layout({ children, onLogout }) {
   const location = useLocation();
 
   const navItems = [
-    { path: "/", label: "Dashboard", icon: LayoutDashboard },
-    { path: "/customers", label: "Customers", icon: Users },
-    { path: "/invoices", label: "Invoices", icon: FileText },
-    { path: "/payments", label: "Payments", icon: CreditCard },
+    { path: "/", label: "Kontrol Paneli", icon: LayoutDashboard },
+    { path: "/customers", label: "Müşteriler", icon: Users },
+    { path: "/invoices", label: "Faturalar", icon: FileText },
+    { path: "/payments", label: "Ödemeler", icon: CreditCard },
     { path: "/checks", label: "Çekler", icon: Receipt },
     { path: "/weekly-schedule", label: "Haftalık Program", icon: CalendarDays },
   ];
