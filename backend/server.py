@@ -152,7 +152,6 @@ class InvoiceUpdate(BaseModel):
     invoice_number: Optional[str] = None
     amount: Optional[float] = None
     due_date: Optional[str] = None
-    period_type: Optional[str] = None  # "Aylık", "3 Aylık", "Yıllık"
     notes: Optional[str] = None
 
 class Payment(BaseModel):
