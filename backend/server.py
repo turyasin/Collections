@@ -155,9 +155,7 @@ class PaymentCreate(BaseModel):
     check_date: str
     bank_name: str
     amount: float
-    check_date: str
-    bank_name: str
-    amount: float
+    period_type: str = "Aylık"  # "Aylık", "3 Aylık", "Yıllık"
 
 class DashboardStats(BaseModel):
     total_invoices: int
