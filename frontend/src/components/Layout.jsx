@@ -24,15 +24,10 @@ export default function Layout({ children, onLogout }) {
         ...getAuthHeaders(),
         responseType: 'blob'
       });
-      if (response.status === 200 && response.data.size > 0) {
-        const imageUrl = URL.createObjectURL(response.data);
-        setLogo(imageUrl);
-      } else {
-        setLogo(null);
-      }
+      const imageUrl = URL.createObjectURL(response.data);
+      setLogo(imageUrl);
     } catch (error) {
-      // Logo doesn't exist or other error - silently handle
-      console.log('Logo not available:', error.response?.status);
+      // Logo doesn't exist
       setLogo(null);
     }
   };
