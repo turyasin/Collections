@@ -1146,6 +1146,7 @@ async def export_payments_docx(payments):
         doc.add_paragraph(f'Tutar: ₺{payment.get("amount", 0):,.2f}')
         doc.add_paragraph(f'Çek Tarihi: {payment.get("check_date", "")}')
         doc.add_paragraph(f'Banka: {payment.get("bank_name", "")}')
+        doc.add_paragraph(f'Periyot: {payment.get("period_type", "Aylık")}')
         doc.add_paragraph(f'Oluşturan: {payment.get("created_by_username", "")}')
         doc.add_paragraph('')
     
