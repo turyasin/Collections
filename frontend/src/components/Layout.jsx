@@ -34,7 +34,44 @@ export default function Layout({ children, onLogout, user }) {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-slate-200 z-10">
+      {/* Mobile Header */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-50 flex items-center px-4">
+        <button
+          onClick={toggleSidebar}
+          className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
+          aria-label="Toggle menu"
+        >
+          <Menu className="w-6 h-6 text-slate-700" />
+        </button>
+        <h1 className="ml-3 text-xl font-bold text-slate-900">Ödeme Takip</h1>
+      </div>
+
+      {/* Overlay for mobile */}
+      {isSidebarOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={closeSidebar}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`
+        fixed left-0 top-0 h-full w-64 bg-white border-r border-slate-200 z-50
+        transform transition-transform duration-300 ease-in-out
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        lg:translate-x-0
+      `}>
+        {/* Close button for mobile */}
+        <div className="lg:hidden absolute top-4 right-4">
+          <button
+            onClick={closeSidebar}
+            className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
+            aria-label="Close menu"
+          >
+            <X className="w-5 h-5 text-slate-700" />
+          </button>
+        </div>
+
         <div className="p-6">
           <h1 className="text-2xl font-bold text-slate-900">Ödeme Takip</h1>
           <p className="text-sm text-slate-600 mt-1">Ödeme Yönetimi</p>
@@ -50,6 +87,7 @@ export default function Layout({ children, onLogout, user }) {
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={closeSidebar}
                 data-testid={`nav-${item.label.toLowerCase()}`}
                 className={`flex items-center px-4 py-3 rounded-lg font-medium transition-all ${
                   isActive(item.path)
@@ -86,7 +124,8 @@ export default function Layout({ children, onLogout, user }) {
         </div>
       </aside>
 
-      <main className="ml-64 p-8">
+      {/* Main Content */}
+      <main className="lg:ml-64 pt-16 lg:pt-0 p-4 md:p-8">
         <div className="max-w-7xl mx-auto">{children}</div>
       </main>
     </div>
