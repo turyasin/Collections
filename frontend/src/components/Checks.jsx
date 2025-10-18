@@ -195,58 +195,129 @@ export default function Checks() {
           <h1 className="text-4xl font-bold text-slate-900 mb-2">Çek Takibi</h1>
           <p className="text-slate-600">Alınan ve verilen çekleri yönetin</p>
         </div>
-        <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
-          <DialogTrigger asChild>
-            <Button data-testid="add-check-button" className="bg-blue-600 hover:bg-blue-700">
-              <Plus className="w-4 h-4 mr-2" />Çek Ekle
-            </Button>
-          </DialogTrigger>
-          <DialogContent data-testid="check-dialog" aria-describedby="check-dialog-description">
-            <DialogHeader>
-              <DialogTitle>{editingCheck ? "Çek Düzenle" : "Yeni Çek"}</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label>Çek Tipi *</Label>
-                <Select value={formData.check_type} onValueChange={(value) => setFormData({ ...formData, check_type: value })} required>
-                  <SelectTrigger data-testid="check-type-select"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="received">Alınan Çek</SelectItem>
-                    <SelectItem value="issued">Verilen Çek</SelectItem>
-                  </SelectContent>
-                </Select>
+        <div className="flex gap-2">
+          {/* Export Dropdown */}
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-50">
+                <Download className="w-4 h-4 mr-2" />
+                Dışa Aktar
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md" aria-describedby="export-dialog-description">
+              <DialogHeader>
+                <DialogTitle>Çekler Dışa Aktar</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <p id="export-dialog-description" className="text-sm text-slate-600">Dışa aktarma formatını seçin:</p>
+                <div className="flex flex-col gap-2">
+                  <Button onClick={() => handleExport('xlsx')} className="bg-green-600 hover:bg-green-700">
+                    Excel (.xlsx)
+                  </Button>
+                  <Button onClick={() => handleExport('docx')} className="bg-blue-600 hover:bg-blue-700">
+                    Word (.docx)
+                  </Button>
+                  <Button onClick={() => handleExport('pdf')} className="bg-red-600 hover:bg-red-700">
+                    PDF (.pdf)
+                  </Button>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label>Çek No *</Label>
-                <Input data-testid="check-number-input" value={formData.check_number} onChange={(e) => setFormData({ ...formData, check_number: e.target.value })} required />
+            </DialogContent>
+          </Dialog>
+
+          {/* Import Button */}
+          <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="border-purple-600 text-purple-600 hover:bg-purple-50">
+                <Upload className="w-4 h-4 mr-2" />
+                İçe Aktar
+              </Button>
+            </DialogTrigger>
+            <DialogContent aria-describedby="import-dialog-description">
+              <DialogHeader>
+                <DialogTitle>Çekler İçe Aktar</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <p id="import-dialog-description" className="text-sm text-slate-600">
+                  Excel (.xlsx) dosyası yükleyin. Dosya aşağıdaki sütunları içermelidir:
+                  check_type, check_number, amount, due_date, bank_name, payer_payee, status, notes
+                </p>
+                <Input
+                  type="file"
+                  accept=".xlsx"
+                  onChange={handleFileChange}
+                />
+                {selectedFile && (
+                  <p className="text-sm text-green-600">Seçili dosya: {selectedFile.name}</p>
+                )}
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => {
+                    setImportDialogOpen(false);
+                    setSelectedFile(null);
+                  }}>
+                    İptal
+                  </Button>
+                  <Button onClick={handleImport} className="bg-purple-600 hover:bg-purple-700">
+                    İçe Aktar
+                  </Button>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label>Tutar (₺) *</Label>
-                <Input data-testid="check-amount-input" type="number" step="0.01" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} required />
-              </div>
-              <div className="space-y-2">
-                <Label>Vade Tarihi *</Label>
-                <Input data-testid="check-due-date-input" type="date" value={formData.due_date} onChange={(e) => setFormData({ ...formData, due_date: e.target.value })} required />
-              </div>
-              <div className="space-y-2">
-                <Label>Banka *</Label>
-                <Input data-testid="check-bank-input" value={formData.bank_name} onChange={(e) => setFormData({ ...formData, bank_name: e.target.value })} required />
-              </div>
-              <div className="space-y-2">
-                <Label>{formData.check_type === "received" ? "Ödeyici" : "Alacaklı"} *</Label>
-                <Input data-testid="check-payer-input" value={formData.payer_payee} onChange={(e) => setFormData({ ...formData, payer_payee: e.target.value })} required />
-              </div>
-              <div className="space-y-2">
-                <Label>Notlar</Label>
-                <Input data-testid="check-notes-input" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} />
-              </div>
-              <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>İptal</Button>
-                <Button type="submit" data-testid="save-check-button" className="bg-blue-600 hover:bg-blue-700">{editingCheck ? "Güncelle" : "Kaydet"}</Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
+            <DialogTrigger asChild>
+              <Button data-testid="add-check-button" className="bg-blue-600 hover:bg-blue-700">
+                <Plus className="w-4 h-4 mr-2" />Çek Ekle
+              </Button>
+            </DialogTrigger>
+            <DialogContent data-testid="check-dialog" aria-describedby="check-dialog-description">
+              <DialogHeader>
+                <DialogTitle>{editingCheck ? "Çek Düzenle" : "Yeni Çek"}</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Çek Tipi *</Label>
+                  <Select value={formData.check_type} onValueChange={(value) => setFormData({ ...formData, check_type: value })} required>
+                    <SelectTrigger data-testid="check-type-select"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="received">Alınan Çek</SelectItem>
+                      <SelectItem value="issued">Verilen Çek</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Çek No *</Label>
+                  <Input data-testid="check-number-input" value={formData.check_number} onChange={(e) => setFormData({ ...formData, check_number: e.target.value })} required />
+                </div>
+                <div className="space-y-2">
+                  <Label>Tutar (₺) *</Label>
+                  <Input data-testid="check-amount-input" type="number" step="0.01" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} required />
+                </div>
+                <div className="space-y-2">
+                  <Label>Vade Tarihi *</Label>
+                  <Input data-testid="check-due-date-input" type="date" value={formData.due_date} onChange={(e) => setFormData({ ...formData, due_date: e.target.value })} required />
+                </div>
+                <div className="space-y-2">
+                  <Label>Banka *</Label>
+                  <Input data-testid="check-bank-input" value={formData.bank_name} onChange={(e) => setFormData({ ...formData, bank_name: e.target.value })} required />
+                </div>
+                <div className="space-y-2">
+                  <Label>{formData.check_type === "received" ? "Ödeyici" : "Alacaklı"} *</Label>
+                  <Input data-testid="check-payer-input" value={formData.payer_payee} onChange={(e) => setFormData({ ...formData, payer_payee: e.target.value })} required />
+                </div>
+                <div className="space-y-2">
+                  <Label>Notlar</Label>
+                  <Input data-testid="check-notes-input" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>İptal</Button>
+                  <Button type="submit" data-testid="save-check-button" className="bg-blue-600 hover:bg-blue-700">{editingCheck ? "Güncelle" : "Kaydet"}</Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <div className="relative">
