@@ -171,16 +171,17 @@ class DashboardStats(BaseModel):
     total_issued_amount: float
     pending_issued_checks: int
 
-# Çek Modeli - Sadece bizim verdiğimiz çekler (issued checks)
+# Çek Modeli - Alınan ve verilen çekler
 class Check(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    check_type: str = "issued"  # "received" (alınan) veya "issued" (verilen) - default issued
     check_number: str
     amount: float
     due_date: str
     bank_name: str
-    payee: str  # Çeki kime verdik (alıcı firma/kişi)
-    status: str = "pending"  # pending, paid, bounced, cancelled
+    payer_payee: str  # Alıcı veya veren kişi/firma
+    status: str = "pending"  # pending, collected, paid, bounced, cancelled
     related_invoice_id: Optional[str] = None  # Hangi fatura için kesildi (opsiyonel)
     notes: Optional[str] = None
     created_by: Optional[str] = None
@@ -188,20 +189,22 @@ class Check(BaseModel):
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class CheckCreate(BaseModel):
+    check_type: str = "issued"  # Default issued (verilen çek)
     check_number: str
     amount: float
     due_date: str
     bank_name: str
-    payee: str
+    payer_payee: str
     related_invoice_id: Optional[str] = None
     notes: Optional[str] = None
 
 class CheckUpdate(BaseModel):
+    check_type: Optional[str] = None
     check_number: Optional[str] = None
     amount: Optional[float] = None
     due_date: Optional[str] = None
     bank_name: Optional[str] = None
-    payee: Optional[str] = None
+    payer_payee: Optional[str] = None
     status: Optional[str] = None
     related_invoice_id: Optional[str] = None
     notes: Optional[str] = None
