@@ -224,6 +224,7 @@ export default function Checks() {
                           </SelectContent>
                         </Select>
                       </td>
+                      <td className="text-slate-600 text-sm">{check.created_by_username || "—"}</td>
                       <td>
                         <div className="flex gap-2">
                           <Button size="sm" variant="outline" onClick={() => handleEdit(check)}><Pencil className="w-4 h-4" /></Button>
