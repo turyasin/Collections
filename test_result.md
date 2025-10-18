@@ -285,6 +285,30 @@ backend:
         agent: "testing"
         comment: "Logo delete endpoint tested successfully. Endpoint properly rejects non-admin users with 403 Forbidden. Admin-only access control working correctly. Endpoint is properly secured and functional."
 
+  - task: "Invoice model period_type field"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added period_type field to Invoice model with default value 'Aylık'. Updated InvoiceCreate and InvoiceUpdate schemas to include period_type. Ran migration script to update 3 existing invoices with default 'Aylık' value."
+
+  - task: "Payment model period_type field"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added period_type field to Payment model with default value 'Aylık'. Updated PaymentCreate schema to include period_type. Ran migration script to update 1 existing payment with default 'Aylık' value."
+
 frontend:
   - task: "Export/Import UI for Invoices page"
     implemented: true
