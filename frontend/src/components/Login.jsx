@@ -139,8 +139,8 @@ export default function Login({ onLogin }) {
             className="text-sm text-blue-600 hover:text-blue-700 font-medium"
           >
             {isLogin
-              ? "Don't have an account? Sign up"
-              : "Already have an account? Sign in"}
+              ? "Hesabınız yok mu? Kayıt olun"
+              : "Zaten hesabınız var mı? Giriş yapın"}
           </button>
         </div>
       </div>
