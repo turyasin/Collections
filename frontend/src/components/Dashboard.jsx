@@ -135,19 +135,19 @@ export default function Dashboard() {
 
       {/* Invoice Status */}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-        <h2 className="text-xl font-bold text-slate-900 mb-4">Invoice Status</h2>
+        <h2 className="text-xl font-bold text-slate-900 mb-4">Fatura Durumu</h2>
         <div className="grid grid-cols-3 gap-4">
           <div className="text-center p-4 bg-green-50 rounded-lg">
             <p className="text-2xl font-bold text-green-700">{stats?.paid_count || 0}</p>
-            <p className="text-sm text-green-600 mt-1">Paid</p>
+            <p className="text-sm text-green-600 mt-1">Ödendi</p>
           </div>
           <div className="text-center p-4 bg-yellow-50 rounded-lg">
             <p className="text-2xl font-bold text-yellow-700">{stats?.partial_count || 0}</p>
-            <p className="text-sm text-yellow-600 mt-1">Partial</p>
+            <p className="text-sm text-yellow-600 mt-1">Kısmi Ödeme</p>
           </div>
           <div className="text-center p-4 bg-red-50 rounded-lg">
             <p className="text-2xl font-bold text-red-700">{stats?.unpaid_count || 0}</p>
-            <p className="text-sm text-red-600 mt-1">Unpaid</p>
+            <p className="text-sm text-red-600 mt-1">Ödenmedi</p>
           </div>
         </div>
       </div>
