@@ -152,11 +152,16 @@ export default function Invoices() {
     }
   };
 
+  // Get unique months and quarters from invoices
+  const uniqueMonths = [...new Set(invoices.map(inv => inv.month).filter(Boolean))].sort();
+  const uniqueQuarters = [...new Set(invoices.map(inv => inv.quarter).filter(Boolean))].sort();
+
   const filteredInvoices = invoices.filter((invoice) => {
     const matchesSearch = invoice.invoice_number.toLowerCase().includes(searchTerm.toLowerCase()) || (invoice.customer_name || "").toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || invoice.status === statusFilter;
-    const matchesPeriod = periodFilter === "all" || invoice.period_type === periodFilter;
-    return matchesSearch && matchesStatus && matchesPeriod;
+    const matchesMonth = monthFilter === "all" || invoice.month === monthFilter;
+    const matchesQuarter = quarterFilter === "all" || invoice.quarter === quarterFilter;
+    return matchesSearch && matchesStatus && matchesMonth && matchesQuarter;
   });
 
   if (loading) return <div className="flex items-center justify-center h-96"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>;
