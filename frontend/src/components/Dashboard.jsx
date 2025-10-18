@@ -443,7 +443,7 @@ export default function Dashboard() {
           </div>
           <div className="text-center p-4 bg-red-50 rounded-lg">
             <p className="text-2xl font-bold text-red-700">{stats?.unpaid_count || 0}</p>
-            <p className="text-sm text-red-600 mt-1">Ödenmedi</p>
+            <p className="text-sm text-red-600 mt-1">Tahsilat Bekleyen</p>
           </div>
         </div>
       </div>
