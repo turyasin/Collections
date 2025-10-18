@@ -10,6 +10,36 @@ const getAuthHeaders = () => ({ headers: { Authorization: `Bearer ${localStorage
 
 export default function Layout({ children, onLogout }) {
   const location = useLocation();
+  const [logo, setLogo] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    fetchLogo();
+    fetchCurrentUser();
+  }, []);
+
+  const fetchLogo = async () => {
+    try {
+      const response = await axios.get(`${API}/settings/logo`, {
+        ...getAuthHeaders(),
+        responseType: 'blob'
+      });
+      const imageUrl = URL.createObjectURL(response.data);
+      setLogo(imageUrl);
+    } catch (error) {
+      // Logo doesn't exist
+      setLogo(null);
+    }
+  };
+
+  const fetchCurrentUser = async () => {
+    try {
+      const response = await axios.get(`${API}/users/me`, getAuthHeaders());
+      setCurrentUser(response.data);
+    } catch (error) {
+      console.error("Failed to fetch user", error);
+    }
+  };
 
   const navItems = [
     { path: "/", label: "Kontrol Paneli", icon: LayoutDashboard },
@@ -20,6 +50,11 @@ export default function Layout({ children, onLogout }) {
     { path: "/weekly-schedule", label: "Haftalık Program", icon: CalendarDays },
     { path: "/users", label: "Kullanıcılar", icon: UserCircle },
   ];
+
+  // Add Settings for admin users
+  if (currentUser?.is_admin) {
+    navItems.push({ path: "/settings", label: "Ayarlar", icon: Settings });
+  }
 
   const isActive = (path) => {
     return location.pathname === path;
