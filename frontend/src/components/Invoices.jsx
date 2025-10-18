@@ -312,13 +312,22 @@ export default function Invoices() {
             <SelectItem value="unpaid">Ödenmedi</SelectItem>
           </SelectContent>
         </Select>
-        <Select value={periodFilter} onValueChange={setPeriodFilter}>
-          <SelectTrigger className="w-40" data-testid="period-filter"><SelectValue /></SelectTrigger>
+        <Select value={monthFilter} onValueChange={setMonthFilter}>
+          <SelectTrigger className="w-40" data-testid="month-filter"><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Tüm Periyotlar</SelectItem>
-            <SelectItem value="Aylık">Aylık</SelectItem>
-            <SelectItem value="3 Aylık">3 Aylık</SelectItem>
-            <SelectItem value="Yıllık">Yıllık</SelectItem>
+            <SelectItem value="all">Tüm Aylar</SelectItem>
+            {uniqueMonths.map(month => (
+              <SelectItem key={month} value={month}>{month}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select value={quarterFilter} onValueChange={setQuarterFilter}>
+          <SelectTrigger className="w-40" data-testid="quarter-filter"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tüm Çeyrekler</SelectItem>
+            {uniqueQuarters.map(quarter => (
+              <SelectItem key={quarter} value={quarter}>{quarter}</SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
