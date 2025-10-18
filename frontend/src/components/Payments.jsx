@@ -79,6 +79,65 @@ export default function Payments() {
     setFormData({ invoice_id: "", check_number: "", check_date: "", bank_name: "", amount: "" });
   };
 
+  const handleExport = async (format) => {
+    try {
+      const response = await axios.get(`${API}/export/payments?format=${format}`, {
+        ...getAuthHeaders(),
+        responseType: 'blob'
+      });
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      const fileExtension = format === 'xlsx' ? 'xlsx' : format === 'docx' ? 'docx' : 'pdf';
+      link.setAttribute('download', `odemeler_${new Date().toISOString().split('T')[0]}.${fileExtension}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      
+      toast.success(`Ödemeler ${format.toUpperCase()} formatında indirildi`);
+    } catch (error) {
+      toast.error("Dışa aktarma başarısız oldu");
+    }
+  };
+
+  const handleImport = async () => {
+    if (!selectedFile) {
+      toast.error("Lütfen bir dosya seçin");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      await axios.post(`${API}/import/payments`, formData, {
+        headers: {
+          ...getAuthHeaders().headers,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      toast.success("Ödemeler başarıyla içe aktarıldı");
+      setImportDialogOpen(false);
+      setSelectedFile(null);
+      fetchPayments();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || "İçe aktarma başarısız oldu");
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.name.endsWith('.xlsx')) {
+      setSelectedFile(file);
+    } else {
+      toast.error("Sadece .xlsx dosyaları desteklenmektedir");
+      e.target.value = null;
+    }
+  };
+
   const filteredPayments = payments.filter(
     (payment) =>
       (payment.customer_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
