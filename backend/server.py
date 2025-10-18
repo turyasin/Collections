@@ -437,6 +437,32 @@ async def update_user(target_user_id: str, user_update: UserUpdate, admin_id: st
     updated_user = await db.users.find_one({"id": target_user_id}, {"_id": 0, "password": 0})
     return updated_user
 
+@api_router.delete("/users/{target_user_id}")
+async def delete_user(target_user_id: str, admin_id: str = Depends(get_current_admin_user)):
+    """Delete user (admin only)"""
+    # Check if user exists
+    target_user = await db.users.find_one({"id": target_user_id}, {"_id": 0})
+    if not target_user:
+        raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı")
+    
+    # Don't allow admin to delete themselves
+    if target_user_id == admin_id:
+        raise HTTPException(status_code=400, detail="Kendi hesabınızı silemezsiniz")
+    
+    # Don't allow deleting the last admin
+    if target_user.get("is_admin"):
+        admin_count = await db.users.count_documents({"is_admin": True})
+        if admin_count <= 1:
+            raise HTTPException(status_code=400, detail="En az bir admin olmalı")
+    
+    # Delete the user
+    result = await db.users.delete_one({"id": target_user_id})
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=500, detail="Kullanıcı silinemedi")
+    
+    return {"message": f"Kullanıcı {target_user.get('username')} başarıyla silindi", "deleted_user_id": target_user_id}
+
 # Customer routes
 @api_router.get("/customers", response_model=List[Customer])
 async def get_customers(user_id: str = Depends(get_current_user)):
