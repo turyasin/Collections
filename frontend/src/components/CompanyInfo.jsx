@@ -146,6 +146,16 @@ export default function CompanyInfo() {
     );
   }
 
+  if (!isAdmin) {
+    return (
+      <div className="flex flex-col justify-center items-center h-64">
+        <Building2 className="w-16 h-16 text-slate-400 mb-4" />
+        <h2 className="text-2xl font-bold text-slate-900 mb-2">Erişim Yetkisi Yok</h2>
+        <p className="text-slate-600">Bu sayfayı görüntülemek için admin yetkisi gereklidir.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6">
