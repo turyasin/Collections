@@ -17,6 +17,7 @@ const getAuthHeaders = () => ({
 
 export default function Customers() {
   const [activeTab, setActiveTab] = useState("customers");
+  const [currentUser, setCurrentUser] = useState(null);
   
   // Customers state
   const [customers, setCustomers] = useState([]);
@@ -46,9 +47,19 @@ export default function Customers() {
   });
 
   useEffect(() => {
+    fetchCurrentUser();
     fetchCustomers();
     fetchSuppliers();
   }, []);
+
+  const fetchCurrentUser = async () => {
+    try {
+      const response = await axios.get(`${API}/users/me`, getAuthHeaders());
+      setCurrentUser(response.data);
+    } catch (error) {
+      console.error("Failed to fetch current user");
+    }
+  };
 
   // Customer functions
   const fetchCustomers = async () => {
