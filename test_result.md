@@ -494,8 +494,7 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "Month and Quarter Auto-Calculation System"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
