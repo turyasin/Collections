@@ -1,11 +1,29 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Users, FileText, CreditCard, Receipt, CalendarDays, UserCircle, LogOut, ArrowDownUp, Building2, Archive, Menu, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { LayoutDashboard, Users, FileText, CreditCard, Receipt, CalendarDays, UserCircle, LogOut, ArrowDownUp, Building2, Archive, Menu, X, KeyRound } from "lucide-react";
+import { toast } from "sonner";
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
+
+const getAuthHeaders = () => ({
+  headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+});
 
 export default function Layout({ children, onLogout, user }) {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
+  const [passwordFormData, setPasswordFormData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -13,6 +31,37 @@ export default function Layout({ children, onLogout, user }) {
 
   const closeSidebar = () => {
     setIsSidebarOpen(false);
+  };
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    
+    if (passwordFormData.newPassword !== passwordFormData.confirmPassword) {
+      toast.error("Yeni şifreler eşleşmiyor");
+      return;
+    }
+    
+    if (passwordFormData.newPassword.length < 6) {
+      toast.error("Yeni şifre en az 6 karakter olmalıdır");
+      return;
+    }
+    
+    try {
+      await axios.post(`${API}/users/change-password`, {
+        current_password: passwordFormData.currentPassword,
+        new_password: passwordFormData.newPassword,
+      }, getAuthHeaders());
+      
+      toast.success("Şifre başarıyla değiştirildi");
+      setPasswordDialogOpen(false);
+      setPasswordFormData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    } catch (error) {
+      toast.error(error.response?.data?.detail || "Şifre değiştirme başarısız");
+    }
   };
 
   const navItems = [
