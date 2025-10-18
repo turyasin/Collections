@@ -165,45 +165,118 @@ export default function Invoices() {
           <h1 className="text-4xl font-bold text-slate-900 mb-2">Faturalar</h1>
           <p className="text-slate-600">Tüm faturaları takip edin ve yönetin</p>
         </div>
-        <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
-          <DialogTrigger asChild>
-            <Button data-testid="add-invoice-button" className="bg-blue-600 hover:bg-blue-700"><Plus className="w-4 h-4 mr-2" />Fatura Ekle</Button>
-          </DialogTrigger>
-          <DialogContent data-testid="invoice-dialog" aria-describedby="invoice-dialog-description">
-            <DialogHeader><DialogTitle>{editingInvoice ? "Fatura Düzenle" : "Yeni Fatura"}</DialogTitle></DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="customer">Müşteri *</Label>
-                <Select value={formData.customer_id} onValueChange={(value) => setFormData({ ...formData, customer_id: value })} required>
-                  <SelectTrigger data-testid="customer-select"><SelectValue placeholder="Müşteri seçin" /></SelectTrigger>
-                  <SelectContent>
-                    {customers.map((customer) => <SelectItem key={customer.id} value={customer.id}>{customer.name}</SelectItem>)}
-                  </SelectContent>
-                </Select>
+        <div className="flex gap-2">
+          {/* Export Dropdown */}
+          <div className="relative inline-block text-left">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-50">
+                  <Download className="w-4 h-4 mr-2" />
+                  Dışa Aktar
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md" aria-describedby="export-dialog-description">
+                <DialogHeader>
+                  <DialogTitle>Faturalar Dışa Aktar</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <p id="export-dialog-description" className="text-sm text-slate-600">Dışa aktarma formatını seçin:</p>
+                  <div className="flex flex-col gap-2">
+                    <Button onClick={() => handleExport('xlsx')} className="bg-green-600 hover:bg-green-700">
+                      Excel (.xlsx)
+                    </Button>
+                    <Button onClick={() => handleExport('docx')} className="bg-blue-600 hover:bg-blue-700">
+                      Word (.docx)
+                    </Button>
+                    <Button onClick={() => handleExport('pdf')} className="bg-red-600 hover:bg-red-700">
+                      PDF (.pdf)
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          {/* Import Button */}
+          <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="border-purple-600 text-purple-600 hover:bg-purple-50">
+                <Upload className="w-4 h-4 mr-2" />
+                İçe Aktar
+              </Button>
+            </DialogTrigger>
+            <DialogContent aria-describedby="import-dialog-description">
+              <DialogHeader>
+                <DialogTitle>Faturalar İçe Aktar</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <p id="import-dialog-description" className="text-sm text-slate-600">
+                  Excel (.xlsx) dosyası yükleyin. Dosya aşağıdaki sütunları içermelidir:
+                  customer_id, customer_name, invoice_number, amount, paid_amount, due_date, status, notes
+                </p>
+                <Input
+                  type="file"
+                  accept=".xlsx"
+                  onChange={handleFileChange}
+                />
+                {selectedFile && (
+                  <p className="text-sm text-green-600">Seçili dosya: {selectedFile.name}</p>
+                )}
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => {
+                    setImportDialogOpen(false);
+                    setSelectedFile(null);
+                  }}>
+                    İptal
+                  </Button>
+                  <Button onClick={handleImport} className="bg-purple-600 hover:bg-purple-700">
+                    İçe Aktar
+                  </Button>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="invoice_number">Fatura No *</Label>
-                <Input id="invoice_number" data-testid="invoice-number-input" value={formData.invoice_number} onChange={(e) => setFormData({ ...formData, invoice_number: e.target.value })} required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="amount">Tutar *</Label>
-                <Input id="amount" data-testid="invoice-amount-input" type="number" step="0.01" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="due_date">Vade Tarihi *</Label>
-                <Input id="due_date" data-testid="invoice-due-date-input" type="date" value={formData.due_date} onChange={(e) => setFormData({ ...formData, due_date: e.target.value })} required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="notes">Notlar</Label>
-                <Input id="notes" data-testid="invoice-notes-input" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} />
-              </div>
-              <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-                <Button type="submit" data-testid="save-invoice-button" className="bg-blue-600 hover:bg-blue-700">{editingInvoice ? "Update" : "Create"}</Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
+            <DialogTrigger asChild>
+              <Button data-testid="add-invoice-button" className="bg-blue-600 hover:bg-blue-700"><Plus className="w-4 h-4 mr-2" />Fatura Ekle</Button>
+            </DialogTrigger>
+            <DialogContent data-testid="invoice-dialog" aria-describedby="invoice-dialog-description">
+              <DialogHeader><DialogTitle>{editingInvoice ? "Fatura Düzenle" : "Yeni Fatura"}</DialogTitle></DialogHeader>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="customer">Müşteri *</Label>
+                  <Select value={formData.customer_id} onValueChange={(value) => setFormData({ ...formData, customer_id: value })} required>
+                    <SelectTrigger data-testid="customer-select"><SelectValue placeholder="Müşteri seçin" /></SelectTrigger>
+                    <SelectContent>
+                      {customers.map((customer) => <SelectItem key={customer.id} value={customer.id}>{customer.name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="invoice_number">Fatura No *</Label>
+                  <Input id="invoice_number" data-testid="invoice-number-input" value={formData.invoice_number} onChange={(e) => setFormData({ ...formData, invoice_number: e.target.value })} required />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="amount">Tutar *</Label>
+                  <Input id="amount" data-testid="invoice-amount-input" type="number" step="0.01" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} required />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="due_date">Vade Tarihi *</Label>
+                  <Input id="due_date" data-testid="invoice-due-date-input" type="date" value={formData.due_date} onChange={(e) => setFormData({ ...formData, due_date: e.target.value })} required />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="notes">Notlar</Label>
+                  <Input id="notes" data-testid="invoice-notes-input" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
+                  <Button type="submit" data-testid="save-invoice-button" className="bg-blue-600 hover:bg-blue-700">{editingInvoice ? "Update" : "Create"}</Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <div className="flex gap-4">
