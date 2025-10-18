@@ -1104,6 +1104,7 @@ async def export_payments_xlsx(payments):
             payment.get("check_date", ""),
             payment.get("bank_name", ""),
             payment.get("amount", 0),
+            payment.get("period_type", "Aylık"),
             payment.get("created_by_username", ""),
             payment.get("payment_date", "")
         ])
