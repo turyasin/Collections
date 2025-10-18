@@ -114,7 +114,16 @@ export default function Checks() {
   };
 
   const resetForm = () => {
-    setFormData({ check_type: "received", check_number: "", amount: "", due_date: "", bank_name: "", payer_payee: "", notes: "" });
+    setFormData({ 
+      check_type: activeTab === "issued" ? "issued" : "received", 
+      check_number: "", 
+      amount: "", 
+      due_date: "", 
+      bank_name: "", 
+      payer_payee: "", 
+      supplier_id: "",
+      notes: "" 
+    });
     setEditingCheck(null);
   };
 
