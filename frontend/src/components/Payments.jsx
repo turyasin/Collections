@@ -140,10 +140,13 @@ export default function Payments() {
   };
 
   const filteredPayments = payments.filter(
-    (payment) =>
-      (payment.customer_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.check_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (payment.invoice_number || "").toLowerCase().includes(searchTerm.toLowerCase())
+    (payment) => {
+      const matchesSearch = (payment.customer_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        payment.check_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (payment.invoice_number || "").toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesPeriod = periodFilter === "all" || payment.period_type === periodFilter;
+      return matchesSearch && matchesPeriod;
+    }
   );
 
   if (loading) return <div className="flex items-center justify-center h-96"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>;
