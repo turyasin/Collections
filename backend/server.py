@@ -764,6 +764,169 @@ async def get_weekly_payment_schedule(weeks: int = 4, user_id: str = Depends(get
     
     return schedule
 
+# Export/Import endpoints
+@api_router.get("/export/invoices")
+async def export_invoices(format: str = "xlsx", user_id: str = Depends(get_current_user)):
+    """Export all invoices to xlsx, docx, or pdf"""
+    invoices = await db.invoices.find({}, {"_id": 0}).to_list(length=None)
+    
+    if format == "xlsx":
+        return await export_invoices_xlsx(invoices)
+    elif format == "docx":
+        return await export_invoices_docx(invoices)
+    elif format == "pdf":
+        return await export_invoices_pdf(invoices)
+    else:
+        raise HTTPException(status_code=400, detail="Desteklenmeyen format")
+
+@api_router.get("/export/checks")
+async def export_checks(format: str = "xlsx", user_id: str = Depends(get_current_user)):
+    """Export all checks to xlsx, docx, or pdf"""
+    checks = await db.checks.find({}, {"_id": 0}).to_list(length=None)
+    
+    if format == "xlsx":
+        return await export_checks_xlsx(checks)
+    elif format == "docx":
+        return await export_checks_docx(checks)
+    elif format == "pdf":
+        return await export_checks_pdf(checks)
+    else:
+        raise HTTPException(status_code=400, detail="Desteklenmeyen format")
+
+@api_router.get("/export/payments")
+async def export_payments(format: str = "xlsx", user_id: str = Depends(get_current_user)):
+    """Export all payments to xlsx, docx, or pdf"""
+    payments = await db.payments.find({}, {"_id": 0}).to_list(length=None)
+    
+    if format == "xlsx":
+        return await export_payments_xlsx(payments)
+    elif format == "docx":
+        return await export_payments_docx(payments)
+    elif format == "pdf":
+        return await export_payments_pdf(payments)
+    else:
+        raise HTTPException(status_code=400, detail="Desteklenmeyen format")
+
+@api_router.get("/export/weekly-schedule")
+async def export_weekly_schedule(format: str = "xlsx", user_id: str = Depends(get_current_user)):
+    """Export weekly schedule to xlsx, docx, or pdf"""
+    # Get the schedule data
+    schedule = await get_weekly_payment_schedule(user_id)
+    
+    if format == "xlsx":
+        return await export_weekly_schedule_xlsx(schedule)
+    elif format == "docx":
+        return await export_weekly_schedule_docx(schedule)
+    elif format == "pdf":
+        return await export_weekly_schedule_pdf(schedule)
+    else:
+        raise HTTPException(status_code=400, detail="Desteklenmeyen format")
+
+@api_router.post("/import/invoices")
+async def import_invoices(file: bytes = None, user_id: str = Depends(get_current_user)):
+    """Import invoices from xlsx file"""
+    try:
+        # Get user info for created_by
+        user = await db.users.find_one({"id": user_id}, {"_id": 0})
+        if not user:
+            raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı")
+        
+        # Read the Excel file
+        df = pd.read_excel(BytesIO(file))
+        
+        imported_count = 0
+        for _, row in df.iterrows():
+            invoice_data = {
+                "id": str(uuid.uuid4()),
+                "customer_id": str(row.get("customer_id", "")),
+                "customer_name": str(row.get("customer_name", "")),
+                "invoice_number": str(row.get("invoice_number", "")),
+                "amount": float(row.get("amount", 0)),
+                "paid_amount": float(row.get("paid_amount", 0)),
+                "due_date": str(row.get("due_date", "")),
+                "status": str(row.get("status", "unpaid")),
+                "notes": str(row.get("notes", "")) if pd.notna(row.get("notes")) else None,
+                "created_by": user_id,
+                "created_by_username": user["username"],
+                "created_at": datetime.now(timezone.utc).isoformat()
+            }
+            await db.invoices.insert_one(invoice_data)
+            imported_count += 1
+        
+        return {"message": f"{imported_count} fatura başarıyla içe aktarıldı", "count": imported_count}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"İçe aktarma hatası: {str(e)}")
+
+@api_router.post("/import/checks")
+async def import_checks(file: bytes = None, user_id: str = Depends(get_current_user)):
+    """Import checks from xlsx file"""
+    try:
+        # Get user info for created_by
+        user = await db.users.find_one({"id": user_id}, {"_id": 0})
+        if not user:
+            raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı")
+        
+        # Read the Excel file
+        df = pd.read_excel(BytesIO(file))
+        
+        imported_count = 0
+        for _, row in df.iterrows():
+            check_data = {
+                "id": str(uuid.uuid4()),
+                "check_type": str(row.get("check_type", "received")),
+                "check_number": str(row.get("check_number", "")),
+                "amount": float(row.get("amount", 0)),
+                "due_date": str(row.get("due_date", "")),
+                "bank_name": str(row.get("bank_name", "")),
+                "payer_payee": str(row.get("payer_payee", "")),
+                "status": str(row.get("status", "pending")),
+                "notes": str(row.get("notes", "")) if pd.notna(row.get("notes")) else None,
+                "created_by": user_id,
+                "created_by_username": user["username"],
+                "created_at": datetime.now(timezone.utc).isoformat()
+            }
+            await db.checks.insert_one(check_data)
+            imported_count += 1
+        
+        return {"message": f"{imported_count} çek başarıyla içe aktarıldı", "count": imported_count}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"İçe aktarma hatası: {str(e)}")
+
+@api_router.post("/import/payments")
+async def import_payments(file: bytes = None, user_id: str = Depends(get_current_user)):
+    """Import payments from xlsx file"""
+    try:
+        # Get user info for created_by
+        user = await db.users.find_one({"id": user_id}, {"_id": 0})
+        if not user:
+            raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı")
+        
+        # Read the Excel file
+        df = pd.read_excel(BytesIO(file))
+        
+        imported_count = 0
+        for _, row in df.iterrows():
+            payment_data = {
+                "id": str(uuid.uuid4()),
+                "invoice_id": str(row.get("invoice_id", "")),
+                "invoice_number": str(row.get("invoice_number", "")) if pd.notna(row.get("invoice_number")) else None,
+                "customer_name": str(row.get("customer_name", "")) if pd.notna(row.get("customer_name")) else None,
+                "check_number": str(row.get("check_number", "")),
+                "check_date": str(row.get("check_date", "")),
+                "bank_name": str(row.get("bank_name", "")),
+                "amount": float(row.get("amount", 0)),
+                "created_by": user_id,
+                "created_by_username": user["username"],
+                "payment_date": datetime.now(timezone.utc).isoformat(),
+                "created_at": datetime.now(timezone.utc).isoformat()
+            }
+            await db.payments.insert_one(payment_data)
+            imported_count += 1
+        
+        return {"message": f"{imported_count} ödeme başarıyla içe aktarıldı", "count": imported_count}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"İçe aktarma hatası: {str(e)}")
+
 app.include_router(api_router)
 
 app.add_middleware(
