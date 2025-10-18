@@ -160,9 +160,10 @@ class Payment(BaseModel):
     invoice_id: str
     invoice_number: Optional[str] = None
     customer_name: Optional[str] = None
-    check_number: str
-    check_date: str
-    bank_name: str
+    payment_method: str = "Çek"  # "Nakit", "Kredi Kartı", "Havale/EFT", "Çek"
+    check_number: Optional[str] = None
+    check_date: Optional[str] = None
+    bank_name: Optional[str] = None
     amount: float
     month: Optional[str] = None  # Auto-calculated: "Ocak 2025"
     quarter: Optional[str] = None  # Auto-calculated: "Q1 2025"
