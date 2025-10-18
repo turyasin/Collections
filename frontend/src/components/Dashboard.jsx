@@ -16,7 +16,7 @@ export default function Dashboard() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [calendarData, setCalendarData] = useState({ invoices: [], checks: [] });
+  const [calendarData, setCalendarData] = useState({ invoices: [], checks: [], payments: [] });
 
   useEffect(() => {
     fetchStats();
@@ -36,13 +36,15 @@ export default function Dashboard() {
 
   const fetchCalendarData = async () => {
     try {
-      const [invoicesRes, checksRes] = await Promise.all([
+      const [invoicesRes, checksRes, paymentsRes] = await Promise.all([
         axios.get(`${API}/invoices`, getAuthHeaders()),
-        axios.get(`${API}/checks`, getAuthHeaders())
+        axios.get(`${API}/checks`, getAuthHeaders()),
+        axios.get(`${API}/payments`, getAuthHeaders())
       ]);
       setCalendarData({
         invoices: invoicesRes.data || [],
-        checks: checksRes.data || []
+        checks: checksRes.data || [],
+        payments: paymentsRes.data || []
       });
     } catch (error) {
       console.error("Failed to fetch calendar data", error);
