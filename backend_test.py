@@ -957,7 +957,18 @@ class InvoiceTrackerAPITester:
 
     def test_logo_delete_admin(self):
         """Test logo deletion as admin user"""
+        if not hasattr(self, 'admin_token'):
+            self.log_test("Logo Delete (Admin)", False, "No admin token available")
+            return False
+            
+        # Temporarily switch to admin token
+        original_token = self.token
+        self.token = self.admin_token
+        
         success, response = self.make_request('DELETE', '/settings/logo', expected_status=200)
+        
+        # Restore original token
+        self.token = original_token
         
         if success:
             self.log_test("Logo Delete (Admin)", True, f"Logo deleted successfully: {response}")
