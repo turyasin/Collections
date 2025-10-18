@@ -360,7 +360,7 @@ export default function Payments() {
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <table className="custom-table">
           <thead>
-            <tr><th>Fatura #</th><th>Müşteri</th><th>Ödeme Yöntemi</th><th>Çek/Kart Detayı</th><th>Tutar</th><th>Ay</th><th>Çeyrek</th><th>Ödeme Tarihi</th><th>Ekleyen</th><th>İşlemler</th></tr>
+            <tr><th>Fatura #</th><th>Müşteri</th><th>Ödeme Yöntemi</th><th>Banka</th><th>Para Birimi</th><th>Çek/Kart Detayı</th><th>Tutar</th><th>Ay</th><th>Çeyrek</th><th>Ödeme Tarihi</th><th>Ekleyen</th><th>İşlemler</th></tr>
           </thead>
           <tbody>
             {filteredPayments.length > 0 ? (
@@ -369,6 +369,8 @@ export default function Payments() {
                   <td className="font-semibold text-slate-900">{payment.invoice_number || "N/A"}</td>
                   <td className="text-slate-600">{payment.customer_name || "N/A"}</td>
                   <td className="text-slate-900 font-semibold">{payment.payment_method || "Çek"}</td>
+                  <td className="text-slate-600">{payment.bank_account_name || "—"}</td>
+                  <td className="text-slate-600 font-semibold">{payment.currency || "TRY"}</td>
                   <td className="text-slate-600">
                     {payment.payment_method === "Çek" ? (
                       <div className="text-xs">
@@ -379,7 +381,7 @@ export default function Payments() {
                       "—"
                     )}
                   </td>
-                  <td className="text-green-600 font-bold">₺{payment.amount.toFixed(2)}</td>
+                  <td className="text-green-600 font-bold">{payment.amount.toFixed(2)}</td>
                   <td className="text-slate-600">{payment.month || "—"}</td>
                   <td className="text-slate-600">{payment.quarter || "—"}</td>
                   <td className="text-slate-600">{new Date(payment.payment_date).toLocaleDateString()}</td>
@@ -392,7 +394,7 @@ export default function Payments() {
                 </tr>
               ))
             ) : (
-              <tr><td colSpan="10" className="text-center py-8 text-slate-500">Ödeme bulunamadı</td></tr>
+              <tr><td colSpan="12" className="text-center py-8 text-slate-500">Ödeme bulunamadı</td></tr>
             )}
           </tbody>
         </table>
