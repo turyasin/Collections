@@ -461,7 +461,12 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "Invoice model period_type field"
+    - "Payment model period_type field"
+    - "Invoices page period_type field"
+    - "Payments page period_type field"
+    - "Dashboard period statistics"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
