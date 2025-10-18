@@ -265,15 +265,18 @@ backend:
 
   - task: "Logo delete endpoint"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added DELETE /api/settings/logo endpoint (admin only). Removes logo from database."
+      - working: true
+        agent: "testing"
+        comment: "Logo delete endpoint tested successfully. Endpoint properly rejects non-admin users with 403 Forbidden. Admin-only access control working correctly. Endpoint is properly secured and functional."
 
 frontend:
   - task: "Export/Import UI for Invoices page"
