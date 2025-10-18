@@ -309,7 +309,7 @@ export default function Payments() {
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <table className="custom-table">
           <thead>
-            <tr><th>Fatura #</th><th>Müşteri</th><th>Çek No</th><th>Çek Tarihi</th><th>Banka</th><th>Tutar</th><th>Periyot</th><th>Ödeme Tarihi</th><th>Ekleyen</th><th>İşlemler</th></tr>
+            <tr><th>Fatura #</th><th>Müşteri</th><th>Çek No</th><th>Çek Tarihi</th><th>Banka</th><th>Tutar</th><th>Ay</th><th>Çeyrek</th><th>Ödeme Tarihi</th><th>Ekleyen</th><th>İşlemler</th></tr>
           </thead>
           <tbody>
             {filteredPayments.length > 0 ? (
@@ -321,7 +321,8 @@ export default function Payments() {
                   <td className="text-slate-600">{new Date(payment.check_date).toLocaleDateString()}</td>
                   <td className="text-slate-600">{payment.bank_name}</td>
                   <td className="text-green-600 font-bold">₺{payment.amount.toFixed(2)}</td>
-                  <td className="text-slate-600">{payment.period_type || "Aylık"}</td>
+                  <td className="text-slate-600">{payment.month || "—"}</td>
+                  <td className="text-slate-600">{payment.quarter || "—"}</td>
                   <td className="text-slate-600">{new Date(payment.payment_date).toLocaleDateString()}</td>
                   <td className="text-slate-600 text-sm">{payment.created_by_username || "—"}</td>
                   <td>
@@ -332,7 +333,7 @@ export default function Payments() {
                 </tr>
               ))
             ) : (
-              <tr><td colSpan="10" className="text-center py-8 text-slate-500">Ödeme bulunamadı</td></tr>
+              <tr><td colSpan="11" className="text-center py-8 text-slate-500">Ödeme bulunamadı</td></tr>
             )}
           </tbody>
         </table>
