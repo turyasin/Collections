@@ -70,9 +70,22 @@ export default function Dashboard() {
     }
   };
 
-  const calculatePeriodStats = () => {
-    const filteredInvoices = periodFilter === "all" ? invoices : invoices.filter(inv => inv.period_type === periodFilter);
-    const filteredPayments = periodFilter === "all" ? payments : payments.filter(pay => pay.period_type === periodFilter);
+  // Get unique months and quarters
+  const uniqueMonths = [...new Set(invoices.map(inv => inv.month).filter(Boolean))].sort();
+  const uniqueQuarters = [...new Set(invoices.map(inv => inv.quarter).filter(Boolean))].sort();
+
+  const calculateStats = () => {
+    const filteredInvoices = invoices.filter(inv => {
+      const matchesMonth = monthFilter === "all" || inv.month === monthFilter;
+      const matchesQuarter = quarterFilter === "all" || inv.quarter === quarterFilter;
+      return matchesMonth && matchesQuarter;
+    });
+
+    const filteredPayments = payments.filter(pay => {
+      const matchesMonth = monthFilter === "all" || pay.month === monthFilter;
+      const matchesQuarter = quarterFilter === "all" || pay.quarter === quarterFilter;
+      return matchesMonth && matchesQuarter;
+    });
 
     const totalInvoiceAmount = filteredInvoices.reduce((sum, inv) => sum + inv.amount, 0);
     const totalPaidAmount = filteredPayments.reduce((sum, pay) => sum + pay.amount, 0);
