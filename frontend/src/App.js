@@ -70,7 +70,7 @@ function App() {
             path="/"
             element={
               isAuthenticated ? (
-                <Layout onLogout={handleLogout}>
+                <Layout onLogout={handleLogout} user={currentUser}>
                   <Dashboard />
                 </Layout>
               ) : (
@@ -82,7 +82,7 @@ function App() {
             path="/customers"
             element={
               isAuthenticated ? (
-                <Layout onLogout={handleLogout}>
+                <Layout onLogout={handleLogout} user={currentUser}>
                   <Customers />
                 </Layout>
               ) : (
@@ -94,7 +94,7 @@ function App() {
             path="/invoices"
             element={
               isAuthenticated ? (
-                <Layout onLogout={handleLogout}>
+                <Layout onLogout={handleLogout} user={currentUser}>
                   <Invoices />
                 </Layout>
               ) : (
@@ -106,7 +106,7 @@ function App() {
             path="/payments"
             element={
               isAuthenticated ? (
-                <Layout onLogout={handleLogout}>
+                <Layout onLogout={handleLogout} user={currentUser}>
                   <Payments />
                 </Layout>
               ) : (
@@ -118,7 +118,7 @@ function App() {
             path="/checks"
             element={
               isAuthenticated ? (
-                <Layout onLogout={handleLogout}>
+                <Layout onLogout={handleLogout} user={currentUser}>
                   <Checks />
                 </Layout>
               ) : (
@@ -130,7 +130,7 @@ function App() {
             path="/weekly-schedule"
             element={
               isAuthenticated ? (
-                <Layout onLogout={handleLogout}>
+                <Layout onLogout={handleLogout} user={currentUser}>
                   <WeeklySchedule />
                 </Layout>
               ) : (
@@ -142,7 +142,7 @@ function App() {
             path="/users"
             element={
               isAuthenticated ? (
-                <Layout onLogout={handleLogout}>
+                <Layout onLogout={handleLogout} user={currentUser}>
                   <Users />
                 </Layout>
               ) : (
@@ -154,7 +154,7 @@ function App() {
             path="/import-export"
             element={
               isAuthenticated ? (
-                <Layout onLogout={handleLogout}>
+                <Layout onLogout={handleLogout} user={currentUser}>
                   <ImportExport />
                 </Layout>
               ) : (
@@ -166,7 +166,7 @@ function App() {
             path="/company-info"
             element={
               isAuthenticated ? (
-                <Layout onLogout={handleLogout}>
+                <Layout onLogout={handleLogout} user={currentUser}>
                   <CompanyInfo />
                 </Layout>
               ) : (
@@ -178,7 +178,7 @@ function App() {
             path="/archive"
             element={
               isAuthenticated ? (
-                <Layout onLogout={handleLogout}>
+                <Layout onLogout={handleLogout} user={currentUser}>
                   <Archive />
                 </Layout>
               ) : (
