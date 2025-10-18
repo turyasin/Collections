@@ -269,16 +269,9 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "Export Invoices endpoint (xlsx, docx, pdf)"
-    - "Export Checks endpoint (xlsx, docx, pdf)"
-    - "Export Payments endpoint (xlsx, docx, pdf)"
-    - "Export Weekly Schedule endpoint (xlsx, docx, pdf)"
-    - "Import Invoices endpoint (xlsx)"
-    - "Import Checks endpoint (xlsx)"
-    - "Import Payments endpoint (xlsx)"
+  current_focus: []
   stuck_tasks: []
-  test_all: true
+  test_all: false
   test_priority: "high_first"
 
 agent_communication:
