@@ -468,8 +468,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Invoice model period_type field"
-    - "Payment model period_type field"
     - "Invoices page period_type field"
     - "Payments page period_type field"
     - "Dashboard period statistics"
