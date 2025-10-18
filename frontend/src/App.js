@@ -89,6 +89,30 @@ function App() {
               )
             }
           />
+          <Route
+            path="/checks"
+            element={
+              isAuthenticated ? (
+                <Layout onLogout={handleLogout}>
+                  <Checks />
+                </Layout>
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route
+            path="/weekly-schedule"
+            element={
+              isAuthenticated ? (
+                <Layout onLogout={handleLogout}>
+                  <WeeklySchedule />
+                </Layout>
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
         </Routes>
       </BrowserRouter>
     </div>
