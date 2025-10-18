@@ -1086,7 +1086,7 @@ async def export_payments_xlsx(payments):
     ws = wb.active
     ws.title = "Ödemeler"
     
-    headers = ["ID", "Fatura ID", "Fatura No", "Müşteri", "Çek No", "Çek Tarihi", "Banka", "Tutar (₺)", "Oluşturan", "Ödeme Tarihi"]
+    headers = ["ID", "Fatura ID", "Fatura No", "Müşteri", "Çek No", "Çek Tarihi", "Banka", "Tutar (₺)", "Periyot", "Oluşturan", "Ödeme Tarihi"]
     ws.append(headers)
     
     for cell in ws[1]:
