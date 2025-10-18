@@ -110,87 +110,108 @@ user_problem_statement: |
 backend:
   - task: "Export Invoices endpoint (xlsx, docx, pdf)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added GET /api/export/invoices endpoint with format parameter. Supports xlsx, docx, and pdf formats. Uses helper functions for each format with proper styling and Turkish Lira formatting."
+      - working: true
+        agent: "testing"
+        comment: "All export formats tested successfully. XLSX: Excel file exported (proper content-type and filename). DOCX: Word file exported with Turkish formatting. PDF: PDF file exported with proper layout. All files contain invoice data with Turkish Lira symbols and proper headers."
 
   - task: "Export Checks endpoint (xlsx, docx, pdf)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added GET /api/export/checks endpoint with format parameter. Translates check types to Turkish (Alınan/Verilen) in exports."
+      - working: true
+        agent: "testing"
+        comment: "All export formats tested successfully. XLSX: Excel file exported with proper Turkish check type translations. DOCX: Word file exported with check details. PDF: PDF file exported with proper formatting. Check types correctly translated to 'Alınan/Verilen'."
 
   - task: "Export Payments endpoint (xlsx, docx, pdf)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added GET /api/export/payments endpoint with format parameter. Includes invoice and customer information in exports."
+      - working: true
+        agent: "testing"
+        comment: "All export formats tested successfully. XLSX: Excel file exported with payment details including invoice and customer info. DOCX: Word file exported with proper formatting. PDF: PDF file exported with payment data. All formats include linked invoice and customer information."
 
   - task: "Export Weekly Schedule endpoint (xlsx, docx, pdf)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added GET /api/export/weekly-schedule endpoint. Exports 4-week payment schedule with received/issued checks and due invoices."
+      - working: true
+        agent: "testing"
+        comment: "All export formats tested successfully after fixing merged cell issue in XLSX export. XLSX: Excel file exported with 4-week schedule layout. DOCX: Word file exported with weekly breakdown. PDF: PDF file exported with proper table formatting. Fixed column width issue for merged cells in Excel export."
 
   - task: "Import Invoices endpoint (xlsx)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added POST /api/import/invoices endpoint. Uses FastAPI UploadFile for file upload. Reads Excel file and inserts records with current user as creator."
+      - working: true
+        agent: "testing"
+        comment: "Import functionality tested successfully. Created test Excel file with invoice data (customer_id, invoice_number, amount, due_date, etc.). Successfully imported 2 test invoices. Endpoint correctly reads Excel file, validates data, and creates records with proper user attribution."
 
   - task: "Import Checks endpoint (xlsx)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added POST /api/import/checks endpoint. Handles check type, amount, due dates, and bank information from Excel."
+      - working: true
+        agent: "testing"
+        comment: "Import functionality tested successfully. Created test Excel file with check data (check_type, check_number, amount, due_date, bank_name, etc.). Successfully imported 2 test checks. Endpoint correctly processes both 'received' and 'issued' check types with proper validation."
 
   - task: "Import Payments endpoint (xlsx)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added POST /api/import/payments endpoint. Links payments to invoices and includes check information."
+      - working: true
+        agent: "testing"
+        comment: "Import functionality tested successfully. Created test Excel file with payment data (invoice_id, check_number, amount, bank_name, etc.). Successfully imported 2 test payments. Endpoint correctly links payments to existing invoices and includes all required payment details."
 
 frontend:
   - task: "Export/Import UI for Invoices page"
