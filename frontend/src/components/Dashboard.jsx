@@ -20,8 +20,10 @@ export default function Dashboard() {
   const [calendarData, setCalendarData] = useState({ invoices: [], checks: [], payments: [] });
   const [monthFilter, setMonthFilter] = useState("all");
   const [quarterFilter, setQuarterFilter] = useState("all");
+  const [bankFilter, setBankFilter] = useState("all");
   const [invoices, setInvoices] = useState([]);
   const [payments, setPayments] = useState([]);
+  const [bankAccounts, setBankAccounts] = useState([]);
 
   useEffect(() => {
     fetchStats();
