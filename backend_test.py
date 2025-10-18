@@ -931,11 +931,22 @@ class InvoiceTrackerAPITester:
 
     def test_logo_upload_non_png(self):
         """Test logo upload with non-PNG file (should fail)"""
+        if not hasattr(self, 'admin_token'):
+            self.log_test("Logo Upload Non-PNG", False, "No admin token available")
+            return False
+            
+        # Temporarily switch to admin token
+        original_token = self.token
+        self.token = self.admin_token
+        
         # Create a fake text file
         text_file = io.BytesIO(b"This is not a PNG file")
         files = {'file': ('test.txt', text_file, 'text/plain')}
         
         success, response = self.make_request('POST', '/settings/logo', files=files, expected_status=400)
+        
+        # Restore original token
+        self.token = original_token
         
         if success:
             self.log_test("Logo Upload Non-PNG", True, "Correctly rejected non-PNG file")
