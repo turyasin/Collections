@@ -1422,7 +1422,7 @@ async def export_weekly_schedule(format: str = "xlsx", user_id: str = Depends(ge
         raise HTTPException(status_code=400, detail="Desteklenmeyen format")
 
 @api_router.post("/import/invoices")
-async def import_invoices(file: bytes = None, user_id: str = Depends(get_current_user)):
+async def import_invoices(file: UploadFile = File(...), user_id: str = Depends(get_current_user)):
     """Import invoices from xlsx file"""
     try:
         # Get user info for created_by
@@ -1431,7 +1431,8 @@ async def import_invoices(file: bytes = None, user_id: str = Depends(get_current
             raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı")
         
         # Read the Excel file
-        df = pd.read_excel(BytesIO(file))
+        contents = await file.read()
+        df = pd.read_excel(BytesIO(contents))
         
         imported_count = 0
         for _, row in df.iterrows():
@@ -1457,7 +1458,7 @@ async def import_invoices(file: bytes = None, user_id: str = Depends(get_current
         raise HTTPException(status_code=400, detail=f"İçe aktarma hatası: {str(e)}")
 
 @api_router.post("/import/checks")
-async def import_checks(file: bytes = None, user_id: str = Depends(get_current_user)):
+async def import_checks(file: UploadFile = File(...), user_id: str = Depends(get_current_user)):
     """Import checks from xlsx file"""
     try:
         # Get user info for created_by
@@ -1466,7 +1467,8 @@ async def import_checks(file: bytes = None, user_id: str = Depends(get_current_u
             raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı")
         
         # Read the Excel file
-        df = pd.read_excel(BytesIO(file))
+        contents = await file.read()
+        df = pd.read_excel(BytesIO(contents))
         
         imported_count = 0
         for _, row in df.iterrows():
@@ -1492,7 +1494,7 @@ async def import_checks(file: bytes = None, user_id: str = Depends(get_current_u
         raise HTTPException(status_code=400, detail=f"İçe aktarma hatası: {str(e)}")
 
 @api_router.post("/import/payments")
-async def import_payments(file: bytes = None, user_id: str = Depends(get_current_user)):
+async def import_payments(file: UploadFile = File(...), user_id: str = Depends(get_current_user)):
     """Import payments from xlsx file"""
     try:
         # Get user info for created_by
@@ -1501,7 +1503,8 @@ async def import_payments(file: bytes = None, user_id: str = Depends(get_current
             raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı")
         
         # Read the Excel file
-        df = pd.read_excel(BytesIO(file))
+        contents = await file.read()
+        df = pd.read_excel(BytesIO(contents))
         
         imported_count = 0
         for _, row in df.iterrows():
