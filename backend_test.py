@@ -44,19 +44,26 @@ class InvoiceTrackerAPITester:
             "response_data": response_data
         })
 
-    def make_request(self, method: str, endpoint: str, data: Dict = None, expected_status: int = 200) -> tuple[bool, Dict]:
+    def make_request(self, method: str, endpoint: str, data: Dict = None, expected_status: int = 200, files: Dict = None) -> tuple[bool, Dict]:
         """Make API request with error handling"""
         url = f"{self.api_url}/{endpoint.lstrip('/')}"
-        headers = {'Content-Type': 'application/json'}
+        headers = {}
         
         if self.token:
             headers['Authorization'] = f'Bearer {self.token}'
+        
+        # Only set Content-Type for JSON requests (not for file uploads)
+        if not files:
+            headers['Content-Type'] = 'application/json'
 
         try:
             if method == 'GET':
                 response = requests.get(url, headers=headers)
             elif method == 'POST':
-                response = requests.post(url, json=data, headers=headers)
+                if files:
+                    response = requests.post(url, files=files, headers=headers)
+                else:
+                    response = requests.post(url, json=data, headers=headers)
             elif method == 'PUT':
                 response = requests.put(url, json=data, headers=headers)
             elif method == 'DELETE':
@@ -65,10 +72,22 @@ class InvoiceTrackerAPITester:
                 return False, {"error": f"Unsupported method: {method}"}
 
             success = response.status_code == expected_status
-            try:
-                response_data = response.json()
-            except:
-                response_data = {"status_code": response.status_code, "text": response.text}
+            
+            # For file downloads, return response object info
+            if 'application/vnd.openxmlformats' in response.headers.get('content-type', '') or \
+               'application/pdf' in response.headers.get('content-type', '') or \
+               'application/vnd.openxmlformats-officedocument.wordprocessingml.document' in response.headers.get('content-type', ''):
+                response_data = {
+                    "content_type": response.headers.get('content-type'),
+                    "content_disposition": response.headers.get('content-disposition'),
+                    "content_length": len(response.content),
+                    "status_code": response.status_code
+                }
+            else:
+                try:
+                    response_data = response.json()
+                except:
+                    response_data = {"status_code": response.status_code, "text": response.text}
 
             return success, response_data
 
