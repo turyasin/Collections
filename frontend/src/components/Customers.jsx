@@ -183,7 +183,7 @@ export default function Customers() {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="text-center py-8 text-slate-500">Müşteri bulunamadı</td>
+                <td colSpan="6" className="text-center py-8 text-slate-500">Müşteri bulunamadı</td>
               </tr>
             )}
           </tbody>
