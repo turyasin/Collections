@@ -32,7 +32,7 @@ export default function Invoices() {
       const response = await axios.get(`${API}/invoices`, getAuthHeaders());
       setInvoices(response.data);
     } catch (error) {
-      toast.error("Failed to load invoices");
+      toast.error("Faturalar yüklenemedi");
     } finally {
       setLoading(false);
     }
@@ -43,7 +43,7 @@ export default function Invoices() {
       const response = await axios.get(`${API}/customers`, getAuthHeaders());
       setCustomers(response.data);
     } catch (error) {
-      toast.error("Failed to load customers");
+      toast.error("Müşteriler yüklenemedi");
     }
   };
 
@@ -53,16 +53,16 @@ export default function Invoices() {
       const payload = { ...formData, amount: parseFloat(formData.amount) };
       if (editingInvoice) {
         await axios.put(`${API}/invoices/${editingInvoice.id}`, payload, getAuthHeaders());
-        toast.success("Invoice updated successfully");
+        toast.success("Fatura güncellendi");
       } else {
         await axios.post(`${API}/invoices`, payload, getAuthHeaders());
-        toast.success("Invoice created successfully");
+        toast.success("Fatura oluşturuldu");
       }
       setDialogOpen(false);
       resetForm();
       fetchInvoices();
     } catch (error) {
-      toast.error(error.response?.data?.detail || "Failed to save invoice");
+      toast.error(error.response?.data?.detail || "Fatura kaydedilemedi");
     }
   };
 
@@ -73,13 +73,13 @@ export default function Invoices() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this invoice?")) return;
+    if (!window.confirm("Bu faturayı silmek istediğinizden emin misiniz?")) return;
     try {
       await axios.delete(`${API}/invoices/${id}`, getAuthHeaders());
-      toast.success("Invoice deleted successfully");
+      toast.success("Fatura silindi");
       fetchInvoices();
     } catch (error) {
-      toast.error("Failed to delete invoice");
+      toast.error("Fatura silinemedi");
     }
   };
 
@@ -100,39 +100,39 @@ export default function Invoices() {
     <div className="space-y-6 animate-fade-in" data-testid="invoices-page">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">Invoices</h1>
-          <p className="text-slate-600">Track and manage all invoices</p>
+          <h1 className="text-4xl font-bold text-slate-900 mb-2">Faturalar</h1>
+          <p className="text-slate-600">Tüm faturaları takip edin ve yönetin</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
           <DialogTrigger asChild>
-            <Button data-testid="add-invoice-button" className="bg-blue-600 hover:bg-blue-700"><Plus className="w-4 h-4 mr-2" />Add Invoice</Button>
+            <Button data-testid="add-invoice-button" className="bg-blue-600 hover:bg-blue-700"><Plus className="w-4 h-4 mr-2" />Fatura Ekle</Button>
           </DialogTrigger>
           <DialogContent data-testid="invoice-dialog" aria-describedby="invoice-dialog-description">
-            <DialogHeader><DialogTitle>{editingInvoice ? "Edit Invoice" : "Create New Invoice"}</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle>{editingInvoice ? "Fatura Düzenle" : "Yeni Fatura"}</DialogTitle></DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="customer">Customer *</Label>
+                <Label htmlFor="customer">Müşteri *</Label>
                 <Select value={formData.customer_id} onValueChange={(value) => setFormData({ ...formData, customer_id: value })} required>
-                  <SelectTrigger data-testid="customer-select"><SelectValue placeholder="Select customer" /></SelectTrigger>
+                  <SelectTrigger data-testid="customer-select"><SelectValue placeholder="Müşteri seçin" /></SelectTrigger>
                   <SelectContent>
                     {customers.map((customer) => <SelectItem key={customer.id} value={customer.id}>{customer.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="invoice_number">Invoice Number *</Label>
+                <Label htmlFor="invoice_number">Fatura No *</Label>
                 <Input id="invoice_number" data-testid="invoice-number-input" value={formData.invoice_number} onChange={(e) => setFormData({ ...formData, invoice_number: e.target.value })} required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="amount">Amount *</Label>
+                <Label htmlFor="amount">Tutar *</Label>
                 <Input id="amount" data-testid="invoice-amount-input" type="number" step="0.01" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="due_date">Due Date *</Label>
+                <Label htmlFor="due_date">Vade Tarihi *</Label>
                 <Input id="due_date" data-testid="invoice-due-date-input" type="date" value={formData.due_date} onChange={(e) => setFormData({ ...formData, due_date: e.target.value })} required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="notes">Notes</Label>
+                <Label htmlFor="notes">Notlar</Label>
                 <Input id="notes" data-testid="invoice-notes-input" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} />
               </div>
               <div className="flex justify-end gap-2">
@@ -147,15 +147,15 @@ export default function Invoices() {
       <div className="flex gap-4">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-          <Input data-testid="search-invoices-input" placeholder="Search invoices..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10" />
+          <Input data-testid="search-invoices-input" placeholder="Fatura ara..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10" />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-40" data-testid="status-filter"><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="paid">Paid</SelectItem>
-            <SelectItem value="partial">Partial</SelectItem>
-            <SelectItem value="unpaid">Unpaid</SelectItem>
+            <SelectItem value="all">Tüm Durumlar</SelectItem>
+            <SelectItem value="paid">Ödendi</SelectItem>
+            <SelectItem value="partial">Kısmi</SelectItem>
+            <SelectItem value="unpaid">Ödenmedi</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -163,7 +163,7 @@ export default function Invoices() {
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <table className="custom-table">
           <thead>
-            <tr><th>Invoice #</th><th>Customer</th><th>Amount</th><th>Paid</th><th>Due Date</th><th>Status</th><th>Actions</th></tr>
+            <tr><th>Fatura #</th><th>Müşteri</th><th>Tutar</th><th>Ödendi</th><th>Vade</th><th>Durum</th><th>Actions</th></tr>
           </thead>
           <tbody>
             {filteredInvoices.length > 0 ? (
@@ -184,7 +184,7 @@ export default function Invoices() {
                 </tr>
               ))
             ) : (
-              <tr><td colSpan="7" className="text-center py-8 text-slate-500">No invoices found</td></tr>
+              <tr><td colSpan="7" className="text-center py-8 text-slate-500">Fatura bulunamadı</td></tr>
             )}
           </tbody>
         </table>
