@@ -1378,6 +1378,383 @@ class InvoiceTrackerAPITester:
             self.log_test("Restore Original Token", False, "No original token to restore")
             return False
 
+    # Phase 4 Tests - Month and Quarter Auto-Calculation System
+    def test_admin_login_for_month_quarter_tests(self):
+        """Login as admin user for month/quarter testing"""
+        admin_credentials = {
+            "email": "turyasin@gmail.com", 
+            "password": "adminpassword"
+        }
+        
+        success, response = self.make_request('POST', '/auth/login', admin_credentials)
+        
+        if success and 'token' in response:
+            # Store current token and switch to admin
+            self.original_token = self.token
+            self.token = response['token']
+            self.admin_user_id = response.get('user', {}).get('id')
+            self.log_test("Admin Login for Month/Quarter Tests", True, "Successfully logged in as admin user")
+            return True
+        else:
+            self.log_test("Admin Login for Month/Quarter Tests", False, f"Admin login failed: {response}", response)
+            return False
+
+    def test_invoice_month_quarter_calculation_march(self):
+        """Test invoice month/quarter calculation for March 2025 (Q1)"""
+        if not self.test_customer_id:
+            self.log_test("Invoice Month/Quarter March", False, "No customer ID available")
+            return False
+            
+        invoice_data = {
+            "customer_id": self.test_customer_id,
+            "invoice_number": f"INV-MARCH-{datetime.now().strftime('%Y%m%d%H%M%S')}",
+            "amount": 1500.00,
+            "due_date": "2025-03-15",
+            "notes": "Test March month/quarter calculation"
+        }
+        
+        success, response = self.make_request('POST', '/invoices', invoice_data, 200)
+        
+        if success and 'id' in response:
+            month = response.get('month')
+            quarter = response.get('quarter')
+            
+            if month == "Mart 2025" and quarter == "Q1 2025":
+                self.test_march_invoice_id = response['id']
+                self.log_test("Invoice Month/Quarter March", True, f"Correct calculation: month='{month}', quarter='{quarter}'")
+                return True
+            else:
+                self.log_test("Invoice Month/Quarter March", False, f"Incorrect calculation: month='{month}', quarter='{quarter}' (expected 'Mart 2025', 'Q1 2025')")
+                return False
+        else:
+            self.log_test("Invoice Month/Quarter March", False, f"Invoice creation failed: {response}", response)
+            return False
+
+    def test_invoice_month_quarter_calculation_july(self):
+        """Test invoice month/quarter calculation for July 2025 (Q3)"""
+        if not self.test_customer_id:
+            self.log_test("Invoice Month/Quarter July", False, "No customer ID available")
+            return False
+            
+        invoice_data = {
+            "customer_id": self.test_customer_id,
+            "invoice_number": f"INV-JULY-{datetime.now().strftime('%Y%m%d%H%M%S')}",
+            "amount": 2500.00,
+            "due_date": "2025-07-20",
+            "notes": "Test July month/quarter calculation"
+        }
+        
+        success, response = self.make_request('POST', '/invoices', invoice_data, 200)
+        
+        if success and 'id' in response:
+            month = response.get('month')
+            quarter = response.get('quarter')
+            
+            if month == "Temmuz 2025" and quarter == "Q3 2025":
+                self.test_july_invoice_id = response['id']
+                self.log_test("Invoice Month/Quarter July", True, f"Correct calculation: month='{month}', quarter='{quarter}'")
+                return True
+            else:
+                self.log_test("Invoice Month/Quarter July", False, f"Incorrect calculation: month='{month}', quarter='{quarter}' (expected 'Temmuz 2025', 'Q3 2025')")
+                return False
+        else:
+            self.log_test("Invoice Month/Quarter July", False, f"Invoice creation failed: {response}", response)
+            return False
+
+    def test_invoice_update_recalculates_month_quarter(self):
+        """Test that updating invoice due_date recalculates month and quarter"""
+        if not hasattr(self, 'test_march_invoice_id'):
+            self.log_test("Invoice Update Recalculation", False, "No March invoice ID available")
+            return False
+            
+        update_data = {
+            "due_date": "2025-12-01"
+        }
+        
+        success, response = self.make_request('PUT', f'/invoices/{self.test_march_invoice_id}', update_data, 200)
+        
+        if success:
+            month = response.get('month')
+            quarter = response.get('quarter')
+            
+            if month == "Aralık 2025" and quarter == "Q4 2025":
+                self.log_test("Invoice Update Recalculation", True, f"Correct recalculation: month='{month}', quarter='{quarter}'")
+                return True
+            else:
+                self.log_test("Invoice Update Recalculation", False, f"Incorrect recalculation: month='{month}', quarter='{quarter}' (expected 'Aralık 2025', 'Q4 2025')")
+                return False
+        else:
+            self.log_test("Invoice Update Recalculation", False, f"Invoice update failed: {response}", response)
+            return False
+
+    def test_payment_month_quarter_calculation(self):
+        """Test payment month/quarter calculation from payment_date (current date)"""
+        if not self.test_invoice_id:
+            self.log_test("Payment Month/Quarter Calculation", False, "No invoice ID available")
+            return False
+            
+        payment_data = {
+            "invoice_id": self.test_invoice_id,
+            "check_number": f"CHK-MONTHTEST-{datetime.now().strftime('%H%M%S')}",
+            "check_date": datetime.now().strftime('%Y-%m-%d'),
+            "bank_name": "Month Test Bank",
+            "amount": 500.00
+        }
+        
+        success, response = self.make_request('POST', '/payments', payment_data, 200)
+        
+        if success and 'id' in response:
+            month = response.get('month')
+            quarter = response.get('quarter')
+            
+            # Calculate expected month and quarter for current date
+            current_date = datetime.now()
+            month_names = {
+                1: "Ocak", 2: "Şubat", 3: "Mart", 4: "Nisan", 5: "Mayıs", 6: "Haziran",
+                7: "Temmuz", 8: "Ağustos", 9: "Eylül", 10: "Ekim", 11: "Kasım", 12: "Aralık"
+            }
+            expected_month = f"{month_names[current_date.month]} {current_date.year}"
+            expected_quarter = f"Q{(current_date.month - 1) // 3 + 1} {current_date.year}"
+            
+            if month == expected_month and quarter == expected_quarter:
+                self.test_payment_month_id = response['id']
+                self.log_test("Payment Month/Quarter Calculation", True, f"Correct calculation: month='{month}', quarter='{quarter}'")
+                return True
+            else:
+                self.log_test("Payment Month/Quarter Calculation", False, f"Incorrect calculation: month='{month}', quarter='{quarter}' (expected '{expected_month}', '{expected_quarter}')")
+                return False
+        else:
+            self.log_test("Payment Month/Quarter Calculation", False, f"Payment creation failed: {response}", response)
+            return False
+
+    def test_all_invoices_have_month_quarter(self):
+        """Test that all invoices return month and quarter fields"""
+        success, response = self.make_request('GET', '/invoices', expected_status=200)
+        
+        if success and isinstance(response, list):
+            if len(response) == 0:
+                self.log_test("All Invoices Have Month/Quarter", True, "No invoices to check")
+                return True
+                
+            invoices_with_month = [inv for inv in response if 'month' in inv and inv['month'] is not None]
+            invoices_with_quarter = [inv for inv in response if 'quarter' in inv and inv['quarter'] is not None]
+            
+            if len(invoices_with_month) == len(response) and len(invoices_with_quarter) == len(response):
+                self.log_test("All Invoices Have Month/Quarter", True, f"All {len(response)} invoices have month and quarter fields")
+                return True
+            else:
+                missing_month = len(response) - len(invoices_with_month)
+                missing_quarter = len(response) - len(invoices_with_quarter)
+                self.log_test("All Invoices Have Month/Quarter", False, f"Missing fields: {missing_month} without month, {missing_quarter} without quarter")
+                return False
+        else:
+            self.log_test("All Invoices Have Month/Quarter", False, f"Failed to get invoices: {response}", response)
+            return False
+
+    def test_all_payments_have_month_quarter(self):
+        """Test that all payments return month and quarter fields"""
+        success, response = self.make_request('GET', '/payments', expected_status=200)
+        
+        if success and isinstance(response, list):
+            if len(response) == 0:
+                self.log_test("All Payments Have Month/Quarter", True, "No payments to check")
+                return True
+                
+            payments_with_month = [pay for pay in response if 'month' in pay and pay['month'] is not None]
+            payments_with_quarter = [pay for pay in response if 'quarter' in pay and pay['quarter'] is not None]
+            
+            if len(payments_with_month) == len(response) and len(payments_with_quarter) == len(response):
+                self.log_test("All Payments Have Month/Quarter", True, f"All {len(response)} payments have month and quarter fields")
+                return True
+            else:
+                missing_month = len(response) - len(payments_with_month)
+                missing_quarter = len(response) - len(payments_with_quarter)
+                self.log_test("All Payments Have Month/Quarter", False, f"Missing fields: {missing_month} without month, {missing_quarter} without quarter")
+                return False
+        else:
+            self.log_test("All Payments Have Month/Quarter", False, f"Failed to get payments: {response}", response)
+            return False
+
+    def test_quarter_calculation_validation(self):
+        """Test quarter calculations for all quarters"""
+        if not self.test_customer_id:
+            self.log_test("Quarter Calculation Validation", False, "No customer ID available")
+            return False
+            
+        # Test dates for each quarter
+        test_cases = [
+            ("2025-01-15", "Q1 2025", "Ocak 2025"),  # Q1: Jan-Mar
+            ("2025-04-15", "Q2 2025", "Nisan 2025"), # Q2: Apr-Jun
+            ("2025-07-15", "Q3 2025", "Temmuz 2025"), # Q3: Jul-Sep
+            ("2025-10-15", "Q4 2025", "Ekim 2025")   # Q4: Oct-Dec
+        ]
+        
+        results = []
+        for i, (due_date, expected_quarter, expected_month) in enumerate(test_cases):
+            invoice_data = {
+                "customer_id": self.test_customer_id,
+                "invoice_number": f"INV-Q{i+1}-{datetime.now().strftime('%H%M%S')}",
+                "amount": 1000.00,
+                "due_date": due_date,
+                "notes": f"Test Q{i+1} calculation"
+            }
+            
+            success, response = self.make_request('POST', '/invoices', invoice_data, 200)
+            
+            if success and 'id' in response:
+                month = response.get('month')
+                quarter = response.get('quarter')
+                
+                if month == expected_month and quarter == expected_quarter:
+                    results.append(True)
+                else:
+                    results.append(False)
+                    self.log_test(f"Quarter {i+1} Calculation", False, f"Expected {expected_month}/{expected_quarter}, got {month}/{quarter}")
+            else:
+                results.append(False)
+                
+        if all(results):
+            self.log_test("Quarter Calculation Validation", True, "All quarter calculations correct (Q1-Q4)")
+            return True
+        else:
+            failed_quarters = [f"Q{i+1}" for i, result in enumerate(results) if not result]
+            self.log_test("Quarter Calculation Validation", False, f"Failed quarters: {failed_quarters}")
+            return False
+
+    def test_turkish_month_names_validation(self):
+        """Test that all Turkish month names are correct"""
+        if not self.test_customer_id:
+            self.log_test("Turkish Month Names Validation", False, "No customer ID available")
+            return False
+            
+        # Test all 12 months
+        month_tests = [
+            ("2025-01-01", "Ocak 2025"),
+            ("2025-02-01", "Şubat 2025"),
+            ("2025-03-01", "Mart 2025"),
+            ("2025-04-01", "Nisan 2025"),
+            ("2025-05-01", "Mayıs 2025"),
+            ("2025-06-01", "Haziran 2025"),
+            ("2025-07-01", "Temmuz 2025"),
+            ("2025-08-01", "Ağustos 2025"),
+            ("2025-09-01", "Eylül 2025"),
+            ("2025-10-01", "Ekim 2025"),
+            ("2025-11-01", "Kasım 2025"),
+            ("2025-12-01", "Aralık 2025")
+        ]
+        
+        results = []
+        for i, (due_date, expected_month) in enumerate(month_tests):
+            invoice_data = {
+                "customer_id": self.test_customer_id,
+                "invoice_number": f"INV-MONTH{i+1}-{datetime.now().strftime('%H%M%S')}",
+                "amount": 1000.00,
+                "due_date": due_date,
+                "notes": f"Test month {i+1} name"
+            }
+            
+            success, response = self.make_request('POST', '/invoices', invoice_data, 200)
+            
+            if success and 'id' in response:
+                month = response.get('month')
+                if month == expected_month:
+                    results.append(True)
+                else:
+                    results.append(False)
+                    self.log_test(f"Month {i+1} Name", False, f"Expected '{expected_month}', got '{month}'")
+            else:
+                results.append(False)
+                
+        if all(results):
+            self.log_test("Turkish Month Names Validation", True, "All 12 Turkish month names correct")
+            return True
+        else:
+            failed_months = [f"Month {i+1}" for i, result in enumerate(results) if not result]
+            self.log_test("Turkish Month Names Validation", False, f"Failed months: {failed_months}")
+            return False
+
+    def test_no_period_type_field_in_responses(self):
+        """Test that period_type field is no longer in invoice/payment responses"""
+        # Check invoices
+        success, invoices = self.make_request('GET', '/invoices', expected_status=200)
+        
+        if success and isinstance(invoices, list) and len(invoices) > 0:
+            invoices_with_period_type = [inv for inv in invoices if 'period_type' in inv]
+            
+            if len(invoices_with_period_type) > 0:
+                self.log_test("No Period Type in Invoices", False, f"{len(invoices_with_period_type)} invoices still have period_type field")
+                return False
+        
+        # Check payments
+        success, payments = self.make_request('GET', '/payments', expected_status=200)
+        
+        if success and isinstance(payments, list) and len(payments) > 0:
+            payments_with_period_type = [pay for pay in payments if 'period_type' in pay]
+            
+            if len(payments_with_period_type) > 0:
+                self.log_test("No Period Type in Responses", False, f"{len(payments_with_period_type)} payments still have period_type field")
+                return False
+        
+        self.log_test("No Period Type in Responses", True, "period_type field successfully removed from all responses")
+        return True
+
+    def test_data_migration_verification(self):
+        """Test that migrated data has correct month/quarter calculations"""
+        # Get all invoices and check if they have proper month/quarter
+        success, invoices = self.make_request('GET', '/invoices', expected_status=200)
+        
+        if success and isinstance(invoices, list):
+            migrated_invoices = 0
+            correct_calculations = 0
+            
+            for invoice in invoices:
+                if 'due_date' in invoice and 'month' in invoice and 'quarter' in invoice:
+                    migrated_invoices += 1
+                    
+                    # Verify calculation is correct
+                    due_date = invoice['due_date']
+                    expected_month = self.calculate_expected_month(due_date)
+                    expected_quarter = self.calculate_expected_quarter(due_date)
+                    
+                    if invoice['month'] == expected_month and invoice['quarter'] == expected_quarter:
+                        correct_calculations += 1
+            
+            if migrated_invoices > 0:
+                success_rate = (correct_calculations / migrated_invoices) * 100
+                if success_rate == 100:
+                    self.log_test("Data Migration Verification", True, f"All {migrated_invoices} migrated invoices have correct month/quarter calculations")
+                    return True
+                else:
+                    self.log_test("Data Migration Verification", False, f"Only {correct_calculations}/{migrated_invoices} invoices have correct calculations ({success_rate:.1f}%)")
+                    return False
+            else:
+                self.log_test("Data Migration Verification", True, "No existing invoices to verify migration")
+                return True
+        else:
+            self.log_test("Data Migration Verification", False, f"Failed to get invoices: {invoices}")
+            return False
+
+    def calculate_expected_month(self, date_str: str) -> str:
+        """Helper method to calculate expected month"""
+        try:
+            date_obj = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+            month_names = {
+                1: "Ocak", 2: "Şubat", 3: "Mart", 4: "Nisan", 5: "Mayıs", 6: "Haziran",
+                7: "Temmuz", 8: "Ağustos", 9: "Eylül", 10: "Ekim", 11: "Kasım", 12: "Aralık"
+            }
+            return f"{month_names[date_obj.month]} {date_obj.year}"
+        except:
+            return "N/A"
+
+    def calculate_expected_quarter(self, date_str: str) -> str:
+        """Helper method to calculate expected quarter"""
+        try:
+            date_obj = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+            quarter = (date_obj.month - 1) // 3 + 1
+            return f"Q{quarter} {date_obj.year}"
+        except:
+            return "N/A"
+
     def run_all_tests(self):
         """Run all API tests in sequence"""
         print("🚀 Starting Invoice Tracker API Tests...")
