@@ -28,16 +28,23 @@ export default function CompanyInfo() {
   });
 
   useEffect(() => {
-    checkAdminStatus();
-    fetchCompanyInfo();
+    const initializePage = async () => {
+      await checkAdminStatus();
+      await fetchCompanyInfo();
+    };
+    initializePage();
   }, []);
 
   const checkAdminStatus = async () => {
     try {
       const res = await axios.get(`${API}/users/me`, getAuthHeaders());
-      setIsAdmin(res.data.is_admin || false);
+      const isAdminUser = res.data.is_admin || false;
+      setIsAdmin(isAdminUser);
+      console.log("Admin status:", isAdminUser); // Debug log
+      return isAdminUser;
     } catch (error) {
       console.error("Failed to check admin status", error);
+      return false;
     }
   };
 
