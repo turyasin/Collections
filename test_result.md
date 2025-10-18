@@ -218,6 +218,54 @@ backend:
         agent: "testing"
         comment: "Import functionality tested successfully. Created test Excel file with payment data (invoice_id, check_number, amount, bank_name, etc.). Successfully imported 2 test payments. Endpoint correctly links payments to existing invoices and includes all required payment details."
 
+  - task: "Dashboard export endpoint (xlsx, docx, pdf)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added GET /api/export/dashboard-stats endpoint. Exports comprehensive dashboard statistics including invoices, checks, and payments summary in all three formats."
+
+  - task: "Logo upload endpoint"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added POST /api/settings/logo endpoint (admin only). Accepts PNG files, stores as base64 in MongoDB settings collection. Validates file type and format."
+
+  - task: "Logo get endpoint"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added GET /api/settings/logo endpoint (public). Returns logo image from database. Returns 404 if no logo exists."
+
+  - task: "Logo delete endpoint"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added DELETE /api/settings/logo endpoint (admin only). Removes logo from database."
+
 frontend:
   - task: "Export/Import UI for Invoices page"
     implemented: true
