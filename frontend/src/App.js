@@ -11,6 +11,7 @@ import WeeklySchedule from "@/components/WeeklySchedule";
 import Users from "@/components/Users";
 import ImportExport from "@/components/ImportExport";
 import CompanyInfo from "@/components/CompanyInfo";
+import Archive from "@/components/Archive";
 import Layout from "@/components/Layout";
 
 function App() {
