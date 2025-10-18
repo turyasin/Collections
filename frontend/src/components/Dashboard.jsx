@@ -395,6 +395,7 @@ export default function Dashboard() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 bg-blue-50 rounded-lg">
+            <p className="text-sm text-blue-600 mb-1">Toplam Fatura Tutarı</p>
             <p className="text-lg font-semibold text-blue-700">₺{calculateStats().totalInvoiceAmount.toFixed(2)}</p>
             <p className="text-sm text-blue-600 mt-2">Fatura Sayısı: {calculateStats().invoiceCount}</p>
           </div>
