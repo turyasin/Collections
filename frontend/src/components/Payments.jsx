@@ -327,7 +327,7 @@ export default function Payments() {
                 </tr>
               ))
             ) : (
-              <tr><td colSpan="9" className="text-center py-8 text-slate-500">Ödeme bulunamadı</td></tr>
+              <tr><td colSpan="10" className="text-center py-8 text-slate-500">Ödeme bulunamadı</td></tr>
             )}
           </tbody>
         </table>
