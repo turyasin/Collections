@@ -1958,6 +1958,59 @@ async def delete_logo(admin_id: str = Depends(get_current_admin_user)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Logo silme hatası: {str(e)}")
 
+
+# ===== COMPANY INFO ENDPOINTS =====
+@api_router.get("/company-info", response_model=CompanyInfo)
+async def get_company_info(user_id: str = Depends(get_current_user)):
+    """Get company information"""
+    company = await db.company_info.find_one({}, {"_id": 0})
+    if not company:
+        # Return default empty company info
+        return CompanyInfo(
+            company_name="",
+            bank_accounts=[]
+        )
+    return CompanyInfo(**company)
+
+@api_router.post("/company-info", response_model=CompanyInfo)
+async def create_or_update_company_info(
+    company_data: CompanyInfoCreate,
+    user_id: str = Depends(get_current_user)
+):
+    """Create or update company information (admin only)"""
+    # Check if user is admin
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user or not user.get("is_admin"):
+        raise HTTPException(status_code=403, detail="Admin yetkilisi gerekli")
+    
+    # Check if company info exists
+    existing = await db.company_info.find_one({})
+    
+    company_obj = CompanyInfo(**company_data.model_dump())
+    company_obj.updated_at = datetime.now(timezone.utc).isoformat()
+    
+    if existing:
+        # Update existing
+        company_obj.id = existing.get("id", company_obj.id)
+        company_obj.created_at = existing.get("created_at", company_obj.created_at)
+        await db.company_info.replace_one({"id": company_obj.id}, company_obj.model_dump())
+    else:
+        # Create new
+        await db.company_info.insert_one(company_obj.model_dump())
+    
+    return company_obj
+
+@api_router.get("/company-info/banks")
+async def get_bank_accounts(user_id: str = Depends(get_current_user)):
+    """Get list of company bank accounts"""
+    company = await db.company_info.find_one({}, {"_id": 0})
+    if not company:
+        return []
+    
+    company_info = CompanyInfo(**company)
+    return company_info.bank_accounts
+
+
 app.include_router(api_router)
 
 app.add_middleware(
