@@ -146,6 +146,7 @@ class InvoiceCreate(BaseModel):
     invoice_number: str
     amount: float
     due_date: str
+    currency: str = "TRY"  # "TRY", "USD", "EUR"
     notes: Optional[str] = None
 
 class InvoiceUpdate(BaseModel):
