@@ -67,6 +67,7 @@ export default function Layout({ children, onLogout, user }) {
   const navItems = [
     { path: "/", label: "Kontrol Paneli", icon: LayoutDashboard },
     { path: "/customers", label: "Müşteriler", icon: Users },
+    { path: "/suppliers", label: "Tedarikçiler", icon: Truck },
     { path: "/invoices", label: "Faturalar", icon: FileText },
     { path: "/payments", label: "Ödemeler", icon: CreditCard },
     { path: "/checks", label: "Çekler", icon: Receipt },
