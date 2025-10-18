@@ -351,6 +351,25 @@ async def get_current_user_info(user_id: str = Depends(get_current_user)):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
+@api_router.put("/users/{target_user_id}", response_model=User)
+async def update_user(target_user_id: str, user_update: UserUpdate, admin_id: str = Depends(get_current_admin_user)):
+    """Update user permissions (admin only)"""
+    target_user = await db.users.find_one({"id": target_user_id}, {"_id": 0})
+    if not target_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Don't allow admin to remove their own admin status if they're the only admin
+    if target_user_id == admin_id and user_update.is_admin is False:
+        admin_count = await db.users.count_documents({"is_admin": True})
+        if admin_count <= 1:
+            raise HTTPException(status_code=400, detail="En az bir admin olmalı")
+    
+    update_data = user_update.model_dump(exclude_unset=True)
+    await db.users.update_one({"id": target_user_id}, {"$set": update_data})
+    
+    updated_user = await db.users.find_one({"id": target_user_id}, {"_id": 0, "password": 0})
+    return updated_user
+
 # Customer routes
 @api_router.get("/customers", response_model=List[Customer])
 async def get_customers(user_id: str = Depends(get_current_user)):
