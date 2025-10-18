@@ -418,6 +418,42 @@ frontend:
         agent: "main"
         comment: "Created Settings page accessible only to admin users. Shows current logo (200x200px preview). File upload for new PNG logos. Delete button for removing logo. Settings nav item only visible to admins."
 
+  - task: "Invoices page period_type field"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/Invoices.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added period_type dropdown to invoice form with options: Aylık, 3 Aylık, Yıllık (default: Aylık). Added period filter dropdown in search bar. Added 'Periyot' column to invoices table. Updated form data state and handlers to include period_type."
+
+  - task: "Payments page period_type field"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/Payments.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added period_type dropdown to payment form with options: Aylık, 3 Aylık, Yıllık (default: Aylık). Added period filter dropdown in search bar. Added 'Periyot' column to payments table. Updated form data state and handlers to include period_type."
+
+  - task: "Dashboard period statistics"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/Dashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added period-based statistics section to dashboard with dropdown filter. Shows: Invoice count & total amount, Payment count & total amount, Outstanding amount. Filter options: Tüm Periyotlar, Aylık, 3 Aylık, Yıllık. Added calculatePeriodStats() function and fetchInvoicesAndPayments() to fetch data."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"
