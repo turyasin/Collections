@@ -102,35 +102,11 @@ function App() {
             }
           />
           <Route
-            path="/invoices"
+            path="/finance"
             element={
               isAuthenticated ? (
                 <Layout onLogout={handleLogout} user={currentUser}>
-                  <Invoices />
-                </Layout>
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
-          <Route
-            path="/payments"
-            element={
-              isAuthenticated ? (
-                <Layout onLogout={handleLogout} user={currentUser}>
-                  <Payments />
-                </Layout>
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
-          <Route
-            path="/checks"
-            element={
-              isAuthenticated ? (
-                <Layout onLogout={handleLogout} user={currentUser}>
-                  <Checks />
+                  <Finance />
                 </Layout>
               ) : (
                 <Navigate to="/login" replace />
