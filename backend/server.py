@@ -877,6 +877,14 @@ async def get_checks(check_type: Optional[str] = None, status: Optional[str] = N
         query["status"] = status
     
     checks = await db.checks.find(query, {"_id": 0}).to_list(1000)
+    
+    # Populate supplier names
+    for check in checks:
+        if check.get("supplier_id"):
+            supplier = await db.suppliers.find_one({"id": check["supplier_id"]}, {"_id": 0})
+            if supplier:
+                check["supplier_name"] = supplier.get("name")
+    
     return checks
 
 @api_router.post("/checks", response_model=Check)
