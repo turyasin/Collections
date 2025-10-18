@@ -1410,7 +1410,7 @@ async def export_payments(format: str = "xlsx", user_id: str = Depends(get_curre
 async def export_weekly_schedule(format: str = "xlsx", user_id: str = Depends(get_current_user)):
     """Export weekly schedule to xlsx, docx, or pdf"""
     # Get the schedule data
-    schedule = await get_weekly_payment_schedule(user_id)
+    schedule = await get_weekly_payment_schedule(weeks=4, user_id=user_id)
     
     if format == "xlsx":
         return await export_weekly_schedule_xlsx(schedule)
