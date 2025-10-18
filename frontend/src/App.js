@@ -127,6 +127,18 @@ function App() {
               )
             }
           />
+          <Route
+            path="/import-export"
+            element={
+              isAuthenticated ? (
+                <Layout onLogout={handleLogout}>
+                  <ImportExport />
+                </Layout>
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
         </Routes>
       </BrowserRouter>
     </div>
