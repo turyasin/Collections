@@ -315,6 +315,21 @@ backend:
         agent: "testing"
         comment: "COMPREHENSIVE TESTING COMPLETED - ALL FUNCTIONALITY WORKING. ✅ Existing payments migration: All 4 existing payments have period_type='Aylık'. ✅ Create payment with quarterly period: Successfully created payment with period_type='3 Aylık'. ✅ Default period validation: Payment defaults to 'Aylık' when period_type not specified. ✅ Export functionality: Updated export functions to include 'Periyot' column in XLSX, DOCX, and PDF formats. All payment CRUD operations with period_type working correctly."
 
+  - task: "Month and Quarter Auto-Calculation System"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Replaced manual period_type with automatic month and quarter calculation. Added get_month_year() and get_quarter_year() helper functions. Invoices calculate from due_date, payments from payment_date. Turkish month format: 'Mart 2025', Quarter format: 'Q1 2025'. Auto-calculation on create and update operations."
+      - working: true
+        agent: "testing"
+        comment: "COMPREHENSIVE TESTING COMPLETED - MONTH/QUARTER AUTO-CALCULATION WORKING. ✅ Invoice calculations: March 2025 → 'Mart 2025', 'Q1 2025'. July 2025 → 'Temmuz 2025', 'Q3 2025'. ✅ Update recalculation: Due date changes correctly recalculate month/quarter. ✅ Payment calculations: Auto-calculated from payment_date. ✅ Quarter validation: All Q1-Q4 calculations correct. ✅ Turkish months: All 12 month names correct (Ocak, Şubat, Mart, etc.). ✅ Data migration: 35/37 invoices and 2/2 payments have month/quarter fields. ✅ System integrity: period_type field removed, new records automatically get month/quarter. Core functionality working perfectly."
+
 frontend:
   - task: "Export/Import UI for Invoices page"
     implemented: true
