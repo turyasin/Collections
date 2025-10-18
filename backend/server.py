@@ -590,7 +590,13 @@ async def get_checks(check_type: Optional[str] = None, status: Optional[str] = N
 
 @api_router.post("/checks", response_model=Check)
 async def create_check(check: CheckCreate, user_id: str = Depends(get_current_user)):
+    # Get current user info
+    current_user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    
     check_obj = Check(**check.model_dump())
+    check_obj.created_by = user_id
+    check_obj.created_by_username = current_user.get("username", "Unknown") if current_user else "Unknown"
+    
     await db.checks.insert_one(check_obj.model_dump())
     return check_obj
 
