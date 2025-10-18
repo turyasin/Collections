@@ -78,6 +78,25 @@ export default function Users() {
     }
   };
 
+  const handleDeleteUser = async (userId, username) => {
+    if (!currentUser?.is_admin) {
+      toast.error("Bu işlem için admin yetkisi gerekli");
+      return;
+    }
+
+    if (!window.confirm(`"${username}" kullanıcısını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.`)) {
+      return;
+    }
+
+    try {
+      await axios.delete(`${API}/users/${userId}`, getAuthHeaders());
+      toast.success(`${username} kullanıcısı başarıyla silindi`);
+      fetchUsers();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || "Kullanıcı silinemedi");
+    }
+  };
+
   if (loading) return <div className="flex items-center justify-center h-96"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>;
 
   const isAdmin = currentUser?.is_admin;
