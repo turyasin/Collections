@@ -26,6 +26,7 @@ class InvoiceTrackerAPITester:
         self.test_customer_id = None
         self.test_invoice_id = None
         self.test_payment_id = None
+        self.test_check_id = None
 
     def log_test(self, name: str, success: bool, details: str = "", response_data: Any = None):
         """Log test result"""
