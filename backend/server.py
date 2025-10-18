@@ -749,6 +749,14 @@ async def get_dashboard_stats(user_id: str = Depends(get_current_user)):
     partial_count = len([inv for inv in invoices if inv["status"] == "partial"])
     paid_count = len([inv for inv in invoices if inv["status"] == "paid"])
     
+    # Calculate overdue invoices (due date has passed and not fully paid)
+    today = datetime.now(timezone.utc).date()
+    overdue_count = len([
+        inv for inv in invoices 
+        if inv["status"] in ["unpaid", "partial"] and 
+        datetime.fromisoformat(inv["due_date"].replace('Z', '+00:00')).date() < today
+    ])
+    
     for payment in payments:
         invoice = await db.invoices.find_one({"id": payment["invoice_id"]}, {"_id": 0})
         if invoice:
