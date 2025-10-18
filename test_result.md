@@ -250,15 +250,18 @@ backend:
 
   - task: "Logo get endpoint"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added GET /api/settings/logo endpoint (public). Returns logo image from database. Returns 404 if no logo exists."
+      - working: true
+        agent: "testing"
+        comment: "Logo get endpoint tested successfully. Endpoint correctly returns 'Logo bulunamadı' message when no logo exists. Public access working properly. Endpoint ready to serve logo images when uploaded by admin users."
 
   - task: "Logo delete endpoint"
     implemented: true
