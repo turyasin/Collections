@@ -106,6 +106,65 @@ export default function Checks() {
     setEditingCheck(null);
   };
 
+  const handleExport = async (format) => {
+    try {
+      const response = await axios.get(`${API}/export/checks?format=${format}`, {
+        ...getAuthHeaders(),
+        responseType: 'blob'
+      });
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      const fileExtension = format === 'xlsx' ? 'xlsx' : format === 'docx' ? 'docx' : 'pdf';
+      link.setAttribute('download', `cekler_${new Date().toISOString().split('T')[0]}.${fileExtension}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      
+      toast.success(`Çekler ${format.toUpperCase()} formatında indirildi`);
+    } catch (error) {
+      toast.error("Dışa aktarma başarısız oldu");
+    }
+  };
+
+  const handleImport = async () => {
+    if (!selectedFile) {
+      toast.error("Lütfen bir dosya seçin");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      await axios.post(`${API}/import/checks`, formData, {
+        headers: {
+          ...getAuthHeaders().headers,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      toast.success("Çekler başarıyla içe aktarıldı");
+      setImportDialogOpen(false);
+      setSelectedFile(null);
+      fetchChecks();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || "İçe aktarma başarısız oldu");
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.name.endsWith('.xlsx')) {
+      setSelectedFile(file);
+    } else {
+      toast.error("Sadece .xlsx dosyaları desteklenmektedir");
+      e.target.value = null;
+    }
+  };
+
   const filterChecks = (type) => {
     return checks
       .filter(c => c.check_type === type)
