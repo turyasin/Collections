@@ -176,6 +176,7 @@ class Payment(BaseModel):
 class PaymentCreate(BaseModel):
     invoice_id: str
     payment_method: str = "Çek"  # "Nakit", "Kredi Kartı", "Havale/EFT", "Çek"
+    bank_account_id: Optional[str] = None  # For incoming payments
     check_number: Optional[str] = None
     check_date: Optional[str] = None
     bank_name: Optional[str] = None
