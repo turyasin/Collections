@@ -339,14 +339,13 @@ export default function Checks() {
                   <div className="space-y-2">
                     <Label>Tedarikçi Firma</Label>
                     <Select 
-                      value={formData.supplier_id} 
+                      value={formData.supplier_id || undefined} 
                       onValueChange={(value) => setFormData({ ...formData, supplier_id: value })}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Tedarikçi seçin (opsiyonel)" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Seçim Yok</SelectItem>
                         {suppliers.map((supplier) => (
                           <SelectItem key={supplier.id} value={supplier.id}>
                             {supplier.name} (İskonto: %{supplier.discount_rate || 0})
