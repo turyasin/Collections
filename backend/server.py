@@ -559,6 +559,12 @@ async def update_invoice(invoice_id: str, invoice: InvoiceUpdate, user_id: str =
         raise HTTPException(status_code=404, detail="Invoice not found")
     
     update_data = invoice.model_dump(exclude_unset=True)
+    
+    # If due_date is updated, recalculate month and quarter
+    if "due_date" in update_data:
+        update_data["month"] = get_month_year(update_data["due_date"])
+        update_data["quarter"] = get_quarter_year(update_data["due_date"])
+    
     await db.invoices.update_one({"id": invoice_id}, {"$set": update_data})
     
     updated = await db.invoices.find_one({"id": invoice_id}, {"_id": 0})
