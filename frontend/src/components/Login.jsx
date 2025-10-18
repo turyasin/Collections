@@ -133,6 +133,22 @@ export default function Login({ onLogin }) {
             />
           </div>
 
+          {isLogin && (
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="remember-me"
+                checked={rememberMe}
+                onCheckedChange={setRememberMe}
+              />
+              <Label
+                htmlFor="remember-me"
+                className="text-sm font-normal cursor-pointer"
+              >
+                Beni Hatırla
+              </Label>
+            </div>
+          )}
+
           <Button
             type="submit"
             data-testid="submit-button"
