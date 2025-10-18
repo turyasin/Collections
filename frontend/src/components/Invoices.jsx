@@ -163,7 +163,7 @@ export default function Invoices() {
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <table className="custom-table">
           <thead>
-            <tr><th>Fatura #</th><th>Müşteri</th><th>Tutar</th><th>Ödendi</th><th>Vade</th><th>Durum</th><th>Actions</th></tr>
+            <tr><th>Fatura #</th><th>Müşteri</th><th>Tutar</th><th>Ödendi</th><th>Vade</th><th>Durum</th><th>Ekleyen</th><th>Actions</th></tr>
           </thead>
           <tbody>
             {filteredInvoices.length > 0 ? (
@@ -174,7 +174,7 @@ export default function Invoices() {
                   <td className="text-slate-900 font-semibold">₺{invoice.amount.toFixed(2)}</td>
                   <td className="text-green-600 font-semibold">₺{invoice.paid_amount?.toFixed(2) || "0.00"}</td>
                   <td className="text-slate-600">{new Date(invoice.due_date).toLocaleDateString()}</td>
-                  <td><span className={`status-badge status-${invoice.status}`} data-testid={`invoice-status-${invoice.id}`}>{invoice.status}</span></td>
+                  <td><span className={`status-badge status-${invoice.status}`} data-testid={`invoice-status-${invoice.id}`}>{invoice.status}</span></td><td className="text-slate-600 text-sm">{invoice.created_by_username || "—"}</td>
                   <td>
                     <div className="flex gap-2">
                       <Button size="sm" variant="outline" data-testid={`edit-invoice-${invoice.id}`} onClick={() => handleEdit(invoice)}><Pencil className="w-4 h-4" /></Button>
@@ -184,7 +184,7 @@ export default function Invoices() {
                 </tr>
               ))
             ) : (
-              <tr><td colSpan="7" className="text-center py-8 text-slate-500">Fatura bulunamadı</td></tr>
+              <tr><td colSpan="8" className="text-center py-8 text-slate-500">Fatura bulunamadı</td></tr>
             )}
           </tbody>
         </table>

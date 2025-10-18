@@ -146,7 +146,7 @@ export default function Payments() {
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <table className="custom-table">
           <thead>
-            <tr><th>Fatura #</th><th>Müşteri</th><th>Çek No</th><th>Çek Tarihi</th><th>Banka</th><th>Tutar</th><th>Ödeme Tarihi</th><th>İşlemler</th></tr>
+            <tr><th>Fatura #</th><th>Müşteri</th><th>Çek No</th><th>Çek Tarihi</th><th>Banka</th><th>Tutar</th><th>Ödeme Tarihi</th><th>Ekleyen</th><th>İşlemler</th></tr>
           </thead>
           <tbody>
             {filteredPayments.length > 0 ? (
@@ -167,7 +167,7 @@ export default function Payments() {
                 </tr>
               ))
             ) : (
-              <tr><td colSpan="8" className="text-center py-8 text-slate-500">Ödeme bulunamadı</td></tr>
+              <tr><td colSpan="9" className="text-center py-8 text-slate-500">Ödeme bulunamadı</td></tr>
             )}
           </tbody>
         </table>

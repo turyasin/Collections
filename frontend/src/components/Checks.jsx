@@ -203,7 +203,7 @@ export default function Checks() {
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             <table className="custom-table">
               <thead>
-                <tr><th>Çek No</th><th>Ödeyici</th><th>Banka</th><th>Tutar</th><th>Vade</th><th>Durum</th><th>İşlemler</th></tr>
+                <tr><th>Çek No</th><th>Ödeyici</th><th>Banka</th><th>Tutar</th><th>Vade</th><th>Durum</th><th>Ekleyen</th><th>İşlemler</th></tr>
               </thead>
               <tbody>
                 {filterChecks("received").length > 0 ? (
@@ -233,7 +233,7 @@ export default function Checks() {
                     </tr>
                   ))
                 ) : (
-                  <tr><td colSpan="7" className="text-center py-8 text-slate-500">Alınan çek bulunamadı</td></tr>
+                  <tr><td colSpan="8" className="text-center py-8 text-slate-500">Alınan çek bulunamadı</td></tr>
                 )}
               </tbody>
             </table>
@@ -244,7 +244,7 @@ export default function Checks() {
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             <table className="custom-table">
               <thead>
-                <tr><th>Çek No</th><th>Alacaklı</th><th>Banka</th><th>Tutar</th><th>Vade</th><th>Durum</th><th>İşlemler</th></tr>
+                <tr><th>Çek No</th><th>Alacaklı</th><th>Banka</th><th>Tutar</th><th>Vade</th><th>Durum</th><th>Ekleyen</th><th>İşlemler</th></tr>
               </thead>
               <tbody>
                 {filterChecks("issued").length > 0 ? (
@@ -273,7 +273,7 @@ export default function Checks() {
                     </tr>
                   ))
                 ) : (
-                  <tr><td colSpan="7" className="text-center py-8 text-slate-500">Verilen çek bulunamadı</td></tr>
+                  <tr><td colSpan="8" className="text-center py-8 text-slate-500">Verilen çek bulunamadı</td></tr>
                 )}
               </tbody>
             </table>
