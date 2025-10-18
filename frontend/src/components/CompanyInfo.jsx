@@ -225,10 +225,12 @@ export default function CompanyInfo() {
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-slate-900">Banka Hesapları</h2>
-            <Button type="button" onClick={addBankAccount} variant="outline" size="sm">
-              <Plus className="w-4 h-4 mr-2" />
-              Hesap Ekle
-            </Button>
+            {isAdmin && (
+              <Button type="button" onClick={addBankAccount} variant="outline" size="sm">
+                <Plus className="w-4 h-4 mr-2" />
+                Hesap Ekle
+              </Button>
+            )}
           </div>
 
           <div className="space-y-4">
