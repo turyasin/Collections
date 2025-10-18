@@ -1,0 +1,100 @@
+{
+  "summary": {
+    "total_tests": 15,
+    "passed_tests": 15,
+    "success_rate": "100.0%",
+    "timestamp": "2025-10-18T05:53:34.251692"
+  },
+  "detailed_results": [
+    {
+      "test": "User Registration",
+      "success": true,
+      "details": "User created with email: test_055333@example.com",
+      "response_data": null
+    },
+    {
+      "test": "User Login/Authentication",
+      "success": true,
+      "details": "Token authentication working",
+      "response_data": null
+    },
+    {
+      "test": "Create Customer",
+      "success": true,
+      "details": "Customer created with ID: eb6487d2-6275-4a6d-86b3-68c4eef3c73b",
+      "response_data": null
+    },
+    {
+      "test": "Get Customers",
+      "success": true,
+      "details": "Retrieved 1 customers",
+      "response_data": null
+    },
+    {
+      "test": "Update Customer",
+      "success": true,
+      "details": "Customer updated successfully",
+      "response_data": null
+    },
+    {
+      "test": "Create Invoice",
+      "success": true,
+      "details": "Invoice created with ID: af4a7c7a-bbc3-4b4a-8409-777dc02932ed",
+      "response_data": null
+    },
+    {
+      "test": "Get Invoices",
+      "success": true,
+      "details": "Retrieved 1 invoices",
+      "response_data": null
+    },
+    {
+      "test": "Invoice Status Filter",
+      "success": true,
+      "details": "Retrieved 1 unpaid invoices",
+      "response_data": null
+    },
+    {
+      "test": "Create Payment",
+      "success": true,
+      "details": "Payment created with ID: 2f5b64e3-3a94-400e-9e6a-e3736be17bfc",
+      "response_data": null
+    },
+    {
+      "test": "Invoice Status Update",
+      "success": true,
+      "details": "Invoice status correctly updated to 'partial' with paid amount $750.0",
+      "response_data": null
+    },
+    {
+      "test": "Get Payments",
+      "success": true,
+      "details": "Retrieved 1 payments",
+      "response_data": null
+    },
+    {
+      "test": "Dashboard Stats",
+      "success": true,
+      "details": "All required fields present. Total invoices: 1",
+      "response_data": null
+    },
+    {
+      "test": "Payment Deletion & Status Recalculation",
+      "success": true,
+      "details": "Payment deleted and invoice status recalculated correctly",
+      "response_data": null
+    },
+    {
+      "test": "Cascade Delete Invoice",
+      "success": true,
+      "details": "Invoice and associated payments deleted successfully",
+      "response_data": null
+    },
+    {
+      "test": "Delete Customer",
+      "success": true,
+      "details": "Customer deleted successfully",
+      "response_data": null
+    }
+  ]
+}
