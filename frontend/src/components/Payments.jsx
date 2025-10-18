@@ -261,7 +261,7 @@ export default function Payments() {
                 <Input id="amount" data-testid="payment-amount-input" type="number" step="0.01" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} required />
               </div>
               <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
+                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>İptal</Button>
                 <Button type="submit" data-testid="save-payment-button" className="bg-blue-600 hover:bg-blue-700">Ödeme Kaydet</Button>
               </div>
             </form>
