@@ -174,9 +174,10 @@ class Payment(BaseModel):
 
 class PaymentCreate(BaseModel):
     invoice_id: str
-    check_number: str
-    check_date: str
-    bank_name: str
+    payment_method: str = "Çek"  # "Nakit", "Kredi Kartı", "Havale/EFT", "Çek"
+    check_number: Optional[str] = None
+    check_date: Optional[str] = None
+    bank_name: Optional[str] = None
     amount: float
 
 class DashboardStats(BaseModel):
