@@ -55,7 +55,7 @@ export default function Layout({ children, onLogout }) {
             className="w-full justify-start text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
           >
             <LogOut className="w-5 h-5 mr-3" />
-            Logout
+            Çıkış
           </Button>
         </div>
       </aside>
