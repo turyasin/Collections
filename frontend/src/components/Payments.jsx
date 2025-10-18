@@ -296,13 +296,22 @@ export default function Payments() {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
           <Input data-testid="search-payments-input" placeholder="Ödeme ara..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10" />
         </div>
-        <Select value={periodFilter} onValueChange={setPeriodFilter}>
-          <SelectTrigger className="w-40" data-testid="period-filter"><SelectValue /></SelectTrigger>
+        <Select value={monthFilter} onValueChange={setMonthFilter}>
+          <SelectTrigger className="w-40" data-testid="month-filter"><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Tüm Periyotlar</SelectItem>
-            <SelectItem value="Aylık">Aylık</SelectItem>
-            <SelectItem value="3 Aylık">3 Aylık</SelectItem>
-            <SelectItem value="Yıllık">Yıllık</SelectItem>
+            <SelectItem value="all">Tüm Aylar</SelectItem>
+            {uniqueMonths.map(month => (
+              <SelectItem key={month} value={month}>{month}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select value={quarterFilter} onValueChange={setQuarterFilter}>
+          <SelectTrigger className="w-40" data-testid="quarter-filter"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tüm Çeyrekler</SelectItem>
+            {uniqueQuarters.map(quarter => (
+              <SelectItem key={quarter} value={quarter}>{quarter}</SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
