@@ -114,69 +114,41 @@ class InvoiceTrackerAPITester:
             self.log_test("User Registration", False, f"Registration failed: {response}", response)
             return False
 
-    def test_admin_user_registration(self):
-        """Test admin user registration - try to create a new admin user with unique email"""
-        # Try creating a new admin user with the special admin email pattern
-        timestamp = datetime.now().strftime('%H%M%S')
-        admin_email = "turyasin@gmail.com"  # This should automatically get admin privileges
+    def test_admin_user_setup(self):
+        """Setup admin user for logo management tests"""
+        # First check if current user is admin
+        success, response = self.make_request('GET', '/users/me', expected_status=200)
+        
+        if success and response.get('is_admin', False):
+            # Current user is already admin
+            self.admin_token = self.token
+            self.admin_user_id = self.user_id
+            self.log_test("Admin User Setup", True, f"Current user is admin: {response.get('email')}")
+            return True
+        
+        # Try to create admin user with turyasin@gmail.com email
+        timestamp = datetime.now().strftime('%H%M%S%f')  # More unique timestamp
+        admin_email = "turyasin@gmail.com"
         user_data = {
             "username": f"admin_test_{timestamp}",
             "email": admin_email,
             "password": "AdminPassword123!"
         }
         
-        success, response = self.make_request('POST', '/auth/register', user_data, 200)
+        success, response = self.make_request('POST', '/auth/register', user_data)
         
         if success and 'token' in response:
-            self.admin_token = response['token']
-            self.admin_user_id = response.get('user', {}).get('id')
-            is_admin = response.get('user', {}).get('is_admin', False)
-            self.log_test("Admin User Registration", True, f"Admin user created with email: {admin_email}, is_admin: {is_admin}")
-            return True
-        else:
-            # If admin email already exists, try with a different approach
-            # Check if our first registered user has admin privileges (first user should be admin)
-            success, response = self.make_request('GET', '/users/me', expected_status=200)
-            
-            if success and response.get('is_admin', False):
-                # Our current user is already admin
-                self.admin_token = self.token
-                self.admin_user_id = self.user_id
-                self.log_test("Admin User Registration", True, f"Current user is admin: {response.get('email')}")
+            user_info = response.get('user', {})
+            if user_info.get('is_admin', False):
+                self.admin_token = response['token']
+                self.admin_user_id = user_info.get('id')
+                self.log_test("Admin User Setup", True, f"Admin user created successfully")
                 return True
-            else:
-                # Try creating a completely new admin user with a different email pattern
-                new_admin_email = f"admin_{timestamp}@gmail.com"
-                # Since the first user should be admin, let's try creating a user when there are no users
-                # But since we already have users, let's use the turyasin email logic
-                
-                # Let's try a different admin email that might work
-                fallback_admin_email = f"turyasin+test{timestamp}@gmail.com"
-                user_data = {
-                    "username": f"admin_fallback_{timestamp}",
-                    "email": fallback_admin_email,
-                    "password": "AdminPassword123!"
-                }
-                
-                success, response = self.make_request('POST', '/auth/register', user_data, 200)
-                
-                if success and 'token' in response:
-                    # Check if this user got admin privileges
-                    temp_token = response['token']
-                    original_token = self.token
-                    self.token = temp_token
-                    
-                    success2, user_info = self.make_request('GET', '/users/me', expected_status=200)
-                    self.token = original_token
-                    
-                    if success2 and user_info.get('is_admin', False):
-                        self.admin_token = temp_token
-                        self.admin_user_id = response.get('user', {}).get('id')
-                        self.log_test("Admin User Registration", True, f"Fallback admin user created: {fallback_admin_email}")
-                        return True
-                
-                self.log_test("Admin User Registration", False, f"Could not create admin user. Response: {response}")
-                return False
+        
+        # If turyasin email is taken, the database might already have users
+        # In that case, we'll note that admin tests cannot be run
+        self.log_test("Admin User Setup", False, "Could not create admin user - database may already have users. Admin tests will be skipped.")
+        return False
 
     def test_user_login(self):
         """Test user login with existing credentials"""
