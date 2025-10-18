@@ -263,7 +263,7 @@ export default function Dashboard() {
 
   const statCards = [
     {
-      title: "Toplam Borç",
+      title: "Toplam Alacak",
       value: `₺${stats?.outstanding_amount?.toFixed(2) || "0.00"}`,
       icon: DollarSign,
       color: "bg-red-500",
