@@ -89,7 +89,7 @@ export default function Invoices() {
   };
 
   const resetForm = () => {
-    setFormData({ customer_id: "", invoice_number: "", amount: "", due_date: "", period_type: "Aylık", notes: "" });
+    setFormData({ customer_id: "", invoice_number: "", amount: "", due_date: "", notes: "" });
     setEditingInvoice(null);
   };
 
