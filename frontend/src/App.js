@@ -153,6 +153,18 @@ function App() {
               )
             }
           />
+          <Route
+            path="/archive"
+            element={
+              isAuthenticated ? (
+                <Layout onLogout={handleLogout}>
+                  <Archive />
+                </Layout>
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
         </Routes>
       </BrowserRouter>
     </div>
