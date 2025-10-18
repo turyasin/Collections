@@ -268,6 +268,17 @@ export default function Invoices() {
                   <Input id="due_date" data-testid="invoice-due-date-input" type="date" value={formData.due_date} onChange={(e) => setFormData({ ...formData, due_date: e.target.value })} required />
                 </div>
                 <div className="space-y-2">
+                  <Label htmlFor="period_type">Periyot *</Label>
+                  <Select value={formData.period_type} onValueChange={(value) => setFormData({ ...formData, period_type: value })} required>
+                    <SelectTrigger data-testid="period-select"><SelectValue placeholder="Periyot seçin" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Aylık">Aylık</SelectItem>
+                      <SelectItem value="3 Aylık">3 Aylık</SelectItem>
+                      <SelectItem value="Yıllık">Yıllık</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
                   <Label htmlFor="notes">Notlar</Label>
                   <Input id="notes" data-testid="invoice-notes-input" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} />
                 </div>
