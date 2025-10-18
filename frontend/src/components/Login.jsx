@@ -51,10 +51,10 @@ export default function Login({ onLogin }) {
             </div>
           </div>
           <h1 className="text-3xl font-bold text-slate-900">
-            Invoice Tracker
+            Fatura Takip
           </h1>
           <p className="text-slate-600">
-            Manage invoices and track check payments
+            Faturaları yönetin ve çek ödemelerini takip edin
           </p>
         </div>
 
