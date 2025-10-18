@@ -248,23 +248,23 @@ export default function Payments() {
                   <Label htmlFor="check_number">Çek No *</Label>
                   <Input id="check_number" data-testid="check-number-input" value={formData.check_number} onChange={(e) => setFormData({ ...formData, check_number: e.target.value })} required />
                 </div>
-              <div className="space-y-2">
-                <Label htmlFor="check_date">Çek Tarihi *</Label>
-                <Input id="check_date" data-testid="check-date-input" type="date" value={formData.check_date} onChange={(e) => setFormData({ ...formData, check_date: e.target.value })} required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="bank_name">Banka *</Label>
-                <Input id="bank_name" data-testid="bank-name-input" value={formData.bank_name} onChange={(e) => setFormData({ ...formData, bank_name: e.target.value })} required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="amount">Amount *</Label>
-                <Input id="amount" data-testid="payment-amount-input" type="number" step="0.01" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} required />
-              </div>
-              <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-                <Button type="submit" data-testid="save-payment-button" className="bg-blue-600 hover:bg-blue-700">Ödeme Kaydet</Button>
-              </div>
-            </form>
+                <div className="space-y-2">
+                  <Label htmlFor="check_date">Çek Tarihi *</Label>
+                  <Input id="check_date" data-testid="check-date-input" type="date" value={formData.check_date} onChange={(e) => setFormData({ ...formData, check_date: e.target.value })} required />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="bank_name">Banka *</Label>
+                  <Input id="bank_name" data-testid="bank-name-input" value={formData.bank_name} onChange={(e) => setFormData({ ...formData, bank_name: e.target.value })} required />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="amount">Amount *</Label>
+                  <Input id="amount" data-testid="payment-amount-input" type="number" step="0.01" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} required />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
+                  <Button type="submit" data-testid="save-payment-button" className="bg-blue-600 hover:bg-blue-700">Ödeme Kaydet</Button>
+                </div>
+              </form>
           </DialogContent>
         </Dialog>
       </div>
