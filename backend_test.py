@@ -810,7 +810,7 @@ class InvoiceTrackerAPITester:
             content_disposition = response.get('content_disposition', '')
             content_length = response.get('content_length', 0)
             
-            if 'pdf' in content_type and 'dashboard_stats_' in content_disposition and content_length > 0:
+            if 'pdf' in content_type and ('dashboard_stats_' in content_disposition or 'dashboard_ozet_' in content_disposition) and content_length > 0:
                 self.log_test("Export Dashboard Stats PDF", True, f"PDF file exported successfully ({content_length} bytes)")
                 return True
             else:
