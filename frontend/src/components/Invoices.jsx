@@ -21,6 +21,9 @@ export default function Invoices() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [formData, setFormData] = useState({ customer_id: "", invoice_number: "", amount: "", due_date: "", notes: "" });
+  const [exportFormat, setExportFormat] = useState("xlsx");
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
     fetchInvoices();
