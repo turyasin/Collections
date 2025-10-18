@@ -2012,6 +2012,146 @@ async def create_or_update_company_info(
     if not user or not user.get("is_admin"):
         raise HTTPException(status_code=403, detail="Admin yetkilisi gerekli")
     
+
+# ===== ARCHIVE ENDPOINTS =====
+async def archive_old_records():
+    """Archive completed records older than 3 months"""
+    try:
+        cutoff_date = datetime.now(timezone.utc) - timedelta(days=90)  # 3 months
+        cutoff_str = cutoff_date.isoformat()
+        
+        # Archive paid invoices
+        old_invoices = await db.invoices.find({
+            "status": "paid",
+            "due_date": {"$lt": cutoff_str}
+        }).to_list(length=None)
+        
+        if old_invoices:
+            await db.archived_invoices.insert_many(old_invoices)
+            invoice_ids = [inv["id"] for inv in old_invoices]
+            await db.invoices.delete_many({"id": {"$in": invoice_ids}})
+            print(f"✓ Archived {len(old_invoices)} invoices")
+        
+        # Archive payments
+        old_payments = await db.payments.find({
+            "payment_date": {"$lt": cutoff_str}
+        }).to_list(length=None)
+        
+        if old_payments:
+            await db.archived_payments.insert_many(old_payments)
+            payment_ids = [pay["id"] for pay in old_payments]
+            await db.payments.delete_many({"id": {"$in": payment_ids}})
+            print(f"✓ Archived {len(old_payments)} payments")
+        
+        # Archive collected/paid checks
+        old_checks = await db.checks.find({
+            "$or": [
+                {"status": "collected", "due_date": {"$lt": cutoff_str}},
+                {"status": "paid", "due_date": {"$lt": cutoff_str}}
+            ]
+        }).to_list(length=None)
+        
+        if old_checks:
+            await db.archived_checks.insert_many(old_checks)
+            check_ids = [chk["id"] for chk in old_checks]
+            await db.checks.delete_many({"id": {"$in": check_ids}})
+            print(f"✓ Archived {len(old_checks)} checks")
+        
+        return {
+            "invoices": len(old_invoices),
+            "payments": len(old_payments),
+            "checks": len(old_checks)
+        }
+    except Exception as e:
+        print(f"✗ Archive error: {str(e)}")
+        return {"error": str(e)}
+
+@api_router.post("/archive/manual")
+async def manual_archive(user_id: str = Depends(get_current_user)):
+    """Manually trigger archiving (admin only)"""
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user or not user.get("is_admin"):
+        raise HTTPException(status_code=403, detail="Admin yetkisi gerekli")
+    
+    result = await archive_old_records()
+    return {"message": "Arşivleme tamamlandı", "archived": result}
+
+@api_router.get("/archive/invoices")
+async def get_archived_invoices(user_id: str = Depends(get_current_user)):
+    """Get archived invoices (admin only)"""
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user or not user.get("is_admin"):
+        raise HTTPException(status_code=403, detail="Admin yetkisi gerekli")
+    
+    invoices = await db.archived_invoices.find({}, {"_id": 0}).to_list(length=None)
+    return invoices
+
+@api_router.get("/archive/payments")
+async def get_archived_payments(user_id: str = Depends(get_current_user)):
+    """Get archived payments (admin only)"""
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user or not user.get("is_admin"):
+        raise HTTPException(status_code=403, detail="Admin yetkisi gerekli")
+    
+    payments = await db.archived_payments.find({}, {"_id": 0}).to_list(length=None)
+    return payments
+
+@api_router.get("/archive/checks")
+async def get_archived_checks(user_id: str = Depends(get_current_user)):
+    """Get archived checks (admin only)"""
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user or not user.get("is_admin"):
+        raise HTTPException(status_code=403, detail="Admin yetkisi gerekli")
+    
+    checks = await db.archived_checks.find({}, {"_id": 0}).to_list(length=None)
+    return checks
+
+@api_router.post("/archive/restore/invoice/{invoice_id}")
+async def restore_invoice(invoice_id: str, user_id: str = Depends(get_current_user)):
+    """Restore archived invoice (admin only)"""
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user or not user.get("is_admin"):
+        raise HTTPException(status_code=403, detail="Admin yetkisi gerekli")
+    
+    invoice = await db.archived_invoices.find_one({"id": invoice_id}, {"_id": 0})
+    if not invoice:
+        raise HTTPException(status_code=404, detail="Arşivlenmiş fatura bulunamadı")
+    
+    await db.invoices.insert_one(invoice)
+    await db.archived_invoices.delete_one({"id": invoice_id})
+    return {"message": "Fatura geri getirildi"}
+
+@api_router.post("/archive/restore/payment/{payment_id}")
+async def restore_payment(payment_id: str, user_id: str = Depends(get_current_user)):
+    """Restore archived payment (admin only)"""
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user or not user.get("is_admin"):
+        raise HTTPException(status_code=403, detail="Admin yetkisi gerekli")
+    
+    payment = await db.archived_payments.find_one({"id": payment_id}, {"_id": 0})
+    if not payment:
+        raise HTTPException(status_code=404, detail="Arşivlenmiş ödeme bulunamadı")
+    
+    await db.payments.insert_one(payment)
+    await db.archived_payments.delete_one({"id": payment_id})
+    return {"message": "Ödeme geri getirildi"}
+
+@api_router.post("/archive/restore/check/{check_id}")
+async def restore_check(check_id: str, user_id: str = Depends(get_current_user)):
+    """Restore archived check (admin only)"""
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user or not user.get("is_admin"):
+        raise HTTPException(status_code=403, detail="Admin yetkisi gerekli")
+    
+    check = await db.archived_checks.find_one({"id": check_id}, {"_id": 0})
+    if not check:
+        raise HTTPException(status_code=404, detail="Arşivlenmiş çek bulunamadı")
+    
+    await db.checks.insert_one(check)
+    await db.archived_checks.delete_one({"id": check_id})
+    return {"message": "Çek geri getirildi"}
+
+
     # Check if company info exists
     existing = await db.company_info.find_one({})
     
