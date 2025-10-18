@@ -39,28 +39,28 @@ export default function Dashboard() {
 
   const statCards = [
     {
-      title: "Total Outstanding",
+      title: "Toplam Alacak",
       value: `₺${stats?.outstanding_amount?.toFixed(2) || "0.00"}`,
       icon: DollarSign,
       color: "bg-red-500",
       testId: "total-outstanding",
     },
     {
-      title: "Total Collected",
+      title: "Toplam Tahsilat",
       value: `₺${stats?.paid_amount?.toFixed(2) || "0.00"}`,
       icon: CheckCircle,
       color: "bg-green-500",
       testId: "total-collected",
     },
     {
-      title: "Total Invoices",
+      title: "Toplam Fatura",
       value: stats?.total_invoices || 0,
       icon: FileText,
       color: "bg-blue-500",
       testId: "total-invoices",
     },
     {
-      title: "Unpaid Invoices",
+      title: "Ödenmemiş Faturalar",
       value: stats?.unpaid_count || 0,
       icon: AlertCircle,
       color: "bg-orange-500",
