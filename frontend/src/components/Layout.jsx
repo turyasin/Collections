@@ -22,8 +22,8 @@ export default function Layout({ children, onLogout }) {
     <div className="min-h-screen bg-slate-50">
       <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-slate-200 z-10">
         <div className="p-6">
-          <h1 className="text-2xl font-bold text-slate-900">Invoice Tracker</h1>
-          <p className="text-sm text-slate-600 mt-1">Payment Management</p>
+          <h1 className="text-2xl font-bold text-slate-900">Fatura Takip</h1>
+          <p className="text-sm text-slate-600 mt-1">Ödeme Yönetimi</p>
         </div>
 
         <nav className="px-3 space-y-1">
