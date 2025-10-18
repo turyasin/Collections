@@ -888,11 +888,28 @@ async def create_check(check: CheckCreate, user_id: str = Depends(get_current_us
     check_obj.created_by = user_id
     check_obj.created_by_username = current_user.get("username", "Unknown") if current_user else "Unknown"
     
+    # Populate supplier name if supplier_id is provided
+    if check_obj.supplier_id:
+        supplier = await db.suppliers.find_one({"id": check_obj.supplier_id}, {"_id": 0})
+        if supplier:
+            check_obj.supplier_name = supplier.get("name")
+    
     await db.checks.insert_one(check_obj.model_dump())
     return check_obj
 
 @api_router.get("/checks/{check_id}", response_model=Check)
 async def get_check(check_id: str, user_id: str = Depends(get_current_user)):
+    check = await db.checks.find_one({"id": check_id}, {"_id": 0})
+    if not check:
+        raise HTTPException(status_code=404, detail="Check not found")
+    
+    # Populate supplier name
+    if check.get("supplier_id"):
+        supplier = await db.suppliers.find_one({"id": check["supplier_id"]}, {"_id": 0})
+        if supplier:
+            check["supplier_name"] = supplier.get("name")
+    
+    return check
     check = await db.checks.find_one({"id": check_id}, {"_id": 0})
     if not check:
         raise HTTPException(status_code=404, detail="Check not found")
