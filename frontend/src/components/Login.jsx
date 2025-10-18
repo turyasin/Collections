@@ -121,12 +121,12 @@ export default function Login({ onLogin }) {
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Please wait...
+                Lütfen bekleyin...
               </>
             ) : isLogin ? (
-              "Sign In"
+              "Giriş Yap"
             ) : (
-              "Create Account"
+              "Hesap Oluştur"
             )}
           </Button>
         </form>
