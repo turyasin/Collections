@@ -44,7 +44,7 @@ class InvoiceTrackerAPITester:
             "response_data": response_data
         })
 
-    def make_request(self, method: str, endpoint: str, data: Dict = None, expected_status: int = 200, files: Dict = None) -> tuple[bool, Dict]:
+    def make_request(self, method: str, endpoint: str, data: Dict = None, expected_status: int = None, files: Dict = None) -> tuple[bool, Dict]:
         """Make API request with error handling"""
         url = f"{self.api_url}/{endpoint.lstrip('/')}"
         headers = {}
