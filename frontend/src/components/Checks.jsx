@@ -339,32 +339,36 @@ export default function Checks() {
               </thead>
               <tbody>
                 {filterChecks("received").length > 0 ? (
-                  filterChecks("received").map((check) => (
-                    <tr key={check.id} data-testid={`check-row-${check.id}`}>
-                      <td className="font-semibold text-slate-900">{check.check_number}</td>
-                      <td className="text-slate-600">{check.payer_payee}</td>
-                      <td className="text-slate-600">{check.bank_name}</td>
-                      <td className="text-green-600 font-bold">₺{check.amount.toFixed(2)}</td>
-                      <td className="text-slate-600">{new Date(check.due_date).toLocaleDateString('tr-TR')}</td>
-                      <td>
-                        <Select value={check.status} onValueChange={(value) => handleStatusChange(check.id, value)}>
-                          <SelectTrigger className="w-40">{getStatusBadge(check.status)}</SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="pending">Beklemede</SelectItem>
-                            <SelectItem value="collected">Tahsil Edildi</SelectItem>
-                            <SelectItem value="bounced">Karşılıksız</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </td>
-                      <td className="text-slate-600 text-sm">{check.created_by_username || "—"}</td>
-                      <td>
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="outline" onClick={() => handleEdit(check)}><Pencil className="w-4 h-4" /></Button>
-                          <Button size="sm" variant="outline" className="text-red-600 hover:bg-red-50" onClick={() => handleDelete(check.id)}><Trash2 className="w-4 h-4" /></Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                  filterChecks("received").map((check) => {
+                    const isOverdue = check.status === "pending" && new Date(check.due_date) < new Date();
+                    const rowClass = isOverdue ? "bg-red-50" : "";
+                    return (
+                      <tr key={check.id} data-testid={`check-row-${check.id}`} className={rowClass}>
+                        <td className="font-semibold text-slate-900">{check.check_number}</td>
+                        <td className="text-slate-600">{check.payer_payee}</td>
+                        <td className="text-slate-600">{check.bank_name}</td>
+                        <td className="text-green-600 font-bold">₺{check.amount.toFixed(2)}</td>
+                        <td className={isOverdue ? "text-red-600 font-bold" : "text-slate-600"}>{new Date(check.due_date).toLocaleDateString('tr-TR')}</td>
+                        <td>
+                          <Select value={check.status} onValueChange={(value) => handleStatusChange(check.id, value)}>
+                            <SelectTrigger className="w-40">{getStatusBadge(check.status)}</SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="pending">Beklemede</SelectItem>
+                              <SelectItem value="collected">Tahsil Edildi</SelectItem>
+                              <SelectItem value="bounced">Karşılıksız</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </td>
+                        <td className="text-slate-600 text-sm">{check.created_by_username || "—"}</td>
+                        <td>
+                          <div className="flex gap-2">
+                            <Button size="sm" variant="outline" onClick={() => handleEdit(check)}><Pencil className="w-4 h-4" /></Button>
+                            <Button size="sm" variant="outline" className="text-red-600 hover:bg-red-50" onClick={() => handleDelete(check.id)}><Trash2 className="w-4 h-4" /></Button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr><td colSpan="8" className="text-center py-8 text-slate-500">Alınan çek bulunamadı</td></tr>
                 )}
