@@ -1,4 +1,4 @@
-# Fatura Takip Uygulaması - Docker Kurulum Rehberi
+# Ödeme Takip Uygulaması - Docker Kurulum Rehberi
 
 ## 🐳 Docker ile Hızlı Başlangıç
 
@@ -16,8 +16,8 @@ Docker kullanarak uygulamayı tek komutla çalıştırabilirsiniz!
 
 ```bash
 # GitHub'dan klonlayın
-git clone https://github.com/kullanici-adiniz/fatura-takip-uygulamasi.git
-cd fatura-takip-uygulamasi
+git clone https://github.com/kullanici-adiniz/odeme-takip-uygulamasi.git
+cd odeme-takip-uygulamasi
 ```
 
 #### 2. Environment Variables Ayarlayın

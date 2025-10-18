@@ -1,4 +1,4 @@
-# 🧾 Fatura Takip Uygulaması
+# 🧾 Ödeme Takip Uygulaması
 
 Faturalarınızı, çek ödemelerinizi ve tahsilatlarınızı kolayca yönetin!
 

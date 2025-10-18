@@ -1,4 +1,4 @@
-# Fatura Takip Uygulaması - Bağımsız Kullanım Rehberi
+# Ödeme Takip Uygulaması - Bağımsız Kullanım Rehberi
 
 ## 🎯 Genel Bakış
 
@@ -16,7 +16,7 @@ Bu uygulamayı Emergent platformundan bağımsız olarak kullanmanın 3 yolu var
 
 1. Emergent arayüzünde **"Save to GitHub"** butonuna tıklayın
 2. GitHub hesabınızla bağlantı kurun
-3. Repository adı girin (örn: `fatura-takip-uygulamasi`)
+3. Repository adı girin (örn: `odeme-takip-uygulamasi`)
 4. "Public" veya "Private" seçin
 5. Kaydet'e tıklayın
 
@@ -122,8 +122,8 @@ sudo apt update
 sudo apt install -y nodejs npm python3 python3-pip mongodb nginx
 
 # Projeyi klonla
-git clone https://github.com/kullanici-adiniz/fatura-takip-uygulamasi.git
-cd fatura-takip-uygulamasi
+git clone https://github.com/kullanici-adiniz/odeme-takip-uygulamasi.git
+cd odeme-takip-uygulamasi
 
 # Backend kurulum
 cd backend
@@ -186,8 +186,8 @@ docker-compose down
 **1. Projeyi İndirin:**
 ```bash
 # GitHub'dan klonlayın
-git clone https://github.com/kullanici-adiniz/fatura-takip-uygulamasi.git
-cd fatura-takip-uygulamasi
+git clone https://github.com/kullanici-adiniz/odeme-takip-uygulamasi.git
+cd odeme-takip-uygulamasi
 ```
 
 **2. MongoDB Kurun ve Başlatın:**

@@ -4,7 +4,7 @@ services:
   # MongoDB Database
   mongodb:
     image: mongo:7.0
-    container_name: fatura-takip-mongodb
+    container_name: odeme-takip-mongodb
     restart: unless-stopped
     ports:
       - "27017:27017"
@@ -13,14 +13,14 @@ services:
     environment:
       - MONGO_INITDB_DATABASE=fatura_takip
     networks:
-      - fatura-takip-network
+      - odeme-takip-network
 
   # Backend API
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: fatura-takip-backend
+    container_name: odeme-takip-backend
     restart: unless-stopped
     ports:
       - "8001:8001"
@@ -34,14 +34,14 @@ services:
       - ADMIN_EMAIL=${ADMIN_EMAIL}
       - SECRET_KEY=${SECRET_KEY}
     networks:
-      - fatura-takip-network
+      - odeme-takip-network
 
   # Frontend Application
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: fatura-takip-frontend
+    container_name: odeme-takip-frontend
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -50,12 +50,12 @@ services:
     environment:
       - REACT_APP_BACKEND_URL=http://localhost:8001
     networks:
-      - fatura-takip-network
+      - odeme-takip-network
 
 volumes:
   mongodb_data:
     driver: local
 
 networks:
-  fatura-takip-network:
+  odeme-takip-network:
     driver: bridge

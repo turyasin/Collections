@@ -107,13 +107,13 @@ cd ~/Projeler
 Emergent'te:
 1. "Save to GitHub" butonuna tıklayın
 2. GitHub hesabınızla giriş yapın
-3. Repository adı verin: `fatura-takip-uygulamasi`
+3. Repository adı verin: `odeme-takip-uygulamasi`
 4. "Save" deyin
 
 Sonra terminalinizde:
 ```bash
-git clone https://github.com/KULLANICI-ADINIZ/fatura-takip-uygulamasi.git
-cd fatura-takip-uygulamasi
+git clone https://github.com/KULLANICI-ADINIZ/odeme-takip-uygulamasi.git
+cd odeme-takip-uygulamasi
 ```
 
 ---
@@ -182,10 +182,10 @@ docker-compose --env-file .env.docker up -d
 
 **Ekranda Görecekleriniz:**
 ```
-Creating network "fatura-takip-uygulamasi_fatura-takip-network" ... done
-Creating fatura-takip-mongodb ... done
-Creating fatura-takip-backend ... done
-Creating fatura-takip-frontend ... done
+Creating network "odeme-takip-uygulamasi_odeme-takip-network" ... done
+Creating odeme-takip-mongodb ... done
+Creating odeme-takip-backend ... done
+Creating odeme-takip-frontend ... done
 ```
 
 ### 4.2 Durumu Kontrol Edin
@@ -197,9 +197,9 @@ docker-compose ps
 **Görmeniz Gereken:**
 ```
 NAME                    STATUS
-fatura-takip-mongodb    Up
-fatura-takip-backend    Up
-fatura-takip-frontend   Up
+odeme-takip-mongodb    Up
+odeme-takip-backend    Up
+odeme-takip-frontend   Up
 ```
 
 Hepsi "Up" yazmalı! ✅
