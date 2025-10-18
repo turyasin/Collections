@@ -97,7 +97,7 @@ export default function Payments() {
           <DialogTrigger asChild>
             <Button data-testid="add-payment-button" className="bg-blue-600 hover:bg-blue-700"><Plus className="w-4 h-4 mr-2" />Record Payment</Button>
           </DialogTrigger>
-          <DialogContent data-testid="payment-dialog">
+          <DialogContent data-testid="payment-dialog" aria-describedby="payment-dialog-description">
             <DialogHeader><DialogTitle>Record Check Payment</DialogTitle></DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
