@@ -274,9 +274,20 @@ export default function Payments() {
         </div>
       </div>
 
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-        <Input data-testid="search-payments-input" placeholder="Ödeme ara..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10" />
+      <div className="flex gap-4">
+        <div className="flex-1 relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+          <Input data-testid="search-payments-input" placeholder="Ödeme ara..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10" />
+        </div>
+        <Select value={periodFilter} onValueChange={setPeriodFilter}>
+          <SelectTrigger className="w-40" data-testid="period-filter"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tüm Periyotlar</SelectItem>
+            <SelectItem value="Aylık">Aylık</SelectItem>
+            <SelectItem value="3 Aylık">3 Aylık</SelectItem>
+            <SelectItem value="Yıllık">Yıllık</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
