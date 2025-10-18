@@ -811,7 +811,7 @@ async def export_invoices_xlsx(invoices):
     ws.title = "Faturalar"
     
     # Headers
-    headers = ["ID", "Müşteri ID", "Müşteri Adı", "Fatura No", "Tutar (₺)", "Ödenen (₺)", "Vade Tarihi", "Durum", "Notlar", "Oluşturan", "Oluşturma Tarihi"]
+    headers = ["ID", "Müşteri ID", "Müşteri Adı", "Fatura No", "Tutar (₺)", "Ödenen (₺)", "Vade Tarihi", "Durum", "Periyot", "Notlar", "Oluşturan", "Oluşturma Tarihi"]
     ws.append(headers)
     
     # Style headers
