@@ -2207,8 +2207,18 @@ async def startup_event():
         name='Daily Invoice Reminder Check',
         replace_existing=True
     )
+    
+    # Schedule nightly archiving at 2:00 AM Turkish time
+    scheduler.add_job(
+        archive_old_records,
+        CronTrigger(hour=2, minute=0, timezone=pytz.timezone('Europe/Istanbul')),
+        id='nightly_archive',
+        name='Nightly Archive Old Records',
+        replace_existing=True
+    )
+    
     scheduler.start()
-    logger.info("Scheduler started - Daily invoice reminders will be sent at 12:00 PM Turkish time")
+    logger.info("Scheduler started - Daily invoice reminders at 12:00 PM, Nightly archiving at 2:00 AM Turkish time")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
