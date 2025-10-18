@@ -1903,6 +1903,42 @@ class InvoiceTrackerAPITester:
             print("⚠️ Admin login failed - skipping period type tests")
         
         print("\n" + "=" * 60)
+        print("🔄 Testing Phase 4 Features - Month and Quarter Auto-Calculation...")
+        print("=" * 60)
+        
+        # Phase 4 - Month and Quarter Auto-Calculation tests
+        # Login as admin for month/quarter testing
+        if self.test_admin_login_for_month_quarter_tests():
+            # Test that all existing invoices and payments have month/quarter fields
+            self.test_all_invoices_have_month_quarter()
+            self.test_all_payments_have_month_quarter()
+            
+            # Test invoice month/quarter calculation
+            self.test_invoice_month_quarter_calculation_march()
+            self.test_invoice_month_quarter_calculation_july()
+            self.test_invoice_update_recalculates_month_quarter()
+            
+            # Test payment month/quarter calculation
+            self.test_payment_month_quarter_calculation()
+            
+            # Test quarter calculation validation (Q1-Q4)
+            self.test_quarter_calculation_validation()
+            
+            # Test Turkish month names validation
+            self.test_turkish_month_names_validation()
+            
+            # Test that period_type field is no longer present
+            self.test_no_period_type_field_in_responses()
+            
+            # Test data migration verification
+            self.test_data_migration_verification()
+            
+            # Restore original token
+            self.restore_original_token()
+        else:
+            print("⚠️ Admin login failed - skipping month/quarter tests")
+        
+        print("\n" + "=" * 60)
         print("🔄 Testing Advanced Functionality...")
         print("=" * 60)
         
