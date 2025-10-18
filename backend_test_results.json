@@ -3,13 +3,13 @@
     "total_tests": 45,
     "passed_tests": 39,
     "success_rate": "86.7%",
-    "timestamp": "2025-10-18T11:23:29.070918"
+    "timestamp": "2025-10-18T11:25:21.402141"
   },
   "detailed_results": [
     {
       "test": "User Registration",
       "success": true,
-      "details": "User created with email: test_112325@example.com",
+      "details": "User created with email: test_112516@example.com",
       "response_data": null
     },
     {
@@ -19,17 +19,15 @@
       "response_data": null
     },
     {
-      "test": "Admin User Registration",
+      "test": "Admin User Setup",
       "success": false,
-      "details": "Admin registration/login failed: {'detail': 'Invalid credentials'}",
-      "response_data": {
-        "detail": "Invalid credentials"
-      }
+      "details": "Could not login as existing admin user and cannot create new admin. Admin tests will be skipped.",
+      "response_data": null
     },
     {
       "test": "Create Customer",
       "success": true,
-      "details": "Customer created with ID: e0061846-9418-4bc2-b344-45eedccd7cae",
+      "details": "Customer created with ID: 8f27246b-00e6-405f-a4d6-0440ccf064ab",
       "response_data": null
     },
     {
@@ -47,31 +45,31 @@
     {
       "test": "Create Invoice",
       "success": true,
-      "details": "Invoice created with ID: c08a392c-0181-4ce9-9768-65aedb85e5da",
+      "details": "Invoice created with ID: 65aea4f6-cbba-4ea5-9ce5-21ad6fdb1437",
       "response_data": null
     },
     {
       "test": "Get Invoices",
       "success": true,
-      "details": "Retrieved 9 invoices",
+      "details": "Retrieved 11 invoices",
       "response_data": null
     },
     {
       "test": "Invoice Status Filter",
       "success": true,
-      "details": "Retrieved 5 unpaid invoices",
+      "details": "Retrieved 6 unpaid invoices",
       "response_data": null
     },
     {
       "test": "Create Check",
       "success": true,
-      "details": "Check created with ID: 4b860ae9-fe22-4d0b-9eb9-88c3cd43a069",
+      "details": "Check created with ID: 2f9ce2ee-2ac1-47b2-a80d-46a807295442",
       "response_data": null
     },
     {
       "test": "Create Payment",
       "success": true,
-      "details": "Payment created with ID: 80f94896-1201-4b56-b0f8-c99baa587e86",
+      "details": "Payment created with ID: 79e9b45f-b336-48bf-bd77-40d2d2775646",
       "response_data": null
     },
     {
@@ -89,79 +87,79 @@
     {
       "test": "Dashboard Stats",
       "success": true,
-      "details": "All required fields present. Total invoices: 9",
+      "details": "All required fields present. Total invoices: 11",
       "response_data": null
     },
     {
       "test": "Export Invoices XLSX",
       "success": true,
-      "details": "Excel file exported successfully (6301 bytes)",
+      "details": "Excel file exported successfully (6506 bytes)",
       "response_data": null
     },
     {
       "test": "Export Invoices DOCX",
       "success": true,
-      "details": "Word file exported successfully (37048 bytes)",
+      "details": "Word file exported successfully (37077 bytes)",
       "response_data": null
     },
     {
       "test": "Export Invoices PDF",
       "success": true,
-      "details": "PDF file exported successfully (2871 bytes)",
+      "details": "PDF file exported successfully (2973 bytes)",
       "response_data": null
     },
     {
       "test": "Export Checks XLSX",
       "success": true,
-      "details": "Excel file exported successfully (6239 bytes)",
+      "details": "Excel file exported successfully (6519 bytes)",
       "response_data": null
     },
     {
       "test": "Export Checks DOCX",
       "success": true,
-      "details": "Word file exported successfully (37050 bytes)",
+      "details": "Word file exported successfully (37087 bytes)",
       "response_data": null
     },
     {
       "test": "Export Checks PDF",
       "success": true,
-      "details": "PDF file exported successfully (2944 bytes)",
+      "details": "PDF file exported successfully (3111 bytes)",
       "response_data": null
     },
     {
       "test": "Export Payments XLSX",
       "success": true,
-      "details": "Excel file exported successfully (5465 bytes)",
+      "details": "Excel file exported successfully (5468 bytes)",
       "response_data": null
     },
     {
       "test": "Export Payments DOCX",
       "success": true,
-      "details": "Word file exported successfully (36855 bytes)",
+      "details": "Word file exported successfully (36857 bytes)",
       "response_data": null
     },
     {
       "test": "Export Payments PDF",
       "success": true,
-      "details": "PDF file exported successfully (2400 bytes)",
+      "details": "PDF file exported successfully (2397 bytes)",
       "response_data": null
     },
     {
       "test": "Export Weekly Schedule XLSX",
       "success": true,
-      "details": "Excel file exported successfully (6416 bytes)",
+      "details": "Excel file exported successfully (6462 bytes)",
       "response_data": null
     },
     {
       "test": "Export Weekly Schedule DOCX",
       "success": true,
-      "details": "Word file exported successfully (36954 bytes)",
+      "details": "Word file exported successfully (36961 bytes)",
       "response_data": null
     },
     {
       "test": "Export Weekly Schedule PDF",
       "success": true,
-      "details": "PDF file exported successfully (3270 bytes)",
+      "details": "PDF file exported successfully (3302 bytes)",
       "response_data": null
     },
     {
@@ -191,19 +189,19 @@
     {
       "test": "Export Dashboard Stats XLSX",
       "success": true,
-      "details": "Excel file exported successfully (5444 bytes)",
+      "details": "Excel file exported successfully (5448 bytes)",
       "response_data": null
     },
     {
       "test": "Export Dashboard Stats DOCX",
       "success": true,
-      "details": "Word file exported successfully (36861 bytes)",
+      "details": "Word file exported successfully (36869 bytes)",
       "response_data": null
     },
     {
       "test": "Export Dashboard Stats PDF",
       "success": true,
-      "details": "PDF file exported successfully (2515 bytes)",
+      "details": "PDF file exported successfully (2520 bytes)",
       "response_data": null
     },
     {
@@ -217,7 +215,7 @@
     {
       "test": "Logo Upload (Admin)",
       "success": false,
-      "details": "No admin token available",
+      "details": "No admin token available - skipping admin test",
       "response_data": null
     },
     {
@@ -231,13 +229,13 @@
     {
       "test": "Logo Upload Non-PNG",
       "success": false,
-      "details": "No admin token available",
+      "details": "No admin token available - skipping admin test",
       "response_data": null
     },
     {
       "test": "Create Non-Admin User",
       "success": true,
-      "details": "Non-admin user created: nonadmin_112328@example.com",
+      "details": "Non-admin user created: nonadmin_112520@example.com",
       "response_data": null
     },
     {
@@ -255,7 +253,7 @@
     {
       "test": "Logo Delete (Admin)",
       "success": false,
-      "details": "No admin token available",
+      "details": "No admin token available - skipping admin test",
       "response_data": null
     },
     {
