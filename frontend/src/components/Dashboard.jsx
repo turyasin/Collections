@@ -29,7 +29,17 @@ export default function Dashboard() {
     fetchStats();
     fetchCalendarData();
     fetchInvoicesAndPayments();
+    fetchBankAccounts();
   }, []);
+
+  const fetchBankAccounts = async () => {
+    try {
+      const res = await axios.get(`${API}/company-info/banks`, getAuthHeaders());
+      setBankAccounts(res.data || []);
+    } catch (error) {
+      console.error("Failed to fetch bank accounts", error);
+    }
+  };
 
   const fetchStats = async () => {
     try {
