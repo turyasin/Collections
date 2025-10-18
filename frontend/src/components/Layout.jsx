@@ -1,44 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Users, FileText, CreditCard, Receipt, CalendarDays, UserCircle, LogOut, ArrowDownUp, Settings } from "lucide-react";
-import { useState, useEffect } from "react";
-import axios from "axios";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
-const getAuthHeaders = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
+import { LayoutDashboard, Users, FileText, CreditCard, Receipt, CalendarDays, UserCircle, LogOut } from "lucide-react";
 
 export default function Layout({ children, onLogout }) {
   const location = useLocation();
-  const [logo, setLogo] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
-
-  useEffect(() => {
-    fetchLogo();
-    fetchCurrentUser();
-  }, []);
-
-  const fetchLogo = async () => {
-    try {
-      const response = await axios.get(`${API}/settings/logo`, {
-        ...getAuthHeaders(),
-        responseType: 'blob'
-      });
-      const imageUrl = URL.createObjectURL(response.data);
-      setLogo(imageUrl);
-    } catch (error) {
-      setLogo(null);
-    }
-  };
-
-  const fetchCurrentUser = async () => {
-    try {
-      const response = await axios.get(`${API}/users/me`, getAuthHeaders());
-      setCurrentUser(response.data);
-    } catch (error) {
-      console.error("Failed to fetch user", error);
-    }
-  };
 
   const navItems = [
     { path: "/", label: "Kontrol Paneli", icon: LayoutDashboard },
@@ -47,14 +12,8 @@ export default function Layout({ children, onLogout }) {
     { path: "/payments", label: "Ödemeler", icon: CreditCard },
     { path: "/checks", label: "Çekler", icon: Receipt },
     { path: "/weekly-schedule", label: "Haftalık Program", icon: CalendarDays },
-    { path: "/import-export", label: "İçe/Dışa Aktarım", icon: ArrowDownUp },
     { path: "/users", label: "Kullanıcılar", icon: UserCircle },
   ];
-
-  // Admin kullanıcılar için Ayarlar menüsü ekle
-  if (currentUser?.is_admin) {
-    navItems.push({ path: "/settings", label: "Ayarlar", icon: Settings });
-  }
 
   const isActive = (path) => {
     return location.pathname === path;
