@@ -485,6 +485,37 @@ async def get_current_user_info(user_id: str = Depends(get_current_user)):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
+
+@api_router.post("/users/change-password")
+async def change_password(request: ChangePasswordRequest, user_id: str = Depends(get_current_user)):
+    """Change current user's password"""
+    # Get user from database
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Verify current password
+    if not pwd_context.verify(request.current_password, user["password"]):
+        raise HTTPException(status_code=400, detail="Mevcut şifre yanlış")
+    
+    # Validate new password
+    if len(request.new_password) < 6:
+        raise HTTPException(status_code=400, detail="Yeni şifre en az 6 karakter olmalıdır")
+    
+    # Hash new password
+    hashed_password = pwd_context.hash(request.new_password)
+    
+    # Update password
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": {"password": hashed_password}}
+    )
+    
+    return {"message": "Şifre başarıyla değiştirildi"}
+
 @api_router.put("/users/{target_user_id}", response_model=User)
 async def update_user(target_user_id: str, user_update: UserUpdate, admin_id: str = Depends(get_current_admin_user)):
     """Update user permissions (admin only)"""
