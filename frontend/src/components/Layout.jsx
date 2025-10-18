@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, Users, FileText, CreditCard, Receipt, CalendarDays, UserCircle, LogOut, ArrowDownUp, Building2, Archive } from "lucide-react";
 
-export default function Layout({ children, onLogout }) {
+export default function Layout({ children, onLogout, user }) {
   const location = useLocation();
 
   const navItems = [
