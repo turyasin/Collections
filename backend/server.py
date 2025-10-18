@@ -227,7 +227,7 @@ async def get_current_admin_user(user_id: str = Depends(get_current_user)):
     return user_id
 
 # Email notification functions
-async def send_invoice_reminder_email(invoice_number: str, customer_name: str, amount: float, due_date: str):
+async def send_invoice_reminder_email(invoice_number: str, customer_name: str, amount: float, due_date: str, recipient_email: str, recipient_name: str):
     """Send email reminder for upcoming invoice due date"""
     if not SENDGRID_API_KEY or SENDGRID_API_KEY == 'your-sendgrid-api-key-here':
         logger.warning(f"SendGrid API key not configured. Skipping email for invoice {invoice_number}")
@@ -235,23 +235,24 @@ async def send_invoice_reminder_email(invoice_number: str, customer_name: str, a
     
     try:
         message = Mail(
-            from_email='noreply@invoicetracker.com',
-            to_emails=ADMIN_EMAIL,
-            subject=f'Invoice Reminder: {invoice_number} - Due in 2 Days',
+            from_email='noreply@odemetakip.com',
+            to_emails=recipient_email,
+            subject=f'Ödeme Hatırlatması: Fatura {invoice_number} - 2 Gün Sonra',
             html_content=f'''
             <html>
             <body style="font-family: Arial, sans-serif; padding: 20px;">
-                <h2 style="color: #2563eb;">Invoice Payment Reminder</h2>
-                <p>This is a reminder that the following invoice is due in 2 days:</p>
+                <h2 style="color: #2563eb;">Ödeme Hatırlatması</h2>
+                <p>Sayın {recipient_name},</p>
+                <p>Aşağıdaki faturanın vadesi 2 gün sonra dolmaktadır:</p>
                 <div style="background-color: #f1f5f9; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                    <p><strong>Invoice Number:</strong> {invoice_number}</p>
-                    <p><strong>Customer:</strong> {customer_name}</p>
-                    <p><strong>Amount:</strong> ₺{amount:.2f}</p>
-                    <p><strong>Due Date:</strong> {due_date}</p>
+                    <p><strong>Fatura No:</strong> {invoice_number}</p>
+                    <p><strong>Müşteri:</strong> {customer_name}</p>
+                    <p><strong>Tutar:</strong> ₺{amount:.2f}</p>
+                    <p><strong>Vade Tarihi:</strong> {due_date}</p>
                 </div>
-                <p style="color: #dc2626;">Please ensure payment collection is scheduled.</p>
+                <p style="color: #dc2626;">Lütfen ödeme tahsilatının planlandığından emin olun.</p>
                 <hr style="margin: 20px 0;">
-                <p style="color: #64748b; font-size: 12px;">This is an automated reminder from Invoice Tracker</p>
+                <p style="color: #64748b; font-size: 12px;">Bu otomatik bir hatırlatmadır - Ödeme Takip Sistemi</p>
             </body>
             </html>
             '''
@@ -259,10 +260,10 @@ async def send_invoice_reminder_email(invoice_number: str, customer_name: str, a
         
         sg = SendGridAPIClient(SENDGRID_API_KEY)
         response = sg.send(message)
-        logger.info(f"Email sent successfully for invoice {invoice_number}. Status: {response.status_code}")
+        logger.info(f"Email sent to {recipient_email} for invoice {invoice_number}. Status: {response.status_code}")
         return True
     except Exception as e:
-        logger.error(f"Failed to send email for invoice {invoice_number}: {str(e)}")
+        logger.error(f"Failed to send email to {recipient_email} for invoice {invoice_number}: {str(e)}")
         return False
 
 async def check_upcoming_invoices():
