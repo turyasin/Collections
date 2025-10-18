@@ -78,6 +78,10 @@ export default function Dashboard() {
       // Find events for this date
       const dayInvoices = calendarData.invoices.filter(inv => inv.due_date === dateStr);
       const dayChecks = calendarData.checks.filter(check => check.due_date === dateStr);
+      const dayPayments = calendarData.payments.filter(payment => {
+        const paymentDate = payment.payment_date?.split('T')[0];
+        return paymentDate === dateStr;
+      });
       
       days.push(
         <div
@@ -101,6 +105,11 @@ export default function Dashboard() {
             {dayChecks.filter(c => c.check_type === 'issued').length > 0 && (
               <div className="text-xs px-1 py-0.5 rounded bg-orange-100 text-orange-800 truncate">
                 {dayChecks.filter(c => c.check_type === 'issued').length} Verilen
+              </div>
+            )}
+            {dayPayments.length > 0 && (
+              <div className="text-xs px-1 py-0.5 rounded bg-blue-100 text-blue-800 truncate">
+                {dayPayments.length} Ödeme
               </div>
             )}
           </div>
