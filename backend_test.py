@@ -7,6 +7,8 @@ Tests all authentication, customer, invoice, payment, and dashboard endpoints
 import requests
 import sys
 import json
+import pandas as pd
+import io
 from datetime import datetime, timedelta
 from typing import Dict, Any, Optional
 
