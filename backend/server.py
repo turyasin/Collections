@@ -528,6 +528,108 @@ async def trigger_reminder_check(user_id: str = Depends(get_current_user)):
     await check_upcoming_invoices()
     return {"message": "Invoice reminder check completed"}
 
+# Check routes
+@api_router.get("/checks", response_model=List[Check])
+async def get_checks(check_type: Optional[str] = None, status: Optional[str] = None, user_id: str = Depends(get_current_user)):
+    query = {}
+    if check_type:
+        query["check_type"] = check_type
+    if status:
+        query["status"] = status
+    
+    checks = await db.checks.find(query, {"_id": 0}).to_list(1000)
+    return checks
+
+@api_router.post("/checks", response_model=Check)
+async def create_check(check: CheckCreate, user_id: str = Depends(get_current_user)):
+    check_obj = Check(**check.model_dump())
+    await db.checks.insert_one(check_obj.model_dump())
+    return check_obj
+
+@api_router.get("/checks/{check_id}", response_model=Check)
+async def get_check(check_id: str, user_id: str = Depends(get_current_user)):
+    check = await db.checks.find_one({"id": check_id}, {"_id": 0})
+    if not check:
+        raise HTTPException(status_code=404, detail="Check not found")
+    return check
+
+@api_router.put("/checks/{check_id}", response_model=Check)
+async def update_check(check_id: str, check: CheckUpdate, user_id: str = Depends(get_current_user)):
+    result = await db.checks.find_one({"id": check_id}, {"_id": 0})
+    if not result:
+        raise HTTPException(status_code=404, detail="Check not found")
+    
+    update_data = check.model_dump(exclude_unset=True)
+    await db.checks.update_one({"id": check_id}, {"$set": update_data})
+    
+    updated = await db.checks.find_one({"id": check_id}, {"_id": 0})
+    return updated
+
+@api_router.delete("/checks/{check_id}")
+async def delete_check(check_id: str, user_id: str = Depends(get_current_user)):
+    result = await db.checks.delete_one({"id": check_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Check not found")
+    return {"message": "Check deleted"}
+
+# Weekly payment schedule
+@api_router.get("/payments/weekly-schedule", response_model=List[WeeklyPaymentSchedule])
+async def get_weekly_payment_schedule(weeks: int = 4, user_id: str = Depends(get_current_user)):
+    """Get weekly payment schedule for next N weeks"""
+    schedule = []
+    today = datetime.now(timezone.utc).date()
+    
+    for week_num in range(weeks):
+        week_start = today + timedelta(weeks=week_num)
+        week_end = week_start + timedelta(days=6)
+        
+        week_start_str = week_start.isoformat()
+        week_end_str = week_end.isoformat()
+        
+        # Get received checks due this week
+        received_checks = await db.checks.find({
+            "check_type": "received",
+            "status": {"$in": ["pending"]},
+            "due_date": {"$gte": week_start_str, "$lte": week_end_str}
+        }, {"_id": 0}).to_list(1000)
+        
+        # Get issued checks due this week
+        issued_checks = await db.checks.find({
+            "check_type": "issued",
+            "status": {"$in": ["pending"]},
+            "due_date": {"$gte": week_start_str, "$lte": week_end_str}
+        }, {"_id": 0}).to_list(1000)
+        
+        # Get invoices due this week
+        invoices_due = await db.invoices.find({
+            "status": {"$in": ["unpaid", "partial"]},
+            "due_date": {"$gte": week_start_str, "$lte": week_end_str}
+        }, {"_id": 0}).to_list(1000)
+        
+        # Enrich invoices with customer names
+        for invoice in invoices_due:
+            customer = await db.customers.find_one({"id": invoice["customer_id"]}, {"_id": 0})
+            if customer:
+                invoice["customer_name"] = customer["name"]
+        
+        total_receivable = sum(c["amount"] for c in received_checks) + sum(i["amount"] - i.get("paid_amount", 0) for i in invoices_due)
+        total_payable = sum(c["amount"] for c in issued_checks)
+        
+        week_label = "Bu Hafta" if week_num == 0 else f"{week_num + 1}. Hafta"
+        date_range = f"{week_start.strftime('%d.%m')} - {week_end.strftime('%d.%m.%Y')}"
+        
+        schedule.append(WeeklyPaymentSchedule(
+            week_label=week_label,
+            date_range=date_range,
+            received_checks=received_checks,
+            issued_checks=issued_checks,
+            invoices_due=invoices_due,
+            total_receivable=total_receivable,
+            total_payable=total_payable
+        ))
+    
+    return schedule
+
 app.include_router(api_router)
 
 app.add_middleware(
