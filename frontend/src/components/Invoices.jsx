@@ -171,8 +171,8 @@ export default function Invoices() {
                 <tr key={invoice.id} data-testid={`invoice-row-${invoice.id}`}>
                   <td className="font-semibold text-slate-900">{invoice.invoice_number}</td>
                   <td className="text-slate-600">{invoice.customer_name || "N/A"}</td>
-                  <td className="text-slate-900 font-semibold">${invoice.amount.toFixed(2)}</td>
-                  <td className="text-green-600 font-semibold">${invoice.paid_amount?.toFixed(2) || "0.00"}</td>
+                  <td className="text-slate-900 font-semibold">₺{invoice.amount.toFixed(2)}</td>
+                  <td className="text-green-600 font-semibold">₺{invoice.paid_amount?.toFixed(2) || "0.00"}</td>
                   <td className="text-slate-600">{new Date(invoice.due_date).toLocaleDateString()}</td>
                   <td><span className={`status-badge status-${invoice.status}`} data-testid={`invoice-status-${invoice.id}`}>{invoice.status}</span></td>
                   <td>
