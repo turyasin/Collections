@@ -111,6 +111,13 @@ user_problem_statement: |
   1. Dashboard Export - Add export functionality to dashboard (summary statistics)
   2. Calendar - Add visual calendar to dashboard showing invoice due dates and check due dates with color coding
   3. Logo Management - Allow admin users to upload/change company logo (PNG format, 200x200px), displayed in top-left
+  
+  Phase 3 (Current):
+  Add period_type classification to Invoices and Payments with options: "Aylık" (Monthly), "3 Aylık" (Quarterly), "Yıllık" (Yearly).
+  - Backend: Add period_type field to Invoice and Payment models (default: "Aylık")
+  - Migration: Update existing records to "Aylık"
+  - Frontend: Add period_type dropdown in forms, add period filter dropdown, add period column in tables
+  - Dashboard: Add period-based statistics section with dropdown filter
 
 backend:
   - task: "Export Invoices endpoint (xlsx, docx, pdf)"
