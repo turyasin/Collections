@@ -100,7 +100,7 @@ export default function CompanyInfo() {
         acc => acc.bank_name && acc.iban && acc.account_holder
       );
 
-      await axios.post(`${API}/company-info`, {
+      await axios.post(`${API}/api/company-info`, {
         ...formData,
         bank_accounts: filledBankAccounts
       }, getAuthHeaders());
