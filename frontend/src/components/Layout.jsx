@@ -12,6 +12,7 @@ export default function Layout({ children, onLogout }) {
     { path: "/payments", label: "Ödemeler", icon: CreditCard },
     { path: "/checks", label: "Çekler", icon: Receipt },
     { path: "/weekly-schedule", label: "Haftalık Program", icon: CalendarDays },
+    { path: "/users", label: "Kullanıcılar", icon: UserCircle },
   ];
 
   const isActive = (path) => {
