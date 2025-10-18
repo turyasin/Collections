@@ -20,6 +20,8 @@ export default function Checks() {
   const [editingCheck, setEditingCheck] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("received");
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [formData, setFormData] = useState({
     check_type: "received",
     check_number: "",
