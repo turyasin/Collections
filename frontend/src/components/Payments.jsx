@@ -22,7 +22,7 @@ export default function Payments() {
   const [quarterFilter, setQuarterFilter] = useState("all");
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [formData, setFormData] = useState({ invoice_id: "", check_number: "", check_date: "", bank_name: "", amount: "" });
+  const [formData, setFormData] = useState({ invoice_id: "", payment_method: "Çek", check_number: "", check_date: "", bank_name: "", amount: "" });
 
   useEffect(() => {
     fetchPayments();
