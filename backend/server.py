@@ -503,6 +503,22 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+@app.on_event("startup")
+async def startup_event():
+    """Start the scheduler on application startup"""
+    # Schedule daily check at 12:00 PM Turkish time
+    scheduler.add_job(
+        check_upcoming_invoices,
+        CronTrigger(hour=12, minute=0, timezone=pytz.timezone('Europe/Istanbul')),
+        id='invoice_reminder_check',
+        name='Daily Invoice Reminder Check',
+        replace_existing=True
+    )
+    scheduler.start()
+    logger.info("Scheduler started - Daily invoice reminders will be sent at 12:00 PM Turkish time")
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
+    scheduler.shutdown()
     client.close()
+    logger.info("Scheduler and database connection closed")
