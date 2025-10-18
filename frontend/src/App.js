@@ -92,6 +92,18 @@ function App() {
             }
           />
           <Route
+            path="/suppliers"
+            element={
+              isAuthenticated ? (
+                <Layout onLogout={handleLogout} user={currentUser}>
+                  <Suppliers />
+                </Layout>
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route
             path="/invoices"
             element={
               isAuthenticated ? (
