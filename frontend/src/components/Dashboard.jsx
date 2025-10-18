@@ -40,14 +40,14 @@ export default function Dashboard() {
   const statCards = [
     {
       title: "Total Outstanding",
-      value: `$${stats?.outstanding_amount?.toFixed(2) || "0.00"}`,
+      value: `₺${stats?.outstanding_amount?.toFixed(2) || "0.00"}`,
       icon: DollarSign,
       color: "bg-red-500",
       testId: "total-outstanding",
     },
     {
       title: "Total Collected",
-      value: `$${stats?.paid_amount?.toFixed(2) || "0.00"}`,
+      value: `₺${stats?.paid_amount?.toFixed(2) || "0.00"}`,
       icon: CheckCircle,
       color: "bg-green-500",
       testId: "total-collected",
