@@ -787,6 +787,9 @@ class InvoiceTrackerAPITester:
         self.test_get_invoices()
         self.test_invoice_status_filtering()
         
+        # Check tests (needed for export testing)
+        self.test_create_check()
+        
         # Payment tests
         self.test_create_payment()
         self.test_invoice_status_update()
@@ -794,6 +797,42 @@ class InvoiceTrackerAPITester:
         
         # Dashboard tests
         self.test_dashboard_stats()
+        
+        print("\n" + "=" * 60)
+        print("🔄 Testing Import/Export Functionality...")
+        print("=" * 60)
+        
+        # Export tests - Invoices
+        self.test_export_invoices_xlsx()
+        self.test_export_invoices_docx()
+        self.test_export_invoices_pdf()
+        
+        # Export tests - Checks
+        self.test_export_checks_xlsx()
+        self.test_export_checks_docx()
+        self.test_export_checks_pdf()
+        
+        # Export tests - Payments
+        self.test_export_payments_xlsx()
+        self.test_export_payments_docx()
+        self.test_export_payments_pdf()
+        
+        # Export tests - Weekly Schedule
+        self.test_export_weekly_schedule_xlsx()
+        self.test_export_weekly_schedule_docx()
+        self.test_export_weekly_schedule_pdf()
+        
+        # Import tests
+        self.test_import_invoices()
+        self.test_import_checks()
+        self.test_import_payments()
+        
+        # Error handling tests
+        self.test_export_invalid_format()
+        
+        print("\n" + "=" * 60)
+        print("🔄 Testing Advanced Functionality...")
+        print("=" * 60)
         
         # Advanced functionality tests
         self.test_payment_deletion_and_status_recalculation()
