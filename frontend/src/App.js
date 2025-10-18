@@ -5,6 +5,7 @@ import axios from "axios";
 import Login from "@/components/Login";
 import Dashboard from "@/components/Dashboard";
 import Customers from "@/components/Customers";
+import Suppliers from "@/components/Suppliers";
 import Invoices from "@/components/Invoices";
 import Payments from "@/components/Payments";
 import Checks from "@/components/Checks";
