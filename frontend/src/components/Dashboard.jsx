@@ -15,9 +15,12 @@ const getAuthHeaders = () => ({
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [calendarData, setCalendarData] = useState({ invoices: [], checks: [] });
 
   useEffect(() => {
     fetchStats();
+    fetchCalendarData();
   }, []);
 
   const fetchStats = async () => {
@@ -29,6 +32,122 @@ export default function Dashboard() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchCalendarData = async () => {
+    try {
+      const [invoicesRes, checksRes] = await Promise.all([
+        axios.get(`${API}/invoices`, getAuthHeaders()),
+        axios.get(`${API}/checks`, getAuthHeaders())
+      ]);
+      setCalendarData({
+        invoices: invoicesRes.data || [],
+        checks: checksRes.data || []
+      });
+    } catch (error) {
+      console.error("Failed to fetch calendar data", error);
+    }
+  };
+
+  const renderCalendar = () => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+    
+    const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+    const dayNames = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];
+    
+    const days = [];
+    
+    // Empty cells before month starts
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(<div key={`empty-${i}`} className="h-20 bg-slate-50"></div>);
+    }
+    
+    // Days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day);
+      const dateStr = date.toISOString().split('T')[0];
+      const isToday = new Date().toDateString() === date.toDateString();
+      
+      // Find events for this date
+      const dayInvoices = calendarData.invoices.filter(inv => inv.due_date === dateStr);
+      const dayChecks = calendarData.checks.filter(check => check.due_date === dateStr);
+      
+      days.push(
+        <div
+          key={day}
+          className={`h-20 border border-slate-200 p-1 overflow-hidden ${isToday ? 'bg-blue-50 ring-2 ring-blue-500' : 'bg-white'}`}
+        >
+          <div className={`text-xs font-semibold ${isToday ? 'text-blue-600' : 'text-slate-600'}`}>
+            {day}
+          </div>
+          <div className="space-y-0.5 mt-1">
+            {dayInvoices.length > 0 && (
+              <div className="text-xs px-1 py-0.5 rounded bg-red-100 text-red-800 truncate">
+                {dayInvoices.length} Fatura
+              </div>
+            )}
+            {dayChecks.filter(c => c.check_type === 'received').length > 0 && (
+              <div className="text-xs px-1 py-0.5 rounded bg-green-100 text-green-800 truncate">
+                {dayChecks.filter(c => c.check_type === 'received').length} Alınan
+              </div>
+            )}
+            {dayChecks.filter(c => c.check_type === 'issued').length > 0 && (
+              <div className="text-xs px-1 py-0.5 rounded bg-orange-100 text-orange-800 truncate">
+                {dayChecks.filter(c => c.check_type === 'issued').length} Verilen
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+    
+    return (
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-slate-900">Tahsilat Takvimi</h2>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}>
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+            <span className="text-sm font-semibold min-w-[120px] text-center">
+              {monthNames[month]} {year}
+            </span>
+            <Button variant="outline" size="sm" onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}>
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-4 mb-4 text-xs">
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 rounded bg-red-100 border border-red-300"></div>
+            <span>Fatura Vadesi</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 rounded bg-green-100 border border-green-300"></div>
+            <span>Alınan Çek</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 rounded bg-orange-100 border border-orange-300"></div>
+            <span>Verilen Çek</span>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-7 gap-0 border border-slate-200">
+          {dayNames.map(day => (
+            <div key={day} className="bg-slate-100 text-center py-2 text-sm font-semibold text-slate-700 border border-slate-200">
+              {day}
+            </div>
+          ))}
+          {days}
+        </div>
+      </div>
+    );
   };
 
   if (loading) {
