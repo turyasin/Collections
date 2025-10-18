@@ -883,13 +883,21 @@ class InvoiceTrackerAPITester:
 
     def test_logo_upload_admin(self):
         """Test logo upload as admin user"""
-        # First, we need to make sure we have admin privileges
-        # The test user should be admin (first user or turyasin@gmail.com)
+        if not hasattr(self, 'admin_token'):
+            self.log_test("Logo Upload (Admin)", False, "No admin token available")
+            return False
+            
+        # Temporarily switch to admin token
+        original_token = self.token
+        self.token = self.admin_token
         
         png_file = self.create_test_png_image()
         files = {'file': ('test_logo.png', png_file, 'image/png')}
         
         success, response = self.make_request('POST', '/settings/logo', files=files, expected_status=200)
+        
+        # Restore original token
+        self.token = original_token
         
         if success:
             self.log_test("Logo Upload (Admin)", True, f"Logo uploaded successfully: {response}")
