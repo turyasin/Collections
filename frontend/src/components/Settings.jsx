@@ -36,10 +36,15 @@ export default function Settings() {
         ...getAuthHeaders(),
         responseType: 'blob'
       });
-      const imageUrl = URL.createObjectURL(response.data);
-      setLogo(imageUrl);
+      if (response.status === 200 && response.data.size > 0) {
+        const imageUrl = URL.createObjectURL(response.data);
+        setLogo(imageUrl);
+      } else {
+        setLogo(null);
+      }
     } catch (error) {
-      // Logo doesn't exist yet
+      // Logo doesn't exist yet - silently handle
+      console.log('Logo not available:', error.response?.status);
       setLogo(null);
     }
   };
