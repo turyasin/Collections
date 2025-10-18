@@ -246,15 +246,18 @@ frontend:
 
   - task: "Export/Import UI for Payments page"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/components/Payments.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added Export and Import buttons with file upload handling. Includes field descriptions for import template."
+      - working: true
+        agent: "testing"
+        comment: "UI TESTING COMPLETED - ALL FUNCTIONALITY WORKING. Export and Import buttons both visible and functional. Fixed JSX syntax error (missing closing div tag) during testing. Buttons properly styled with correct colors. Turkish labels correct. File upload functionality working with .xlsx validation."
 
   - task: "Export UI for Weekly Schedule page"
     implemented: true
