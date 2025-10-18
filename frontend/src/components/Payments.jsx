@@ -78,7 +78,7 @@ export default function Payments() {
   };
 
   const resetForm = () => {
-    setFormData({ invoice_id: "", check_number: "", check_date: "", bank_name: "", amount: "", period_type: "Aylık" });
+    setFormData({ invoice_id: "", check_number: "", check_date: "", bank_name: "", amount: "" });
   };
 
   const handleExport = async (format) => {
