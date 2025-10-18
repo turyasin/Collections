@@ -15,6 +15,7 @@ const getAuthHeaders = () => ({ headers: { Authorization: `Bearer ${localStorage
 
 export default function Checks() {
   const [checks, setChecks] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingCheck, setEditingCheck] = useState(null);
@@ -29,12 +30,23 @@ export default function Checks() {
     due_date: "",
     bank_name: "",
     payer_payee: "",
+    supplier_id: "",
     notes: ""
   });
 
   useEffect(() => {
     fetchChecks();
+    fetchSuppliers();
   }, []);
+
+  const fetchSuppliers = async () => {
+    try {
+      const response = await axios.get(`${API}/suppliers`, getAuthHeaders());
+      setSuppliers(response.data);
+    } catch (error) {
+      console.error("Tedarikçiler yüklenemedi");
+    }
+  };
 
   const fetchChecks = async () => {
     try {
