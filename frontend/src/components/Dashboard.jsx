@@ -18,7 +18,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [calendarData, setCalendarData] = useState({ invoices: [], checks: [], payments: [] });
-  const [periodFilter, setPeriodFilter] = useState("all");
+  const [monthFilter, setMonthFilter] = useState("all");
+  const [quarterFilter, setQuarterFilter] = useState("all");
   const [invoices, setInvoices] = useState([]);
   const [payments, setPayments] = useState([]);
 
