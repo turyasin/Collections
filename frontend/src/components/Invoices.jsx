@@ -22,7 +22,7 @@ export default function Invoices() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [monthFilter, setMonthFilter] = useState("all");
   const [quarterFilter, setQuarterFilter] = useState("all");
-  const [formData, setFormData] = useState({ customer_id: "", invoice_number: "", amount: "", due_date: "", notes: "" });
+  const [formData, setFormData] = useState({ customer_id: "", invoice_number: "", amount: "", due_date: "", currency: "TRY", notes: "" });
   const [exportFormat, setExportFormat] = useState("xlsx");
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
