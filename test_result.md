@@ -103,9 +103,14 @@
 #====================================================================================================
 
 user_problem_statement: |
-  Add import/export functionality to the control panel for Faturalar (Invoices), Çekler (Checks), 
+  Phase 1: Add import/export functionality to control panel for Faturalar (Invoices), Çekler (Checks), 
   Ödemeler (Payments), and Haftalık Planlar (Weekly Plans). Support .xlsx, .docx, and .pdf formats 
   for export. Support .xlsx format for import.
+  
+  Phase 2 (New):
+  1. Dashboard Export - Add export functionality to dashboard (summary statistics)
+  2. Calendar - Add visual calendar to dashboard showing invoice due dates and check due dates with color coding
+  3. Logo Management - Allow admin users to upload/change company logo (PNG format, 200x200px), displayed in top-left
 
 backend:
   - task: "Export Invoices endpoint (xlsx, docx, pdf)"
