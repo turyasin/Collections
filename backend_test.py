@@ -923,9 +923,11 @@ class InvoiceTrackerAPITester:
 
     def test_logo_get_public(self):
         """Test getting logo (public endpoint)"""
-        success, response = self.make_request('GET', '/settings/logo', expected_status=200)
+        # Try to get logo - it might exist or not exist
+        success, response = self.make_request('GET', '/settings/logo')
         
         if success:
+            # Logo exists and was retrieved successfully
             content_type = response.get('content_type', '')
             content_length = response.get('content_length', 0)
             
@@ -936,10 +938,16 @@ class InvoiceTrackerAPITester:
                 self.log_test("Get Logo (Public)", False, f"Invalid logo response: {response}")
                 return False
         else:
-            # If no logo exists, we should get 404
-            if response.get('status_code') == 404:
-                self.log_test("Get Logo (Public)", True, "Correctly returned 404 when no logo exists")
-                return True
+            # Check if it's a 404 (no logo exists)
+            status_code = response.get('status_code', 0)
+            if status_code == 404:
+                detail = response.get('detail', '')
+                if 'Logo bulunamadı' in detail or 'not found' in detail.lower():
+                    self.log_test("Get Logo (Public)", True, "Correctly returned 404 when no logo exists")
+                    return True
+                else:
+                    self.log_test("Get Logo (Public)", False, f"Unexpected 404 response: {response}")
+                    return False
             else:
                 self.log_test("Get Logo (Public)", False, f"Unexpected response: {response}", response)
                 return False
