@@ -15,9 +15,13 @@ const getAuthHeaders = () => ({
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [invoices, setInvoices] = useState([]);
+  const [checks, setChecks] = useState([]);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
     fetchStats();
+    fetchCalendarData();
   }, []);
 
   const fetchStats = async () => {
@@ -28,6 +32,42 @@ export default function Dashboard() {
       toast.error("Failed to load dashboard data");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchCalendarData = async () => {
+    try {
+      const [invoicesRes, checksRes] = await Promise.all([
+        axios.get(`${API}/invoices`, getAuthHeaders()),
+        axios.get(`${API}/checks`, getAuthHeaders())
+      ]);
+      setInvoices(invoicesRes.data);
+      setChecks(checksRes.data);
+    } catch (error) {
+      console.error("Failed to load calendar data", error);
+    }
+  };
+
+  const handleExport = async (format) => {
+    try {
+      const response = await axios.get(`${API}/export/dashboard-stats?format=${format}`, {
+        ...getAuthHeaders(),
+        responseType: 'blob'
+      });
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      const fileExtension = format === 'xlsx' ? 'xlsx' : format === 'docx' ? 'docx' : 'pdf';
+      link.setAttribute('download', `dashboard_ozet_${new Date().toISOString().split('T')[0]}.${fileExtension}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      
+      toast.success(`Dashboard özeti ${format.toUpperCase()} formatında indirildi`);
+    } catch (error) {
+      toast.error("Dışa aktarma başarısız oldu");
     }
   };
 
