@@ -1,12 +1,48 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileText, CreditCard, Receipt } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { FileText, CreditCard, Receipt, Archive } from "lucide-react";
+import { toast } from "sonner";
 import Invoices from "@/components/Invoices";
 import Payments from "@/components/Payments";
 import Checks from "@/components/Checks";
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
+
+const getAuthHeaders = () => ({
+  headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+});
+
 export default function Finance() {
   const [activeTab, setActiveTab] = useState("invoices");
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    fetchCurrentUser();
+  }, []);
+
+  const fetchCurrentUser = async () => {
+    try {
+      const response = await axios.get(`${API}/users/me`, getAuthHeaders());
+      setCurrentUser(response.data);
+    } catch (error) {
+      console.error("Failed to fetch current user");
+    }
+  };
+
+  const handleArchive = async () => {
+    if (!window.confirm(`Eski kayıtları arşivlemek istediğinizden emin misiniz?`)) return;
+    
+    try {
+      await axios.post(`${API}/archive/create`, {}, getAuthHeaders());
+      toast.success("Arşivleme işlemi tamamlandı");
+      window.location.reload();
+    } catch (error) {
+      toast.error("Arşivleme başarısız");
+    }
+  };
 
   return (
     <div className="space-y-6">
