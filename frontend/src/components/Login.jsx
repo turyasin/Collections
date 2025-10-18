@@ -51,7 +51,7 @@ export default function Login({ onLogin }) {
             </div>
           </div>
           <h1 className="text-3xl font-bold text-slate-900">
-            Fatura Takip
+            Ödeme Takip
           </h1>
           <p className="text-slate-600">
             Faturaları yönetin ve çek ödemelerini takip edin
