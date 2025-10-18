@@ -326,7 +326,13 @@ async def get_customers(user_id: str = Depends(get_current_user)):
 
 @api_router.post("/customers", response_model=Customer)
 async def create_customer(customer: CustomerCreate, user_id: str = Depends(get_current_user)):
+    # Get current user info
+    current_user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    
     customer_obj = Customer(**customer.model_dump())
+    customer_obj.created_by = user_id
+    customer_obj.created_by_username = current_user.get("username", "Unknown") if current_user else "Unknown"
+    
     await db.customers.insert_one(customer_obj.model_dump())
     return customer_obj
 
