@@ -267,6 +267,7 @@ export default function Payments() {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       <div className="relative">
