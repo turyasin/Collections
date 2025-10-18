@@ -36,7 +36,7 @@ export default function Customers() {
       const response = await axios.get(`${API}/customers`, getAuthHeaders());
       setCustomers(response.data);
     } catch (error) {
-      toast.error("Failed to load customers");
+      toast.error("Müşteriler yüklenemedi");
     } finally {
       setLoading(false);
     }
@@ -47,16 +47,16 @@ export default function Customers() {
     try {
       if (editingCustomer) {
         await axios.put(`${API}/customers/${editingCustomer.id}`, formData, getAuthHeaders());
-        toast.success("Customer updated successfully");
+        toast.success("Müşteri güncellendi");
       } else {
         await axios.post(`${API}/customers`, formData, getAuthHeaders());
-        toast.success("Customer created successfully");
+        toast.success("Müşteri eklendi");
       }
       setDialogOpen(false);
       resetForm();
       fetchCustomers();
     } catch (error) {
-      toast.error(error.response?.data?.detail || "Failed to save customer");
+      toast.error(error.response?.data?.detail || "Müşteri kaydedilemedi");
     }
   };
 
@@ -72,13 +72,13 @@ export default function Customers() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this customer?")) return;
+    if (!window.confirm("Bu müşteriyi silmek istediğinizden emin misiniz?")) return;
     try {
       await axios.delete(`${API}/customers/${id}`, getAuthHeaders());
-      toast.success("Customer deleted successfully");
+      toast.success("Müşteri silindi");
       fetchCustomers();
     } catch (error) {
-      toast.error("Failed to delete customer");
+      toast.error("Müşteri silinemedi");
     }
   };
 
@@ -103,8 +103,8 @@ export default function Customers() {
     <div className="space-y-6 animate-fade-in" data-testid="customers-page">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">Customers</h1>
-          <p className="text-slate-600">Manage your customer database</p>
+          <h1 className="text-4xl font-bold text-slate-900 mb-2">Müşteriler</h1>
+          <p className="text-slate-600">Müşteri veritabanınızı yönetin</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
           <DialogTrigger asChild>
@@ -115,11 +115,11 @@ export default function Customers() {
           </DialogTrigger>
           <DialogContent data-testid="customer-dialog" aria-describedby="customer-dialog-description">
             <DialogHeader>
-              <DialogTitle>{editingCustomer ? "Edit Customer" : "Add New Customer"}</DialogTitle>
+              <DialogTitle>{editingCustomer ? "Müşteri Düzenle" : "Yeni Müşteri"}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Name *</Label>
+                <Label htmlFor="name">Ad *</Label>
                 <Input id="name" data-testid="customer-name-input" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />
               </div>
               <div className="space-y-2">
@@ -127,16 +127,16 @@ export default function Customers() {
                 <Input id="email" data-testid="customer-email-input" type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone</Label>
+                <Label htmlFor="phone">Telefon</Label>
                 <Input id="phone" data-testid="customer-phone-input" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="address">Address</Label>
+                <Label htmlFor="address">Adres</Label>
                 <Input id="address" data-testid="customer-address-input" value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })} />
               </div>
               <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-                <Button type="submit" data-testid="save-customer-button" className="bg-blue-600 hover:bg-blue-700">{editingCustomer ? "Update" : "Create"}</Button>
+                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>İptal</Button>
+                <Button type="submit" data-testid="save-customer-button" className="bg-blue-600 hover:bg-blue-700">{editingCustomer ? "Güncelle" : "Kaydet"}</Button>
               </div>
             </form>
           </DialogContent>
@@ -145,18 +145,18 @@ export default function Customers() {
 
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-        <Input data-testid="search-customers-input" placeholder="Search customers..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10" />
+        <Input data-testid="search-customers-input" placeholder="Müşteri ara..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10" />
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <table className="custom-table">
           <thead>
             <tr>
-              <th>Name</th>
+              <th>Ad</th>
               <th>Email</th>
-              <th>Phone</th>
-              <th>Address</th>
-              <th>Actions</th>
+              <th>Telefon</th>
+              <th>Adres</th>
+              <th>İşlemler</th>
             </tr>
           </thead>
           <tbody>
@@ -181,7 +181,7 @@ export default function Customers() {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="text-center py-8 text-slate-500">No customers found</td>
+                <td colSpan="5" className="text-center py-8 text-slate-500">Müşteri bulunamadı</td>
               </tr>
             )}
           </tbody>
