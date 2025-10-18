@@ -516,6 +516,18 @@ async def get_dashboard_stats(user_id: str = Depends(get_current_user)):
             if customer:
                 payment["customer_name"] = customer["name"]
     
+    # Check statistics
+    received_checks = await db.checks.find({"check_type": "received"}, {"_id": 0}).to_list(1000)
+    issued_checks = await db.checks.find({"check_type": "issued"}, {"_id": 0}).to_list(1000)
+    
+    total_received_checks = len(received_checks)
+    total_received_amount = sum(c["amount"] for c in received_checks)
+    pending_received_checks = len([c for c in received_checks if c["status"] == "pending"])
+    
+    total_issued_checks = len(issued_checks)
+    total_issued_amount = sum(c["amount"] for c in issued_checks)
+    pending_issued_checks = len([c for c in issued_checks if c["status"] == "pending"])
+    
     return DashboardStats(
         total_invoices=total_invoices,
         total_amount=total_amount,
@@ -524,7 +536,13 @@ async def get_dashboard_stats(user_id: str = Depends(get_current_user)):
         unpaid_count=unpaid_count,
         partial_count=partial_count,
         paid_count=paid_count,
-        recent_payments=payments
+        recent_payments=payments,
+        total_received_checks=total_received_checks,
+        total_received_amount=total_received_amount,
+        pending_received_checks=pending_received_checks,
+        total_issued_checks=total_issued_checks,
+        total_issued_amount=total_issued_amount,
+        pending_issued_checks=pending_issued_checks
     )
 
 # Email notification endpoint (for testing)
