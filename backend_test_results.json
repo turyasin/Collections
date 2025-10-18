@@ -1,15 +1,15 @@
 {
   "summary": {
-    "total_tests": 15,
-    "passed_tests": 15,
-    "success_rate": "100.0%",
-    "timestamp": "2025-10-18T05:53:34.251692"
+    "total_tests": 32,
+    "passed_tests": 29,
+    "success_rate": "90.6%",
+    "timestamp": "2025-10-18T10:50:20.830634"
   },
   "detailed_results": [
     {
       "test": "User Registration",
       "success": true,
-      "details": "User created with email: test_055333@example.com",
+      "details": "User created with email: test_105018@example.com",
       "response_data": null
     },
     {
@@ -21,13 +21,13 @@
     {
       "test": "Create Customer",
       "success": true,
-      "details": "Customer created with ID: eb6487d2-6275-4a6d-86b3-68c4eef3c73b",
+      "details": "Customer created with ID: ad8a0756-b909-4160-b661-16a8a3dc4b0f",
       "response_data": null
     },
     {
       "test": "Get Customers",
       "success": true,
-      "details": "Retrieved 1 customers",
+      "details": "Retrieved 4 customers",
       "response_data": null
     },
     {
@@ -39,25 +39,31 @@
     {
       "test": "Create Invoice",
       "success": true,
-      "details": "Invoice created with ID: af4a7c7a-bbc3-4b4a-8409-777dc02932ed",
+      "details": "Invoice created with ID: eb8a65e2-a21f-48af-a5f5-81f9888f98b1",
       "response_data": null
     },
     {
       "test": "Get Invoices",
       "success": true,
-      "details": "Retrieved 1 invoices",
+      "details": "Retrieved 3 invoices",
       "response_data": null
     },
     {
       "test": "Invoice Status Filter",
       "success": true,
-      "details": "Retrieved 1 unpaid invoices",
+      "details": "Retrieved 2 unpaid invoices",
+      "response_data": null
+    },
+    {
+      "test": "Create Check",
+      "success": true,
+      "details": "Check created with ID: 51bc54bc-2712-4605-aad8-aa31d9677d56",
       "response_data": null
     },
     {
       "test": "Create Payment",
       "success": true,
-      "details": "Payment created with ID: 2f5b64e3-3a94-400e-9e6a-e3736be17bfc",
+      "details": "Payment created with ID: ee96a944-564d-4ec3-a7c4-abb6d0edc20d",
       "response_data": null
     },
     {
@@ -69,13 +75,118 @@
     {
       "test": "Get Payments",
       "success": true,
-      "details": "Retrieved 1 payments",
+      "details": "Retrieved 2 payments",
       "response_data": null
     },
     {
       "test": "Dashboard Stats",
       "success": true,
-      "details": "All required fields present. Total invoices: 1",
+      "details": "All required fields present. Total invoices: 3",
+      "response_data": null
+    },
+    {
+      "test": "Export Invoices XLSX",
+      "success": true,
+      "details": "Excel file exported successfully (5649 bytes)",
+      "response_data": null
+    },
+    {
+      "test": "Export Invoices DOCX",
+      "success": true,
+      "details": "Word file exported successfully (36914 bytes)",
+      "response_data": null
+    },
+    {
+      "test": "Export Invoices PDF",
+      "success": true,
+      "details": "PDF file exported successfully (2472 bytes)",
+      "response_data": null
+    },
+    {
+      "test": "Export Checks XLSX",
+      "success": true,
+      "details": "Excel file exported successfully (5366 bytes)",
+      "response_data": null
+    },
+    {
+      "test": "Export Checks DOCX",
+      "success": true,
+      "details": "Word file exported successfully (36837 bytes)",
+      "response_data": null
+    },
+    {
+      "test": "Export Checks PDF",
+      "success": true,
+      "details": "PDF file exported successfully (2338 bytes)",
+      "response_data": null
+    },
+    {
+      "test": "Export Payments XLSX",
+      "success": true,
+      "details": "Excel file exported successfully (5463 bytes)",
+      "response_data": null
+    },
+    {
+      "test": "Export Payments DOCX",
+      "success": true,
+      "details": "Word file exported successfully (36854 bytes)",
+      "response_data": null
+    },
+    {
+      "test": "Export Payments PDF",
+      "success": true,
+      "details": "PDF file exported successfully (2396 bytes)",
+      "response_data": null
+    },
+    {
+      "test": "Export Weekly Schedule XLSX",
+      "success": false,
+      "details": "Export failed: {'status_code': 500, 'text': 'Internal Server Error'}",
+      "response_data": {
+        "status_code": 500,
+        "text": "Internal Server Error"
+      }
+    },
+    {
+      "test": "Export Weekly Schedule DOCX",
+      "success": false,
+      "details": "Export failed: {'status_code': 500, 'text': 'Internal Server Error'}",
+      "response_data": {
+        "status_code": 500,
+        "text": "Internal Server Error"
+      }
+    },
+    {
+      "test": "Export Weekly Schedule PDF",
+      "success": false,
+      "details": "Export failed: {'status_code': 500, 'text': 'Internal Server Error'}",
+      "response_data": {
+        "status_code": 500,
+        "text": "Internal Server Error"
+      }
+    },
+    {
+      "test": "Import Invoices",
+      "success": true,
+      "details": "Successfully imported 2 invoices",
+      "response_data": null
+    },
+    {
+      "test": "Import Checks",
+      "success": true,
+      "details": "Successfully imported 2 checks",
+      "response_data": null
+    },
+    {
+      "test": "Import Payments",
+      "success": true,
+      "details": "Successfully imported 2 payments",
+      "response_data": null
+    },
+    {
+      "test": "Export Invalid Format",
+      "success": true,
+      "details": "Correctly rejected invalid format",
       "response_data": null
     },
     {
