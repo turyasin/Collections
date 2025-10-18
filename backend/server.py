@@ -529,6 +529,10 @@ async def create_invoice(invoice: InvoiceCreate, user_id: str = Depends(get_curr
     invoice_obj.created_by = user_id
     invoice_obj.created_by_username = current_user.get("username", "Unknown") if current_user else "Unknown"
     
+    # Auto-calculate month and quarter from due_date
+    invoice_obj.month = get_month_year(invoice.due_date)
+    invoice_obj.quarter = get_quarter_year(invoice.due_date)
+    
     customer = await db.customers.find_one({"id": invoice.customer_id}, {"_id": 0})
     if customer:
         invoice_obj.customer_name = customer["name"]
