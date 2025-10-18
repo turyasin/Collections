@@ -336,7 +336,7 @@ export default function Invoices() {
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <table className="custom-table">
           <thead>
-            <tr><th>Fatura #</th><th>Müşteri</th><th>Tutar</th><th>Ödendi</th><th>Vade</th><th>Ay</th><th>Çeyrek</th><th>Durum</th><th>Ekleyen</th><th>Actions</th></tr>
+            <tr><th>Fatura #</th><th>Müşteri</th><th>Tutar</th><th>Para Birimi</th><th>Ödendi</th><th>Vade</th><th>Ay</th><th>Çeyrek</th><th>Durum</th><th>Ekleyen</th><th>Actions</th></tr>
           </thead>
           <tbody>
             {filteredInvoices.length > 0 ? (
@@ -344,8 +344,9 @@ export default function Invoices() {
                 <tr key={invoice.id} data-testid={`invoice-row-${invoice.id}`}>
                   <td className="font-semibold text-slate-900">{invoice.invoice_number}</td>
                   <td className="text-slate-600">{invoice.customer_name || "N/A"}</td>
-                  <td className="text-slate-900 font-semibold">₺{invoice.amount.toFixed(2)}</td>
-                  <td className="text-green-600 font-semibold">₺{invoice.paid_amount?.toFixed(2) || "0.00"}</td>
+                  <td className="text-slate-900 font-semibold">{invoice.amount.toFixed(2)}</td>
+                  <td className="text-slate-600 font-semibold">{invoice.currency || "TRY"}</td>
+                  <td className="text-green-600 font-semibold">{invoice.paid_amount?.toFixed(2) || "0.00"}</td>
                   <td className="text-slate-600">{new Date(invoice.due_date).toLocaleDateString()}</td>
                   <td className="text-slate-600">{invoice.month || "—"}</td>
                   <td className="text-slate-600">{invoice.quarter || "—"}</td>
@@ -359,7 +360,7 @@ export default function Invoices() {
                 </tr>
               ))
             ) : (
-              <tr><td colSpan="10" className="text-center py-8 text-slate-500">Fatura bulunamadı</td></tr>
+              <tr><td colSpan="11" className="text-center py-8 text-slate-500">Fatura bulunamadı</td></tr>
             )}
           </tbody>
         </table>
