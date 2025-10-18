@@ -492,9 +492,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Invoices page period_type field"
-    - "Payments page period_type field"
-    - "Dashboard period statistics"
+    - "Month and Quarter Auto-Calculation System"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
