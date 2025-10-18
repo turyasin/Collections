@@ -831,6 +831,7 @@ async def export_invoices_xlsx(invoices):
             inv.get("paid_amount", 0),
             inv.get("due_date", ""),
             inv.get("status", ""),
+            inv.get("period_type", "Aylık"),
             inv.get("notes", ""),
             inv.get("created_by_username", ""),
             inv.get("created_at", "")
