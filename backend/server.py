@@ -261,6 +261,7 @@ class CheckUpdate(BaseModel):
     bank_name: Optional[str] = None
     payer_payee: Optional[str] = None
     status: Optional[str] = None
+    supplier_id: Optional[str] = None
     related_invoice_id: Optional[str] = None
     notes: Optional[str] = None
 
