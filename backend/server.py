@@ -785,6 +785,7 @@ async def get_dashboard_stats(user_id: str = Depends(get_current_user)):
         unpaid_count=unpaid_count,
         partial_count=partial_count,
         paid_count=paid_count,
+        overdue_count=overdue_count,
         recent_payments=payments,
         total_received_checks=total_received_checks,
         total_received_amount=total_received_amount,
