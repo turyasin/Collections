@@ -156,6 +156,7 @@ export default function Customers() {
               <th>Email</th>
               <th>Telefon</th>
               <th>Adres</th>
+              <th>Ekleyen</th>
               <th>İşlemler</th>
             </tr>
           </thead>
