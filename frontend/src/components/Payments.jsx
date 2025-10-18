@@ -107,7 +107,7 @@ export default function Payments() {
                   <SelectContent>
                     {invoices.map((invoice) => (
                       <SelectItem key={invoice.id} value={invoice.id}>
-                        {invoice.invoice_number} - {invoice.customer_name} (${(invoice.amount - (invoice.paid_amount || 0)).toFixed(2)} remaining)
+                        {invoice.invoice_number} - {invoice.customer_name} (₺{(invoice.amount - (invoice.paid_amount || 0)).toFixed(2)} remaining)
                       </SelectItem>
                     ))}
                   </SelectContent>
