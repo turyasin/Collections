@@ -216,15 +216,18 @@ backend:
 frontend:
   - task: "Export/Import UI for Invoices page"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/components/Invoices.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added Export (Download) and Import (Upload) buttons with dialog modals. Export offers 3 format choices. Import accepts .xlsx files with validation."
+      - working: true
+        agent: "testing"
+        comment: "COMPREHENSIVE UI TESTING COMPLETED - ALL FUNCTIONALITY WORKING. Export button (green styling) opens dialog with 3 format options (Excel, Word, PDF). Import button (purple styling) opens dialog with file input accepting .xlsx files. All dialogs open/close properly. Turkish text displayed correctly. Export downloads triggered successfully. Fixed minor JSX syntax error in Payments.jsx during testing."
 
   - task: "Export/Import UI for Checks page"
     implemented: true
