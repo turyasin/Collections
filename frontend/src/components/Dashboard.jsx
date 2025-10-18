@@ -55,6 +55,19 @@ export default function Dashboard() {
     }
   };
 
+  const fetchInvoicesAndPayments = async () => {
+    try {
+      const [invoicesRes, paymentsRes] = await Promise.all([
+        axios.get(`${API}/invoices`, getAuthHeaders()),
+        axios.get(`${API}/payments`, getAuthHeaders())
+      ]);
+      setInvoices(invoicesRes.data || []);
+      setPayments(paymentsRes.data || []);
+    } catch (error) {
+      console.error("Failed to fetch invoices and payments", error);
+    }
+  };
+
   const renderCalendar = () => {
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
