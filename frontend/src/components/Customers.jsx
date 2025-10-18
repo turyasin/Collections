@@ -424,7 +424,9 @@ export default function Customers() {
                   <thead>
                     <tr className="border-b border-slate-200">
                       <th className="text-left py-3 px-4 font-semibold text-slate-700">Firma Adı</th>
-                      <th className="text-left py-3 px-4 font-semibold text-slate-700">İskonto %</th>
+                      {currentUser?.is_admin && (
+                        <th className="text-left py-3 px-4 font-semibold text-slate-700">İskonto %</th>
+                      )}
                       <th className="text-left py-3 px-4 font-semibold text-slate-700">E-posta</th>
                       <th className="text-left py-3 px-4 font-semibold text-slate-700">Telefon</th>
                       <th className="text-left py-3 px-4 font-semibold text-slate-700">Adres</th>
@@ -435,11 +437,13 @@ export default function Customers() {
                     {filteredSuppliers.map((supplier) => (
                       <tr key={supplier.id} className="border-b border-slate-100 hover:bg-slate-50">
                         <td className="py-3 px-4 font-medium">{supplier.name}</td>
-                        <td className="py-3 px-4">
-                          <span className="inline-block bg-green-100 text-green-700 px-2 py-1 rounded text-sm font-medium">
-                            %{supplier.discount_rate || 0}
-                          </span>
-                        </td>
+                        {currentUser?.is_admin && (
+                          <td className="py-3 px-4">
+                            <span className="inline-block bg-green-100 text-green-700 px-2 py-1 rounded text-sm font-medium">
+                              %{supplier.discount_rate || 0}
+                            </span>
+                          </td>
+                        )}
                         <td className="py-3 px-4">{supplier.email || "-"}</td>
                         <td className="py-3 px-4">{supplier.phone || "-"}</td>
                         <td className="py-3 px-4">{supplier.address || "-"}</td>
