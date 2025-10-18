@@ -932,8 +932,8 @@ class InvoiceTrackerAPITester:
 
     def test_logo_upload_non_png(self):
         """Test logo upload with non-PNG file (should fail)"""
-        if not hasattr(self, 'admin_token'):
-            self.log_test("Logo Upload Non-PNG", False, "No admin token available")
+        if not hasattr(self, 'admin_token') or not self.admin_token:
+            self.log_test("Logo Upload Non-PNG", False, "No admin token available - skipping admin test")
             return False
             
         # Temporarily switch to admin token
