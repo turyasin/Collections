@@ -168,6 +168,7 @@ export default function Customers() {
                   <td className="text-slate-600">{customer.email || "—"}</td>
                   <td className="text-slate-600">{customer.phone || "—"}</td>
                   <td className="text-slate-600">{customer.address || "—"}</td>
+                  <td className="text-slate-600 text-sm">{customer.created_by_username || "—"}</td>
                   <td>
                     <div className="flex gap-2">
                       <Button size="sm" variant="outline" data-testid={`edit-customer-${customer.id}`} onClick={() => handleEdit(customer)}>
