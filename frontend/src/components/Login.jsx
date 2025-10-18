@@ -62,7 +62,7 @@ export default function Login({ onLogin }) {
           {!isLogin && (
             <div className="space-y-2">
               <Label htmlFor="username" data-testid="username-label">
-                Username
+                Kullanıcı Adı
               </Label>
               <Input
                 id="username"
