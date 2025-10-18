@@ -277,6 +277,21 @@ export default function Payments() {
                     </SelectContent>
                   </Select>
                 </div>
+                {(formData.payment_method === "Havale/EFT" || formData.payment_method === "Nakit") && bankAccounts.length > 0 && (
+                  <div className="space-y-2">
+                    <Label htmlFor="bank_account">Banka Hesabı (Gelen Ödeme)</Label>
+                    <Select value={formData.bank_account_id} onValueChange={(value) => setFormData({ ...formData, bank_account_id: value })}>
+                      <SelectTrigger data-testid="bank-account-select"><SelectValue placeholder="Hesap seçin (opsiyonel)" /></SelectTrigger>
+                      <SelectContent>
+                        {bankAccounts.map((account) => (
+                          <SelectItem key={account.id} value={account.id}>
+                            {account.bank_name} - {account.currency} - {account.iban.slice(-4)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
                 {formData.payment_method === "Çek" && (
                   <>
                     <div className="space-y-2">
