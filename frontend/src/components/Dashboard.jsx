@@ -272,9 +272,40 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8 animate-fade-in" data-testid="dashboard">
-      <div>
-        <h1 className="text-4xl font-bold text-slate-900 mb-2">Kontrol Paneli</h1>
-        <p className="text-slate-600">Faturalarınızın ve ödemelerinizin özeti</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-4xl font-bold text-slate-900 mb-2">Kontrol Paneli</h1>
+          <p className="text-slate-600">Faturalarınızın ve ödemelerinizin özeti</p>
+        </div>
+        
+        {/* Export Button */}
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-50">
+              <Download className="w-4 h-4 mr-2" />
+              Özet Rapor İndir
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-md" aria-describedby="export-dialog-description">
+            <DialogHeader>
+              <DialogTitle>Dashboard Özeti Dışa Aktar</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <p id="export-dialog-description" className="text-sm text-slate-600">Dışa aktarma formatını seçin:</p>
+              <div className="flex flex-col gap-2">
+                <Button onClick={() => handleExport('xlsx')} className="bg-green-600 hover:bg-green-700">
+                  Excel (.xlsx)
+                </Button>
+                <Button onClick={() => handleExport('docx')} className="bg-blue-600 hover:bg-blue-700">
+                  Word (.docx)
+                </Button>
+                <Button onClick={() => handleExport('pdf')} className="bg-red-600 hover:bg-red-700">
+                  PDF (.pdf)
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -336,6 +367,9 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Calendar */}
+      {renderCalendar()}
 
       <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
         <h2 className="text-xl font-bold text-slate-900 mb-4">Son Ödemeler</h2>
