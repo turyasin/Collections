@@ -327,6 +327,54 @@ frontend:
         agent: "testing"
         comment: "UI TESTING COMPLETED - EXPORT-ONLY FUNCTIONALITY WORKING CORRECTLY. Export button visible and functional with green styling. Correctly NO Import button present (as expected for dynamically generated schedule). Export dialog opens with 3 format options. Turkish text 'Dışa Aktar' displayed correctly. Minor HTML validation warning noted but not affecting functionality."
 
+  - task: "Dashboard export UI"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/Dashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added export button to dashboard header. Dialog with 3 format options (xlsx, docx, pdf). Downloads comprehensive statistics summary report."
+
+  - task: "Calendar component on Dashboard"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/Dashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added interactive calendar to dashboard showing invoice due dates (red), received checks (green), and issued checks (orange). Month navigation with prev/next buttons. Shows up to 2 events per day with amounts."
+
+  - task: "Logo display in Layout"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/Layout.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Updated Layout component to fetch and display logo in top-left corner (replaces or supplements 'Ödeme Takip' text). Logo displayed at 48x48px size. Falls back to text if no logo exists."
+
+  - task: "Settings page with logo management"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/Settings.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created Settings page accessible only to admin users. Shows current logo (200x200px preview). File upload for new PNG logos. Delete button for removing logo. Settings nav item only visible to admins."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"
