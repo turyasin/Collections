@@ -289,7 +289,14 @@ export default function Checks() {
 
           <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
             <DialogTrigger asChild>
-              <Button data-testid="add-check-button" className="bg-blue-600 hover:bg-blue-700">
+              <Button 
+                data-testid="add-check-button" 
+                className="bg-blue-600 hover:bg-blue-700"
+                onClick={() => {
+                  resetForm();
+                  setDialogOpen(true);
+                }}
+              >
                 <Plus className="w-4 h-4 mr-2" />Çek Ekle
               </Button>
             </DialogTrigger>
