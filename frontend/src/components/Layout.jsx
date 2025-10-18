@@ -14,6 +14,7 @@ export default function Layout({ children, onLogout }) {
     { path: "/weekly-schedule", label: "Haftalık Program", icon: CalendarDays },
     { path: "/company-info", label: "Firma Bilgileri", icon: Building2 },
     { path: "/import-export", label: "İçe/Dışa Aktarım", icon: ArrowDownUp },
+    { path: "/archive", label: "Arşiv", icon: Archive, adminOnly: true },
     { path: "/users", label: "Kullanıcılar", icon: UserCircle },
   ];
 
