@@ -131,6 +131,12 @@ class DashboardStats(BaseModel):
     partial_count: int
     paid_count: int
     recent_payments: List[Payment]
+    total_received_checks: int
+    total_received_amount: float
+    pending_received_checks: int
+    total_issued_checks: int
+    total_issued_amount: float
+    pending_issued_checks: int
 
 class Check(BaseModel):
     model_config = ConfigDict(extra="ignore")
