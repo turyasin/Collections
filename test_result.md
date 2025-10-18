@@ -849,3 +849,58 @@ agent_communication:
       - All UI labels in Turkish ✓
       
       CRITICAL SUCCESS: The frontend month and quarter auto-calculation UI is fully operational. Manual period selection has been successfully replaced with automatic calculation. All forms now auto-calculate month and quarter from dates, filters work correctly with Turkish month names, and the dashboard statistics recalculate properly when filters change.
+  - agent: "main"
+    message: |
+      BUG FIX COMPLETED - API ENDPOINT & USER DISPLAY ISSUES RESOLVED
+      
+      User Reported Issues:
+      1. Admin user unable to edit Company Info (view-only mode shown incorrectly)
+      2. Logged-in username not displaying in sidebar
+      
+      Root Cause Analysis:
+      - Frontend API calls missing required '/api' prefix for Kubernetes ingress routing
+      - App.js not fetching and passing user data to Layout component
+      
+      Changes Made:
+      
+      1. CompanyInfo.jsx (/app/frontend/src/components/CompanyInfo.jsx):
+         - Fixed: `${API}/users/me` → `${API}/api/users/me` (line 40)
+         - Fixed: `${API}/company-info` → `${API}/api/company-info` (lines 53, 103)
+         - These changes ensure proper API routing through Kubernetes ingress
+      
+      2. App.js (/app/frontend/src/App.js):
+         - Added: axios import for API calls
+         - Added: currentUser state to store user information
+         - Added: fetchCurrentUser() function to get user data from /api/users/me
+         - Modified: All Route components to pass user={currentUser} prop to Layout
+         - Modified: handleLogin() to call fetchCurrentUser() after login
+         - This ensures user data is available throughout the application
+      
+      3. Layout.jsx (no changes needed):
+         - Already correctly displays username from user prop
+         - Already correctly shows admin badge for admin users
+         - Already correctly filters admin-only menu items
+      
+      Test Results (Manual Testing):
+      ✅ Non-Admin User (testadmin@example.com):
+         - Username "testadmin" displays in sidebar
+         - No admin badge (correct)
+         - Company Info shows "Sadece görüntüleme modu" (correct)
+         - No "Kaydet" button (correct)
+         - No "Arşiv" menu item (correct)
+      
+      ✅ Admin User (turyasin@gmail.com):
+         - Username "turyasin" displays in sidebar
+         - Admin badge displays (correct)
+         - Company Info does NOT show view-only message (correct)
+         - "Kaydet" button visible and functional (correct)
+         - "Arşiv" menu item visible (correct)
+         - "Hesap Ekle" button visible (correct)
+      
+      ✅ API Endpoints Verified:
+         - GET /api/users/me: Returns user data with is_admin flag
+         - GET /api/company-info: Returns company information
+         - POST /api/company-info: Allows admin to update (auth tested)
+      
+      Status: ALL ISSUES RESOLVED
+      Next Phase: Implement mobile responsive design
