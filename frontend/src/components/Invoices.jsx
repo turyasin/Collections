@@ -295,6 +295,15 @@ export default function Invoices() {
             <SelectItem value="unpaid">Ödenmedi</SelectItem>
           </SelectContent>
         </Select>
+        <Select value={periodFilter} onValueChange={setPeriodFilter}>
+          <SelectTrigger className="w-40" data-testid="period-filter"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tüm Periyotlar</SelectItem>
+            <SelectItem value="Aylık">Aylık</SelectItem>
+            <SelectItem value="3 Aylık">3 Aylık</SelectItem>
+            <SelectItem value="Yıllık">Yıllık</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
