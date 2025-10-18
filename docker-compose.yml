@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: fatura-takip-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=fatura_takip
+    networks:
+      - fatura-takip-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fatura-takip-backend
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017
+      - DB_NAME=fatura_takip
+      - CORS_ORIGINS=http://localhost:3000
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - SECRET_KEY=${SECRET_KEY}
+    networks:
+      - fatura-takip-network
+
+  # Frontend Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: fatura-takip-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8001
+    networks:
+      - fatura-takip-network
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  fatura-takip-network:
+    driver: bridge
