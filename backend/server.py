@@ -32,6 +32,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'your-secret-key-change-in-production'
 ALGORITHM = "HS256"
 security = HTTPBearer()
 
+# Email configuration
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY', '')
+ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'turyasin@gmail.com')
+
+# Scheduler
+scheduler = AsyncIOScheduler(timezone=pytz.timezone('Europe/Istanbul'))
+
 # Create the main app
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
