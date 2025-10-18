@@ -55,6 +55,15 @@ export default function Layout({ children, onLogout, user }) {
         </nav>
 
         <div className="absolute bottom-6 left-3 right-3">
+          {user && (
+            <div className="mb-3 px-4 py-3 bg-slate-100 rounded-lg">
+              <p className="text-xs text-slate-500 mb-1">Kullanıcı</p>
+              <p className="text-sm font-semibold text-slate-900">{user.username}</p>
+              {user.is_admin && (
+                <span className="inline-block mt-1 text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">Admin</span>
+              )}
+            </div>
+          )}
           <Button
             onClick={onLogout}
             data-testid="logout-button"
