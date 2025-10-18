@@ -28,6 +28,29 @@ export default function WeeklySchedule() {
     }
   };
 
+  const handleExport = async (format) => {
+    try {
+      const response = await axios.get(`${API}/export/weekly-schedule?format=${format}`, {
+        ...getAuthHeaders(),
+        responseType: 'blob'
+      });
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      const fileExtension = format === 'xlsx' ? 'xlsx' : format === 'docx' ? 'docx' : 'pdf';
+      link.setAttribute('download', `haftalik_plan_${new Date().toISOString().split('T')[0]}.${fileExtension}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      
+      toast.success(`Haftalık plan ${format.toUpperCase()} formatında indirildi`);
+    } catch (error) {
+      toast.error("Dışa aktarma başarısız oldu");
+    }
+  };
+
   if (loading) return <div className="flex items-center justify-center h-96"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>;
 
   return (
