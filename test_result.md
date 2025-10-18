@@ -231,15 +231,18 @@ frontend:
 
   - task: "Export/Import UI for Checks page"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/components/Checks.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added Export and Import functionality with proper Turkish labels. Color-coded buttons (green for export, purple for import)."
+      - working: true
+        agent: "testing"
+        comment: "UI TESTING COMPLETED - ALL FUNCTIONALITY WORKING. Export button (green) and Import button (purple) both visible and functional. Proper Turkish labels 'Dışa Aktar' and 'İçe Aktar'. Buttons correctly positioned in header area. Color coding matches specification. All dialogs functional."
 
   - task: "Export/Import UI for Payments page"
     implemented: true
