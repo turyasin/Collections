@@ -32,7 +32,7 @@ export default function CompanyInfo() {
 
   const fetchCompanyInfo = async () => {
     try {
-      const res = await axios.get(`${API}/api/company-info`, getAuthHeaders());
+      const res = await axios.get(`${API}/company-info`, getAuthHeaders());
       if (res.data) {
         setFormData(res.data);
         // Ensure at least 5 bank account slots
