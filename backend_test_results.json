@@ -1,15 +1,15 @@
 {
   "summary": {
-    "total_tests": 44,
-    "passed_tests": 36,
-    "success_rate": "81.8%",
-    "timestamp": "2025-10-18T11:22:10.376368"
+    "total_tests": 45,
+    "passed_tests": 39,
+    "success_rate": "86.7%",
+    "timestamp": "2025-10-18T11:23:29.070918"
   },
   "detailed_results": [
     {
       "test": "User Registration",
       "success": true,
-      "details": "User created with email: test_112206@example.com",
+      "details": "User created with email: test_112325@example.com",
       "response_data": null
     },
     {
@@ -19,9 +19,17 @@
       "response_data": null
     },
     {
+      "test": "Admin User Registration",
+      "success": false,
+      "details": "Admin registration/login failed: {'detail': 'Invalid credentials'}",
+      "response_data": {
+        "detail": "Invalid credentials"
+      }
+    },
+    {
       "test": "Create Customer",
       "success": true,
-      "details": "Customer created with ID: cb6621db-5f1b-42a4-916f-f9ab50dbcc9c",
+      "details": "Customer created with ID: e0061846-9418-4bc2-b344-45eedccd7cae",
       "response_data": null
     },
     {
@@ -39,31 +47,31 @@
     {
       "test": "Create Invoice",
       "success": true,
-      "details": "Invoice created with ID: 33968d77-51f6-4356-9f3c-816243f8ad40",
+      "details": "Invoice created with ID: c08a392c-0181-4ce9-9768-65aedb85e5da",
       "response_data": null
     },
     {
       "test": "Get Invoices",
       "success": true,
-      "details": "Retrieved 7 invoices",
+      "details": "Retrieved 9 invoices",
       "response_data": null
     },
     {
       "test": "Invoice Status Filter",
       "success": true,
-      "details": "Retrieved 4 unpaid invoices",
+      "details": "Retrieved 5 unpaid invoices",
       "response_data": null
     },
     {
       "test": "Create Check",
       "success": true,
-      "details": "Check created with ID: dbb18da2-4d4a-41e8-8cf0-451de0ceb5f1",
+      "details": "Check created with ID: 4b860ae9-fe22-4d0b-9eb9-88c3cd43a069",
       "response_data": null
     },
     {
       "test": "Create Payment",
       "success": true,
-      "details": "Payment created with ID: 51bcda39-4e0d-4fc2-a367-f2d998f853e3",
+      "details": "Payment created with ID: 80f94896-1201-4b56-b0f8-c99baa587e86",
       "response_data": null
     },
     {
@@ -81,79 +89,79 @@
     {
       "test": "Dashboard Stats",
       "success": true,
-      "details": "All required fields present. Total invoices: 7",
+      "details": "All required fields present. Total invoices: 9",
       "response_data": null
     },
     {
       "test": "Export Invoices XLSX",
       "success": true,
-      "details": "Excel file exported successfully (6102 bytes)",
+      "details": "Excel file exported successfully (6301 bytes)",
       "response_data": null
     },
     {
       "test": "Export Invoices DOCX",
       "success": true,
-      "details": "Word file exported successfully (37033 bytes)",
+      "details": "Word file exported successfully (37048 bytes)",
       "response_data": null
     },
     {
       "test": "Export Invoices PDF",
       "success": true,
-      "details": "PDF file exported successfully (2758 bytes)",
+      "details": "PDF file exported successfully (2871 bytes)",
       "response_data": null
     },
     {
       "test": "Export Checks XLSX",
       "success": true,
-      "details": "Excel file exported successfully (5973 bytes)",
+      "details": "Excel file exported successfully (6239 bytes)",
       "response_data": null
     },
     {
       "test": "Export Checks DOCX",
       "success": true,
-      "details": "Word file exported successfully (37009 bytes)",
+      "details": "Word file exported successfully (37050 bytes)",
       "response_data": null
     },
     {
       "test": "Export Checks PDF",
       "success": true,
-      "details": "PDF file exported successfully (2756 bytes)",
+      "details": "PDF file exported successfully (2944 bytes)",
       "response_data": null
     },
     {
       "test": "Export Payments XLSX",
       "success": true,
-      "details": "Excel file exported successfully (5468 bytes)",
+      "details": "Excel file exported successfully (5465 bytes)",
       "response_data": null
     },
     {
       "test": "Export Payments DOCX",
       "success": true,
-      "details": "Word file exported successfully (36854 bytes)",
+      "details": "Word file exported successfully (36855 bytes)",
       "response_data": null
     },
     {
       "test": "Export Payments PDF",
       "success": true,
-      "details": "PDF file exported successfully (2397 bytes)",
+      "details": "PDF file exported successfully (2400 bytes)",
       "response_data": null
     },
     {
       "test": "Export Weekly Schedule XLSX",
       "success": true,
-      "details": "Excel file exported successfully (6378 bytes)",
+      "details": "Excel file exported successfully (6416 bytes)",
       "response_data": null
     },
     {
       "test": "Export Weekly Schedule DOCX",
       "success": true,
-      "details": "Word file exported successfully (36952 bytes)",
+      "details": "Word file exported successfully (36954 bytes)",
       "response_data": null
     },
     {
       "test": "Export Weekly Schedule PDF",
       "success": true,
-      "details": "PDF file exported successfully (3238 bytes)",
+      "details": "PDF file exported successfully (3270 bytes)",
       "response_data": null
     },
     {
@@ -182,20 +190,20 @@
     },
     {
       "test": "Export Dashboard Stats XLSX",
-      "success": false,
-      "details": "Invalid response format: {'content_type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'content_disposition': 'attachment; filename=dashboard_ozet_20251018.xlsx', 'content_length': 5446, 'status_code': 200}",
+      "success": true,
+      "details": "Excel file exported successfully (5444 bytes)",
       "response_data": null
     },
     {
       "test": "Export Dashboard Stats DOCX",
-      "success": false,
-      "details": "Invalid response format: {'content_type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'content_disposition': 'attachment; filename=dashboard_ozet_20251018.docx', 'content_length': 36865, 'status_code': 200}",
+      "success": true,
+      "details": "Word file exported successfully (36861 bytes)",
       "response_data": null
     },
     {
       "test": "Export Dashboard Stats PDF",
-      "success": false,
-      "details": "Invalid response format: {'content_type': 'application/pdf', 'content_disposition': 'attachment; filename=dashboard_ozet_20251018.pdf', 'content_length': 2516, 'status_code': 200}",
+      "success": true,
+      "details": "PDF file exported successfully (2515 bytes)",
       "response_data": null
     },
     {
@@ -209,10 +217,8 @@
     {
       "test": "Logo Upload (Admin)",
       "success": false,
-      "details": "Logo upload failed: {'detail': 'Admin yetkisi gerekli'}",
-      "response_data": {
-        "detail": "Admin yetkisi gerekli"
-      }
+      "details": "No admin token available",
+      "response_data": null
     },
     {
       "test": "Get Logo (Public)",
@@ -225,13 +231,13 @@
     {
       "test": "Logo Upload Non-PNG",
       "success": false,
-      "details": "Should have rejected non-PNG file: {'detail': 'Admin yetkisi gerekli'}",
+      "details": "No admin token available",
       "response_data": null
     },
     {
       "test": "Create Non-Admin User",
       "success": true,
-      "details": "Non-admin user created: nonadmin_112209@example.com",
+      "details": "Non-admin user created: nonadmin_112328@example.com",
       "response_data": null
     },
     {
@@ -249,10 +255,8 @@
     {
       "test": "Logo Delete (Admin)",
       "success": false,
-      "details": "Logo deletion failed: {'detail': 'Admin yetkisi gerekli'}",
-      "response_data": {
-        "detail": "Admin yetkisi gerekli"
-      }
+      "details": "No admin token available",
+      "response_data": null
     },
     {
       "test": "Get Logo After Deletion",
