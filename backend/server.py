@@ -132,6 +132,47 @@ class DashboardStats(BaseModel):
     paid_count: int
     recent_payments: List[Payment]
 
+class Check(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    check_type: str  # "received" (alınan) or "issued" (verilen)
+    check_number: str
+    amount: float
+    due_date: str
+    bank_name: str
+    payer_payee: str  # Alıcı veya veren kişi/firma
+    status: str = "pending"  # pending, collected, paid, bounced
+    notes: Optional[str] = None
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class CheckCreate(BaseModel):
+    check_type: str
+    check_number: str
+    amount: float
+    due_date: str
+    bank_name: str
+    payer_payee: str
+    notes: Optional[str] = None
+
+class CheckUpdate(BaseModel):
+    check_type: Optional[str] = None
+    check_number: Optional[str] = None
+    amount: Optional[float] = None
+    due_date: Optional[str] = None
+    bank_name: Optional[str] = None
+    payer_payee: Optional[str] = None
+    status: Optional[str] = None
+    notes: Optional[str] = None
+
+class WeeklyPaymentSchedule(BaseModel):
+    week_label: str
+    date_range: str
+    received_checks: List[Check]
+    issued_checks: List[Check]
+    invoices_due: List[Invoice]
+    total_receivable: float
+    total_payable: float
+
 # Helper functions
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
