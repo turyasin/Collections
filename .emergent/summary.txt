@@ -1,0 +1,81 @@
+<analysis>
+The trajectory details the AI engineer's work on an Ödeme Takip (Payment Tracking) application. Initially, import/export functionality was added to various pages, followed by requests for dashboard export, calendar, and logo management. These additions led to significant frontend JavaScript errors due to mismanaged state, incomplete reverts, and  pointing to production. The engineer meticulously debugged by analyzing logs, console outputs, and Git history, even attempting manual JSX fixes. A key decision by the user to consolidate import/export into a single page helped stabilize the application. Subsequently, user deletion for admins, localization of buttons, and fixes for invoice creation and calendar payment display were successfully implemented. The work concluded with the engineer starting to address mobile responsiveness issues, which was paused by a call to the deployment agent.
+</analysis>
+
+<product_requirements>
+The Ödeme Takip (Payment Tracking) application facilitates the management of financial records. The implemented features include:
+1.  **Core Tracking:** Comprehensive management of customer details, invoices, payment records, and checks.
+2.  **User Management:** Multi-user support with a  field for records and an administrative role. Admins can manage user roles, notification preferences, and delete other users.
+3.  **Localization:** Full Turkish language support across the entire UI, including all primary action buttons.
+4.  **Currency Support:** Turkish Lira (₺) is used as the primary currency for all financial transactions.
+5.  **Email Notifications:** Automated email reminders are sent for upcoming invoice collections, configurable by administrators for individual users.
+6.  **Check Management:** Dedicated tracking for both issued and received checks, with relevant statistics integrated into the dashboard.
+7.  **Weekly Payment Schedule:** Generation of a detailed weekly payment schedule based on recorded invoices and checks.
+8.  **Deployment & Portability:** The application is packaged with Docker files and accompanying guides for independent deployment.
+9.  **Data Import/Export:** A dedicated İçe/Dışa Aktarım page allows users to export data (Invoices, Checks, Payments, Weekly Plans, Dashboard Summary) in , , and  formats, and import data in  format.
+10. **Dashboard Calendar:** An interactive calendar on the dashboard visually displays invoice due dates (red), received checks (green), issued checks (orange), and payments (blue).
+</product_requirements>
+
+<key_technical_concepts>
+-   **Backend:** FastAPI (Python), MongoDB (database), Pydantic (data validation),  (task scheduling),  (email service), , , ,  (for import/export).
+-   **Frontend:** React (JavaScript),  (component library),  (styling),  (routing).
+-   **Deployment:** Docker, Docker Compose, Kubernetes.
+-   **Language:** Full Turkish localization.
+-   **Security:** JWT-based authentication.
+</key_technical_concepts>
+
+<code_architecture>
+
+-   : Core FastAPI application.
+    -   **Summary:** Defines MongoDB models (, , , , , ), authentication, CRUD endpoints, and  for email notifications. It's crucial for all backend logic and data persistence.
+    -   **Changes:**
+        -   Added , , ,  to .
+        -   Implemented  and  endpoints for invoices, checks, payments, weekly plans, and dashboard summaries. Includes helper functions for XLSX, DOCX, PDF generation.
+        -   Added  DELETE endpoint for admin user deletion.
+        -   Reverted changes to  model (specifically  becoming required) to fix creation issues.
+        -   Re-added  to the  model to fix Weekly Schedule functionality.
+-   : Main React component defining routes.
+    -   **Summary:** Manages authentication state and defines the application's routing structure.
+    -   **Changes:**
+        -   Added routes for  and  (though  was later removed, then re-added, then removed again for logo, and  was re-added). Current state includes .
+-   : Defines the overall layout and navigation.
+    -   **Summary:** Provides the structural layout including the sidebar navigation, handling user authentication status, and fetching user data.
+    -   **Changes:**
+        -   Added navigation link for İçe/Dışa Aktarım.
+        -   Removed previously added Settings navigation link and logo display.
+        -   Started implementing mobile responsive design (sidebar hiding, hamburger menu).
+-   : Displays key statistics and calendar.
+    -   **Summary:** The main landing page after login, showing an overview of financial data.
+    -   **Changes:**
+        -   Added a simple Tahsilat Takvimi (Collection Calendar) displaying invoice due dates, received checks, issued checks, and payments.
+        -   Added logic to fetch payments for the calendar view and updated the calendar legend.
+-   , , , : Feature-specific components.
+    -   **Summary:** Implement CRUD operations and display relevant data for each financial entity.
+    -   **Changes:**
+        -   Initial import/export buttons were added and then subsequently removed as per user request to consolidate into a single  page.
+        -   Localized İptal, Oluştur, Güncelle buttons in  and .
+-   : Manages user accounts.
+    -   **Summary:** Allows admin users to view and manage other users, including their roles and notification preferences.
+    -   **Changes:**
+        -   Added Kullanıcıyı Sil button for admin users to delete other users.
+-    (NEW FILE):
+    -   **Summary:** A dedicated page for all import and export functionalities, replacing inline buttons. This file will house the UI for selecting data types (Invoices, Checks, Payments, Weekly Plans, Dashboard Summary) and file formats (xlsx, docx, pdf for export; xlsx for import).
+    -   **Changes:** Created this new component.
+-   : Stores frontend environment variables.
+    -   **Summary:** Crucial for linking the frontend to the backend API.
+    -   **Changes:** No modifications were allowed/made to  as per system prompt, but its value was central to debugging login issues (it was pointing to production URL).
+</code_architecture>
+
+<pending_tasks>
+-   Implement full mobile responsive design (sidebar toggle, hamburger menu) for the frontend.
+-   Implement logo management functionality (upload, retrieve, display) for admin users, replacing the Ödeme Takip text.
+-   Implement advanced financial tracking features as previously requested: categorizing invoices as Gelen (incoming) or Giden (outgoing), linking payments to methods (Nakit, Kredi Kartı, Havale/EFT), supporting partial payments, and installment plans.
+</pending_tasks>
+
+<current_work>
+Immediately before this summary request, the AI engineer was addressing the user's feedback that Uygulama cep versiyonunda düzgün gözükmüyor (the application does not display correctly on mobile). The task was to implement mobile responsive design. The engineer had identified the  file as the starting point for this change, specifically planning to hide the sidebar on mobile and introduce a hamburger menu for navigation. This work was in its initial phase, and no actual code modifications for responsive design in  have been described yet, as the engineer initiated a call to the  to check readiness for deployment, thereby pausing the mobile responsiveness task.
+</current_work>
+
+<optional_next_step>
+Call the deployment agent to run a health check and assess readiness for deployment.
+</optional_next_step>
