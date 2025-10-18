@@ -165,6 +165,8 @@ class Payment(BaseModel):
     customer_name: Optional[str] = None
     payment_method: str = "Çek"  # "Nakit", "Kredi Kartı", "Havale/EFT", "Çek"
     bank_account_id: Optional[str] = None  # For incoming payments
+    bank_account_name: Optional[str] = None  # Populated from bank_account_id
+    currency: Optional[str] = None  # Populated from bank_account_id or default TRY
     check_number: Optional[str] = None
     check_date: Optional[str] = None
     bank_name: Optional[str] = None
