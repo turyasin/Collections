@@ -88,6 +88,8 @@ class Invoice(BaseModel):
     due_date: str
     status: str = "unpaid"
     notes: Optional[str] = None
+    created_by: Optional[str] = None
+    created_by_username: Optional[str] = None
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class InvoiceCreate(BaseModel):
