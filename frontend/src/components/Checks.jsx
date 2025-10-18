@@ -318,6 +318,27 @@ export default function Checks() {
                   <Label>{formData.check_type === "received" ? "Ödeyici" : "Alacaklı"} *</Label>
                   <Input data-testid="check-payer-input" value={formData.payer_payee} onChange={(e) => setFormData({ ...formData, payer_payee: e.target.value })} required />
                 </div>
+                {formData.check_type === "issued" && (
+                  <div className="space-y-2">
+                    <Label>Tedarikçi Firma</Label>
+                    <Select 
+                      value={formData.supplier_id} 
+                      onValueChange={(value) => setFormData({ ...formData, supplier_id: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Tedarikçi seçin (opsiyonel)" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">Seçim Yok</SelectItem>
+                        {suppliers.map((supplier) => (
+                          <SelectItem key={supplier.id} value={supplier.id}>
+                            {supplier.name} (İskonto: %{supplier.discount_rate || 0})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
                 <div className="space-y-2">
                   <Label>Notlar</Label>
                   <Input data-testid="check-notes-input" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} />
