@@ -269,17 +269,7 @@ export default function Payments() {
               <div className="space-y-2">
                 <Label htmlFor="amount">Amount *</Label>
                 <Input id="amount" data-testid="payment-amount-input" type="number" step="0.01" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="period_type">Periyot *</Label>
-                <Select value={formData.period_type} onValueChange={(value) => setFormData({ ...formData, period_type: value })} required>
-                  <SelectTrigger data-testid="period-select"><SelectValue placeholder="Periyot seçin" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Aylık">Aylık</SelectItem>
-                    <SelectItem value="3 Aylık">3 Aylık</SelectItem>
-                    <SelectItem value="Yıllık">Yıllık</SelectItem>
-                  </SelectContent>
-                </Select>
+                <p className="text-xs text-slate-500">Ay ve çeyrek otomatik hesaplanacaktır</p>
               </div>
               <div className="flex justify-end gap-2">
                 <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>İptal</Button>
