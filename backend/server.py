@@ -243,6 +243,45 @@ class WeeklyPaymentSchedule(BaseModel):
     total_receivable: float
     total_payable: float
 
+class WeeklySchedule(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    week: str
+    invoice_id: Optional[str] = None
+    check_id: Optional[str] = None
+    check_type: Optional[str]
+    notes: Optional[str] = None
+
+class BankAccount(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    bank_name: str
+    branch: Optional[str] = None
+    iban: str
+    account_holder: str
+    currency: str = "TRY"  # "TRY", "USD", "EUR"
+
+class CompanyInfo(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    company_name: str
+    tax_number: Optional[str] = None
+    tax_office: Optional[str] = None
+    address: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    bank_accounts: list[BankAccount] = []
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    updated_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class CompanyInfoCreate(BaseModel):
+    company_name: str
+    tax_number: Optional[str] = None
+    tax_office: Optional[str] = None
+    address: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    bank_accounts: list[BankAccount] = []
+
 # Helper functions
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
