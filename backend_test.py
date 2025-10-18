@@ -396,6 +396,372 @@ class InvoiceTrackerAPITester:
             self.log_test("Delete Customer", False, f"Failed to delete customer: {response}", response)
             return False
 
+    def test_create_check(self):
+        """Test check creation for export testing"""
+        check_data = {
+            "check_type": "received",
+            "check_number": f"CHK-{datetime.now().strftime('%Y%m%d%H%M%S')}",
+            "amount": 2500.00,
+            "due_date": (datetime.now() + timedelta(days=15)).strftime('%Y-%m-%d'),
+            "bank_name": "Test Bank A.Ş.",
+            "payer_payee": "Test Payer Company",
+            "notes": "Test check for export functionality"
+        }
+        
+        success, response = self.make_request('POST', '/checks', check_data, 200)
+        
+        if success and 'id' in response:
+            self.test_check_id = response['id']
+            self.log_test("Create Check", True, f"Check created with ID: {self.test_check_id}")
+            return True
+        else:
+            self.log_test("Create Check", False, f"Check creation failed: {response}", response)
+            return False
+
+    def create_test_excel_file(self, data_type: str) -> io.BytesIO:
+        """Create test Excel files for import testing"""
+        if data_type == "invoices":
+            data = {
+                'customer_id': [self.test_customer_id, self.test_customer_id],
+                'customer_name': ['Test Customer Inc', 'Test Customer Inc'],
+                'invoice_number': [f'IMP-INV-{datetime.now().strftime("%H%M%S")}-1', f'IMP-INV-{datetime.now().strftime("%H%M%S")}-2'],
+                'amount': [1200.50, 850.75],
+                'paid_amount': [0, 200.00],
+                'due_date': ['2024-02-15', '2024-02-20'],
+                'status': ['unpaid', 'partial'],
+                'notes': ['Imported test invoice 1', 'Imported test invoice 2']
+            }
+        elif data_type == "checks":
+            data = {
+                'check_type': ['received', 'issued'],
+                'check_number': [f'IMP-CHK-{datetime.now().strftime("%H%M%S")}-1', f'IMP-CHK-{datetime.now().strftime("%H%M%S")}-2'],
+                'amount': [3000.00, 1500.00],
+                'due_date': ['2024-02-10', '2024-02-25'],
+                'bank_name': ['Import Test Bank', 'Another Test Bank'],
+                'payer_payee': ['Import Test Payer', 'Import Test Payee'],
+                'status': ['pending', 'pending'],
+                'notes': ['Imported test check 1', 'Imported test check 2']
+            }
+        elif data_type == "payments":
+            data = {
+                'invoice_id': [self.test_invoice_id, self.test_invoice_id],
+                'invoice_number': [f'INV-{datetime.now().strftime("%Y%m%d%H%M%S")}', f'INV-{datetime.now().strftime("%Y%m%d%H%M%S")}'],
+                'customer_name': ['Test Customer Inc', 'Test Customer Inc'],
+                'check_number': [f'PAY-CHK-{datetime.now().strftime("%H%M%S")}-1', f'PAY-CHK-{datetime.now().strftime("%H%M%S")}-2'],
+                'check_date': ['2024-01-15', '2024-01-20'],
+                'bank_name': ['Payment Test Bank', 'Another Payment Bank'],
+                'amount': [500.00, 300.00]
+            }
+        else:
+            return None
+            
+        df = pd.DataFrame(data)
+        excel_buffer = io.BytesIO()
+        df.to_excel(excel_buffer, index=False)
+        excel_buffer.seek(0)
+        return excel_buffer
+
+    def test_export_invoices_xlsx(self):
+        """Test exporting invoices to Excel format"""
+        success, response = self.make_request('GET', '/export/invoices?format=xlsx', expected_status=200)
+        
+        if success:
+            content_type = response.get('content_type', '')
+            content_disposition = response.get('content_disposition', '')
+            content_length = response.get('content_length', 0)
+            
+            if 'spreadsheet' in content_type and 'faturalar_' in content_disposition and content_length > 0:
+                self.log_test("Export Invoices XLSX", True, f"Excel file exported successfully ({content_length} bytes)")
+                return True
+            else:
+                self.log_test("Export Invoices XLSX", False, f"Invalid response format: {response}")
+                return False
+        else:
+            self.log_test("Export Invoices XLSX", False, f"Export failed: {response}", response)
+            return False
+
+    def test_export_invoices_docx(self):
+        """Test exporting invoices to Word format"""
+        success, response = self.make_request('GET', '/export/invoices?format=docx', expected_status=200)
+        
+        if success:
+            content_type = response.get('content_type', '')
+            content_disposition = response.get('content_disposition', '')
+            content_length = response.get('content_length', 0)
+            
+            if 'wordprocessingml' in content_type and 'faturalar_' in content_disposition and content_length > 0:
+                self.log_test("Export Invoices DOCX", True, f"Word file exported successfully ({content_length} bytes)")
+                return True
+            else:
+                self.log_test("Export Invoices DOCX", False, f"Invalid response format: {response}")
+                return False
+        else:
+            self.log_test("Export Invoices DOCX", False, f"Export failed: {response}", response)
+            return False
+
+    def test_export_invoices_pdf(self):
+        """Test exporting invoices to PDF format"""
+        success, response = self.make_request('GET', '/export/invoices?format=pdf', expected_status=200)
+        
+        if success:
+            content_type = response.get('content_type', '')
+            content_disposition = response.get('content_disposition', '')
+            content_length = response.get('content_length', 0)
+            
+            if 'pdf' in content_type and 'faturalar_' in content_disposition and content_length > 0:
+                self.log_test("Export Invoices PDF", True, f"PDF file exported successfully ({content_length} bytes)")
+                return True
+            else:
+                self.log_test("Export Invoices PDF", False, f"Invalid response format: {response}")
+                return False
+        else:
+            self.log_test("Export Invoices PDF", False, f"Export failed: {response}", response)
+            return False
+
+    def test_export_checks_xlsx(self):
+        """Test exporting checks to Excel format"""
+        success, response = self.make_request('GET', '/export/checks?format=xlsx', expected_status=200)
+        
+        if success:
+            content_type = response.get('content_type', '')
+            content_disposition = response.get('content_disposition', '')
+            content_length = response.get('content_length', 0)
+            
+            if 'spreadsheet' in content_type and 'cekler_' in content_disposition and content_length > 0:
+                self.log_test("Export Checks XLSX", True, f"Excel file exported successfully ({content_length} bytes)")
+                return True
+            else:
+                self.log_test("Export Checks XLSX", False, f"Invalid response format: {response}")
+                return False
+        else:
+            self.log_test("Export Checks XLSX", False, f"Export failed: {response}", response)
+            return False
+
+    def test_export_checks_docx(self):
+        """Test exporting checks to Word format"""
+        success, response = self.make_request('GET', '/export/checks?format=docx', expected_status=200)
+        
+        if success:
+            content_type = response.get('content_type', '')
+            content_disposition = response.get('content_disposition', '')
+            content_length = response.get('content_length', 0)
+            
+            if 'wordprocessingml' in content_type and 'cekler_' in content_disposition and content_length > 0:
+                self.log_test("Export Checks DOCX", True, f"Word file exported successfully ({content_length} bytes)")
+                return True
+            else:
+                self.log_test("Export Checks DOCX", False, f"Invalid response format: {response}")
+                return False
+        else:
+            self.log_test("Export Checks DOCX", False, f"Export failed: {response}", response)
+            return False
+
+    def test_export_checks_pdf(self):
+        """Test exporting checks to PDF format"""
+        success, response = self.make_request('GET', '/export/checks?format=pdf', expected_status=200)
+        
+        if success:
+            content_type = response.get('content_type', '')
+            content_disposition = response.get('content_disposition', '')
+            content_length = response.get('content_length', 0)
+            
+            if 'pdf' in content_type and 'cekler_' in content_disposition and content_length > 0:
+                self.log_test("Export Checks PDF", True, f"PDF file exported successfully ({content_length} bytes)")
+                return True
+            else:
+                self.log_test("Export Checks PDF", False, f"Invalid response format: {response}")
+                return False
+        else:
+            self.log_test("Export Checks PDF", False, f"Export failed: {response}", response)
+            return False
+
+    def test_export_payments_xlsx(self):
+        """Test exporting payments to Excel format"""
+        success, response = self.make_request('GET', '/export/payments?format=xlsx', expected_status=200)
+        
+        if success:
+            content_type = response.get('content_type', '')
+            content_disposition = response.get('content_disposition', '')
+            content_length = response.get('content_length', 0)
+            
+            if 'spreadsheet' in content_type and 'odemeler_' in content_disposition and content_length > 0:
+                self.log_test("Export Payments XLSX", True, f"Excel file exported successfully ({content_length} bytes)")
+                return True
+            else:
+                self.log_test("Export Payments XLSX", False, f"Invalid response format: {response}")
+                return False
+        else:
+            self.log_test("Export Payments XLSX", False, f"Export failed: {response}", response)
+            return False
+
+    def test_export_payments_docx(self):
+        """Test exporting payments to Word format"""
+        success, response = self.make_request('GET', '/export/payments?format=docx', expected_status=200)
+        
+        if success:
+            content_type = response.get('content_type', '')
+            content_disposition = response.get('content_disposition', '')
+            content_length = response.get('content_length', 0)
+            
+            if 'wordprocessingml' in content_type and 'odemeler_' in content_disposition and content_length > 0:
+                self.log_test("Export Payments DOCX", True, f"Word file exported successfully ({content_length} bytes)")
+                return True
+            else:
+                self.log_test("Export Payments DOCX", False, f"Invalid response format: {response}")
+                return False
+        else:
+            self.log_test("Export Payments DOCX", False, f"Export failed: {response}", response)
+            return False
+
+    def test_export_payments_pdf(self):
+        """Test exporting payments to PDF format"""
+        success, response = self.make_request('GET', '/export/payments?format=pdf', expected_status=200)
+        
+        if success:
+            content_type = response.get('content_type', '')
+            content_disposition = response.get('content_disposition', '')
+            content_length = response.get('content_length', 0)
+            
+            if 'pdf' in content_type and 'odemeler_' in content_disposition and content_length > 0:
+                self.log_test("Export Payments PDF", True, f"PDF file exported successfully ({content_length} bytes)")
+                return True
+            else:
+                self.log_test("Export Payments PDF", False, f"Invalid response format: {response}")
+                return False
+        else:
+            self.log_test("Export Payments PDF", False, f"Export failed: {response}", response)
+            return False
+
+    def test_export_weekly_schedule_xlsx(self):
+        """Test exporting weekly schedule to Excel format"""
+        success, response = self.make_request('GET', '/export/weekly-schedule?format=xlsx', expected_status=200)
+        
+        if success:
+            content_type = response.get('content_type', '')
+            content_disposition = response.get('content_disposition', '')
+            content_length = response.get('content_length', 0)
+            
+            if 'spreadsheet' in content_type and 'haftalik_plan_' in content_disposition and content_length > 0:
+                self.log_test("Export Weekly Schedule XLSX", True, f"Excel file exported successfully ({content_length} bytes)")
+                return True
+            else:
+                self.log_test("Export Weekly Schedule XLSX", False, f"Invalid response format: {response}")
+                return False
+        else:
+            self.log_test("Export Weekly Schedule XLSX", False, f"Export failed: {response}", response)
+            return False
+
+    def test_export_weekly_schedule_docx(self):
+        """Test exporting weekly schedule to Word format"""
+        success, response = self.make_request('GET', '/export/weekly-schedule?format=docx', expected_status=200)
+        
+        if success:
+            content_type = response.get('content_type', '')
+            content_disposition = response.get('content_disposition', '')
+            content_length = response.get('content_length', 0)
+            
+            if 'wordprocessingml' in content_type and 'haftalik_plan_' in content_disposition and content_length > 0:
+                self.log_test("Export Weekly Schedule DOCX", True, f"Word file exported successfully ({content_length} bytes)")
+                return True
+            else:
+                self.log_test("Export Weekly Schedule DOCX", False, f"Invalid response format: {response}")
+                return False
+        else:
+            self.log_test("Export Weekly Schedule DOCX", False, f"Export failed: {response}", response)
+            return False
+
+    def test_export_weekly_schedule_pdf(self):
+        """Test exporting weekly schedule to PDF format"""
+        success, response = self.make_request('GET', '/export/weekly-schedule?format=pdf', expected_status=200)
+        
+        if success:
+            content_type = response.get('content_type', '')
+            content_disposition = response.get('content_disposition', '')
+            content_length = response.get('content_length', 0)
+            
+            if 'pdf' in content_type and 'haftalik_plan_' in content_disposition and content_length > 0:
+                self.log_test("Export Weekly Schedule PDF", True, f"PDF file exported successfully ({content_length} bytes)")
+                return True
+            else:
+                self.log_test("Export Weekly Schedule PDF", False, f"Invalid response format: {response}")
+                return False
+        else:
+            self.log_test("Export Weekly Schedule PDF", False, f"Export failed: {response}", response)
+            return False
+
+    def test_import_invoices(self):
+        """Test importing invoices from Excel file"""
+        if not self.test_customer_id:
+            self.log_test("Import Invoices", False, "No customer ID available for import test")
+            return False
+            
+        excel_file = self.create_test_excel_file("invoices")
+        if not excel_file:
+            self.log_test("Import Invoices", False, "Failed to create test Excel file")
+            return False
+            
+        files = {'file': ('test_invoices.xlsx', excel_file, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')}
+        success, response = self.make_request('POST', '/import/invoices', files=files, expected_status=200)
+        
+        if success and 'count' in response:
+            imported_count = response.get('count', 0)
+            self.log_test("Import Invoices", True, f"Successfully imported {imported_count} invoices")
+            return True
+        else:
+            self.log_test("Import Invoices", False, f"Import failed: {response}", response)
+            return False
+
+    def test_import_checks(self):
+        """Test importing checks from Excel file"""
+        excel_file = self.create_test_excel_file("checks")
+        if not excel_file:
+            self.log_test("Import Checks", False, "Failed to create test Excel file")
+            return False
+            
+        files = {'file': ('test_checks.xlsx', excel_file, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')}
+        success, response = self.make_request('POST', '/import/checks', files=files, expected_status=200)
+        
+        if success and 'count' in response:
+            imported_count = response.get('count', 0)
+            self.log_test("Import Checks", True, f"Successfully imported {imported_count} checks")
+            return True
+        else:
+            self.log_test("Import Checks", False, f"Import failed: {response}", response)
+            return False
+
+    def test_import_payments(self):
+        """Test importing payments from Excel file"""
+        if not self.test_invoice_id:
+            self.log_test("Import Payments", False, "No invoice ID available for import test")
+            return False
+            
+        excel_file = self.create_test_excel_file("payments")
+        if not excel_file:
+            self.log_test("Import Payments", False, "Failed to create test Excel file")
+            return False
+            
+        files = {'file': ('test_payments.xlsx', excel_file, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')}
+        success, response = self.make_request('POST', '/import/payments', files=files, expected_status=200)
+        
+        if success and 'count' in response:
+            imported_count = response.get('count', 0)
+            self.log_test("Import Payments", True, f"Successfully imported {imported_count} payments")
+            return True
+        else:
+            self.log_test("Import Payments", False, f"Import failed: {response}", response)
+            return False
+
+    def test_export_invalid_format(self):
+        """Test export with invalid format parameter"""
+        success, response = self.make_request('GET', '/export/invoices?format=invalid', expected_status=400)
+        
+        if success:
+            self.log_test("Export Invalid Format", True, "Correctly rejected invalid format")
+            return True
+        else:
+            self.log_test("Export Invalid Format", False, f"Should have rejected invalid format: {response}")
+            return False
+
     def run_all_tests(self):
         """Run all API tests in sequence"""
         print("🚀 Starting Invoice Tracker API Tests...")
