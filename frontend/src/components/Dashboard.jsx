@@ -375,17 +375,16 @@ export default function Dashboard() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 bg-blue-50 rounded-lg">
-            <p className="text-sm text-blue-600 mb-1">Fatura Sayısı</p>
-            <p className="text-2xl font-bold text-blue-900">{calculateStats().invoiceCount}</p>
-            <p className="text-lg font-semibold text-blue-700 mt-2">₺{calculateStats().totalInvoiceAmount.toFixed(2)}</p>
+            <p className="text-lg font-semibold text-blue-700">₺{calculateStats().totalInvoiceAmount.toFixed(2)}</p>
+            <p className="text-sm text-blue-600 mt-2">Fatura Sayısı: {calculateStats().invoiceCount}</p>
           </div>
           <div className="p-4 bg-green-50 rounded-lg">
-            <p className="text-sm text-green-600 mb-1">Ödeme Sayısı</p>
-            <p className="text-2xl font-bold text-green-900">{calculateStats().paymentCount}</p>
-            <p className="text-lg font-semibold text-green-700 mt-2">₺{calculateStats().totalPaidAmount.toFixed(2)}</p>
+            <p className="text-sm text-green-600 mb-1">Gelen Ödeme</p>
+            <p className="text-lg font-semibold text-green-700">₺{calculateStats().totalPaidAmount.toFixed(2)}</p>
+            <p className="text-sm text-green-600 mt-2">Ödeme Sayısı: {calculateStats().paymentCount}</p>
           </div>
           <div className="p-4 bg-red-50 rounded-lg">
-            <p className="text-sm text-red-600 mb-1">Bekleyen Alacak</p>
+            <p className="text-sm text-red-600 mb-1">Yapılacak Ödeme</p>
             <p className="text-2xl font-bold text-red-900">₺{calculateStats().totalOutstanding.toFixed(2)}</p>
           </div>
         </div>
