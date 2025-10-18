@@ -273,6 +273,9 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Calendar */}
+      {renderCalendar()}
+
       <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
         <h2 className="text-xl font-bold text-slate-900 mb-4">Son Ödemeler</h2>
         {stats?.recent_payments?.length > 0 ? (
