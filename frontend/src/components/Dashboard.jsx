@@ -258,8 +258,8 @@ export default function Dashboard() {
       testId: "total-invoices",
     },
     {
-      title: "Tahsil Edilmemiş Faturalar",
-      value: stats?.unpaid_count || 0,
+      title: "Ödeme Günü Geçmiş",
+      value: stats?.overdue_count || 0,
       icon: AlertCircle,
       color: "bg-orange-500",
       testId: "unpaid-invoices",
