@@ -762,6 +762,234 @@ class InvoiceTrackerAPITester:
             self.log_test("Export Invalid Format", False, f"Should have rejected invalid format: {response}")
             return False
 
+    # Phase 2 Tests - Dashboard Export
+    def test_export_dashboard_stats_xlsx(self):
+        """Test exporting dashboard statistics to Excel format"""
+        success, response = self.make_request('GET', '/export/dashboard-stats?format=xlsx', expected_status=200)
+        
+        if success:
+            content_type = response.get('content_type', '')
+            content_disposition = response.get('content_disposition', '')
+            content_length = response.get('content_length', 0)
+            
+            if 'spreadsheet' in content_type and 'dashboard_stats_' in content_disposition and content_length > 0:
+                self.log_test("Export Dashboard Stats XLSX", True, f"Excel file exported successfully ({content_length} bytes)")
+                return True
+            else:
+                self.log_test("Export Dashboard Stats XLSX", False, f"Invalid response format: {response}")
+                return False
+        else:
+            self.log_test("Export Dashboard Stats XLSX", False, f"Export failed: {response}", response)
+            return False
+
+    def test_export_dashboard_stats_docx(self):
+        """Test exporting dashboard statistics to Word format"""
+        success, response = self.make_request('GET', '/export/dashboard-stats?format=docx', expected_status=200)
+        
+        if success:
+            content_type = response.get('content_type', '')
+            content_disposition = response.get('content_disposition', '')
+            content_length = response.get('content_length', 0)
+            
+            if 'wordprocessingml' in content_type and 'dashboard_stats_' in content_disposition and content_length > 0:
+                self.log_test("Export Dashboard Stats DOCX", True, f"Word file exported successfully ({content_length} bytes)")
+                return True
+            else:
+                self.log_test("Export Dashboard Stats DOCX", False, f"Invalid response format: {response}")
+                return False
+        else:
+            self.log_test("Export Dashboard Stats DOCX", False, f"Export failed: {response}", response)
+            return False
+
+    def test_export_dashboard_stats_pdf(self):
+        """Test exporting dashboard statistics to PDF format"""
+        success, response = self.make_request('GET', '/export/dashboard-stats?format=pdf', expected_status=200)
+        
+        if success:
+            content_type = response.get('content_type', '')
+            content_disposition = response.get('content_disposition', '')
+            content_length = response.get('content_length', 0)
+            
+            if 'pdf' in content_type and 'dashboard_stats_' in content_disposition and content_length > 0:
+                self.log_test("Export Dashboard Stats PDF", True, f"PDF file exported successfully ({content_length} bytes)")
+                return True
+            else:
+                self.log_test("Export Dashboard Stats PDF", False, f"Invalid response format: {response}")
+                return False
+        else:
+            self.log_test("Export Dashboard Stats PDF", False, f"Export failed: {response}", response)
+            return False
+
+    # Phase 2 Tests - Logo Management
+    def create_test_png_image(self) -> io.BytesIO:
+        """Create a simple test PNG image (200x200px)"""
+        try:
+            from PIL import Image, ImageDraw
+            
+            # Create a 200x200 image with a simple pattern
+            img = Image.new('RGB', (200, 200), color='white')
+            draw = ImageDraw.Draw(img)
+            
+            # Draw a simple logo pattern
+            draw.rectangle([50, 50, 150, 150], fill='blue', outline='black', width=2)
+            draw.text((75, 95), "LOGO", fill='white')
+            
+            # Save to BytesIO
+            img_buffer = io.BytesIO()
+            img.save(img_buffer, format='PNG')
+            img_buffer.seek(0)
+            return img_buffer
+            
+        except ImportError:
+            # Fallback: create a minimal PNG file manually
+            # This is a minimal valid PNG file (1x1 pixel)
+            png_data = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\tpHYs\x00\x00\x0b\x13\x00\x00\x0b\x13\x01\x00\x9a\x9c\x18\x00\x00\x00\x0bIDATx\x9cc```\x00\x00\x00\x04\x00\x01\xdd\x8d\xb4\x1c\x00\x00\x00\x00IEND\xaeB`\x82'
+            return io.BytesIO(png_data)
+
+    def test_logo_upload_admin(self):
+        """Test logo upload as admin user"""
+        # First, we need to make sure we have admin privileges
+        # The test user should be admin (first user or turyasin@gmail.com)
+        
+        png_file = self.create_test_png_image()
+        files = {'file': ('test_logo.png', png_file, 'image/png')}
+        
+        success, response = self.make_request('POST', '/settings/logo', files=files, expected_status=200)
+        
+        if success:
+            self.log_test("Logo Upload (Admin)", True, f"Logo uploaded successfully: {response}")
+            return True
+        else:
+            self.log_test("Logo Upload (Admin)", False, f"Logo upload failed: {response}", response)
+            return False
+
+    def test_logo_get_public(self):
+        """Test getting logo (public endpoint)"""
+        success, response = self.make_request('GET', '/settings/logo', expected_status=200)
+        
+        if success:
+            content_type = response.get('content_type', '')
+            content_length = response.get('content_length', 0)
+            
+            if 'image' in content_type and content_length > 0:
+                self.log_test("Get Logo (Public)", True, f"Logo retrieved successfully ({content_length} bytes, {content_type})")
+                return True
+            else:
+                self.log_test("Get Logo (Public)", False, f"Invalid logo response: {response}")
+                return False
+        else:
+            # If no logo exists, we should get 404
+            if response.get('status_code') == 404:
+                self.log_test("Get Logo (Public)", True, "Correctly returned 404 when no logo exists")
+                return True
+            else:
+                self.log_test("Get Logo (Public)", False, f"Unexpected response: {response}", response)
+                return False
+
+    def test_logo_upload_non_png(self):
+        """Test logo upload with non-PNG file (should fail)"""
+        # Create a fake text file
+        text_file = io.BytesIO(b"This is not a PNG file")
+        files = {'file': ('test.txt', text_file, 'text/plain')}
+        
+        success, response = self.make_request('POST', '/settings/logo', files=files, expected_status=400)
+        
+        if success:
+            self.log_test("Logo Upload Non-PNG", True, "Correctly rejected non-PNG file")
+            return True
+        else:
+            self.log_test("Logo Upload Non-PNG", False, f"Should have rejected non-PNG file: {response}")
+            return False
+
+    def test_logo_delete_admin(self):
+        """Test logo deletion as admin user"""
+        success, response = self.make_request('DELETE', '/settings/logo', expected_status=200)
+        
+        if success:
+            self.log_test("Logo Delete (Admin)", True, f"Logo deleted successfully: {response}")
+            return True
+        else:
+            self.log_test("Logo Delete (Admin)", False, f"Logo deletion failed: {response}", response)
+            return False
+
+    def test_logo_get_after_deletion(self):
+        """Test getting logo after deletion (should return 404)"""
+        success, response = self.make_request('GET', '/settings/logo', expected_status=404)
+        
+        if success:
+            self.log_test("Get Logo After Deletion", True, "Correctly returned 404 after logo deletion")
+            return True
+        else:
+            self.log_test("Get Logo After Deletion", False, f"Should have returned 404: {response}")
+            return False
+
+    def test_create_non_admin_user(self):
+        """Create a non-admin user for testing admin restrictions"""
+        test_email = f"nonadmin_{datetime.now().strftime('%H%M%S')}@example.com"
+        user_data = {
+            "username": f"nonadmin_{datetime.now().strftime('%H%M%S')}",
+            "email": test_email,
+            "password": "TestPassword123!"
+        }
+        
+        success, response = self.make_request('POST', '/auth/register', user_data, 200)
+        
+        if success and 'token' in response:
+            # Store the non-admin token temporarily
+            self.non_admin_token = response['token']
+            self.log_test("Create Non-Admin User", True, f"Non-admin user created: {test_email}")
+            return True
+        else:
+            self.log_test("Create Non-Admin User", False, f"Failed to create non-admin user: {response}", response)
+            return False
+
+    def test_logo_upload_non_admin(self):
+        """Test logo upload as non-admin user (should fail)"""
+        if not hasattr(self, 'non_admin_token'):
+            self.log_test("Logo Upload Non-Admin", False, "No non-admin token available")
+            return False
+            
+        # Temporarily switch to non-admin token
+        original_token = self.token
+        self.token = self.non_admin_token
+        
+        png_file = self.create_test_png_image()
+        files = {'file': ('test_logo.png', png_file, 'image/png')}
+        
+        success, response = self.make_request('POST', '/settings/logo', files=files, expected_status=403)
+        
+        # Restore original token
+        self.token = original_token
+        
+        if success:
+            self.log_test("Logo Upload Non-Admin", True, "Correctly rejected non-admin user")
+            return True
+        else:
+            self.log_test("Logo Upload Non-Admin", False, f"Should have rejected non-admin user: {response}")
+            return False
+
+    def test_logo_delete_non_admin(self):
+        """Test logo deletion as non-admin user (should fail)"""
+        if not hasattr(self, 'non_admin_token'):
+            self.log_test("Logo Delete Non-Admin", False, "No non-admin token available")
+            return False
+            
+        # Temporarily switch to non-admin token
+        original_token = self.token
+        self.token = self.non_admin_token
+        
+        success, response = self.make_request('DELETE', '/settings/logo', expected_status=403)
+        
+        # Restore original token
+        self.token = original_token
+        
+        if success:
+            self.log_test("Logo Delete Non-Admin", True, "Correctly rejected non-admin user")
+            return True
+        else:
+            self.log_test("Logo Delete Non-Admin", False, f"Should have rejected non-admin user: {response}")
+            return False
+
     def run_all_tests(self):
         """Run all API tests in sequence"""
         print("🚀 Starting Invoice Tracker API Tests...")
