@@ -1059,6 +1059,45 @@ class InvoiceTrackerAPITester:
         self.test_export_invalid_format()
         
         print("\n" + "=" * 60)
+        print("🔄 Testing Phase 2 Features - Dashboard Export...")
+        print("=" * 60)
+        
+        # Phase 2 - Dashboard Export tests
+        self.test_export_dashboard_stats_xlsx()
+        self.test_export_dashboard_stats_docx()
+        self.test_export_dashboard_stats_pdf()
+        
+        print("\n" + "=" * 60)
+        print("🔄 Testing Phase 2 Features - Logo Management...")
+        print("=" * 60)
+        
+        # Phase 2 - Logo Management tests
+        # First test getting logo when none exists
+        self.test_logo_get_public()
+        
+        # Test logo upload as admin
+        self.test_logo_upload_admin()
+        
+        # Test getting logo after upload
+        self.test_logo_get_public()
+        
+        # Test non-PNG file upload (should fail)
+        self.test_logo_upload_non_png()
+        
+        # Create non-admin user for permission tests
+        self.test_create_non_admin_user()
+        
+        # Test non-admin access (should fail)
+        self.test_logo_upload_non_admin()
+        self.test_logo_delete_non_admin()
+        
+        # Test logo deletion as admin
+        self.test_logo_delete_admin()
+        
+        # Test getting logo after deletion (should return 404)
+        self.test_logo_get_after_deletion()
+        
+        print("\n" + "=" * 60)
         print("🔄 Testing Advanced Functionality...")
         print("=" * 60)
         
