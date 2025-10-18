@@ -33,7 +33,7 @@ export default function Payments() {
 
   const fetchBankAccounts = async () => {
     try {
-      const res = await axios.get(`${API}/api/company-info/banks`, getAuthHeaders());
+      const res = await axios.get(`${API}/company-info/banks`, getAuthHeaders());
       console.log("Bank accounts fetched:", res.data);
       setBankAccounts(res.data || []);
     } catch (error) {
