@@ -233,6 +233,8 @@ class Check(BaseModel):
     due_date: str
     bank_name: str
     payer_payee: str  # Alıcı veya veren kişi/firma
+    supplier_id: Optional[str] = None  # Verilen çekler için tedarikçi ID
+    supplier_name: Optional[str] = None  # Tedarikçi adı (populate edilecek)
     status: str = "pending"  # pending, collected, paid, bounced, cancelled
     related_invoice_id: Optional[str] = None  # Hangi fatura için kesildi (opsiyonel)
     notes: Optional[str] = None
@@ -242,6 +244,14 @@ class Check(BaseModel):
 
 class CheckCreate(BaseModel):
     check_type: str = "issued"  # Default issued (verilen çek)
+    check_number: str
+    amount: float
+    due_date: str
+    bank_name: str
+    payer_payee: str
+    supplier_id: Optional[str] = None  # Verilen çekler için tedarikçi ID
+    related_invoice_id: Optional[str] = None
+    notes: Optional[str] = None
     check_number: str
     amount: float
     due_date: str
