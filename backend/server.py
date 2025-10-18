@@ -154,6 +154,7 @@ class InvoiceUpdate(BaseModel):
     invoice_number: Optional[str] = None
     amount: Optional[float] = None
     due_date: Optional[str] = None
+    currency: Optional[str] = None  # "TRY", "USD", "EUR"
     notes: Optional[str] = None
 
 class Payment(BaseModel):
