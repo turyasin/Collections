@@ -1533,6 +1533,312 @@ async def import_payments(file: UploadFile = File(...), user_id: str = Depends(g
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"İçe aktarma hatası: {str(e)}")
 
+# Dashboard export endpoint
+@api_router.get("/export/dashboard-stats")
+async def export_dashboard_stats(format: str = "xlsx", user_id: str = Depends(get_current_user)):
+    """Export dashboard statistics summary"""
+    try:
+        # Get all statistics
+        invoices = await db.invoices.find({}, {"_id": 0}).to_list(length=None)
+        checks = await db.checks.find({}, {"_id": 0}).to_list(length=None)
+        payments = await db.payments.find({}, {"_id": 0}).to_list(length=None)
+        
+        # Calculate statistics
+        total_invoices = len(invoices)
+        total_amount = sum(inv.get("amount", 0) for inv in invoices)
+        paid_amount = sum(inv.get("paid_amount", 0) for inv in invoices)
+        outstanding_amount = total_amount - paid_amount
+        
+        unpaid_count = len([inv for inv in invoices if inv.get("status") == "unpaid"])
+        partial_count = len([inv for inv in invoices if inv.get("status") == "partial"])
+        paid_count = len([inv for inv in invoices if inv.get("status") == "paid"])
+        
+        # Check statistics
+        received_checks = [c for c in checks if c.get("check_type") == "received"]
+        issued_checks = [c for c in checks if c.get("check_type") == "issued"]
+        
+        total_received_checks = len(received_checks)
+        total_received_amount = sum(c.get("amount", 0) for c in received_checks)
+        pending_received_checks = len([c for c in received_checks if c.get("status") == "pending"])
+        
+        total_issued_checks = len(issued_checks)
+        total_issued_amount = sum(c.get("amount", 0) for c in issued_checks)
+        pending_issued_checks = len([c for c in issued_checks if c.get("status") == "pending"])
+        
+        stats = {
+            "total_invoices": total_invoices,
+            "total_amount": total_amount,
+            "paid_amount": paid_amount,
+            "outstanding_amount": outstanding_amount,
+            "unpaid_count": unpaid_count,
+            "partial_count": partial_count,
+            "paid_count": paid_count,
+            "total_received_checks": total_received_checks,
+            "total_received_amount": total_received_amount,
+            "pending_received_checks": pending_received_checks,
+            "total_issued_checks": total_issued_checks,
+            "total_issued_amount": total_issued_amount,
+            "pending_issued_checks": pending_issued_checks,
+            "total_payments": len(payments)
+        }
+        
+        if format == "xlsx":
+            return await export_dashboard_stats_xlsx(stats)
+        elif format == "docx":
+            return await export_dashboard_stats_docx(stats)
+        elif format == "pdf":
+            return await export_dashboard_stats_pdf(stats)
+        else:
+            raise HTTPException(status_code=400, detail="Desteklenmeyen format")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Dışa aktarma hatası: {str(e)}")
+
+async def export_dashboard_stats_xlsx(stats):
+    """Export dashboard stats to Excel"""
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Dashboard İstatistikleri"
+    
+    # Title
+    ws['A1'] = "Dashboard İstatistikleri - Özet Rapor"
+    ws['A1'].font = Font(bold=True, size=16, color="FFFFFF")
+    ws['A1'].fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
+    ws.merge_cells('A1:B1')
+    
+    ws['A2'] = f"Rapor Tarihi: {datetime.now().strftime('%d.%m.%Y %H:%M')}"
+    ws.append([])
+    
+    # Fatura İstatistikleri
+    ws.append(["FATURA İSTATİSTİKLERİ", ""])
+    ws[f'A{ws.max_row}'].font = Font(bold=True, size=12)
+    ws.append(["Toplam Fatura Sayısı", stats["total_invoices"]])
+    ws.append(["Toplam Tutar", f"₺{stats['total_amount']:,.2f}"])
+    ws.append(["Ödenen Tutar", f"₺{stats['paid_amount']:,.2f}"])
+    ws.append(["Kalan Tutar", f"₺{stats['outstanding_amount']:,.2f}"])
+    ws.append(["Ödenmemiş Fatura", stats["unpaid_count"]])
+    ws.append(["Kısmi Ödenmiş Fatura", stats["partial_count"]])
+    ws.append(["Ödenmiş Fatura", stats["paid_count"]])
+    ws.append([])
+    
+    # Çek İstatistikleri
+    ws.append(["ÇEK İSTATİSTİKLERİ", ""])
+    ws[f'A{ws.max_row}'].font = Font(bold=True, size=12)
+    ws.append(["Alınan Çek Sayısı", stats["total_received_checks"]])
+    ws.append(["Alınan Çek Tutarı", f"₺{stats['total_received_amount']:,.2f}"])
+    ws.append(["Bekleyen Alınan Çek", stats["pending_received_checks"]])
+    ws.append(["Verilen Çek Sayısı", stats["total_issued_checks"]])
+    ws.append(["Verilen Çek Tutarı", f"₺{stats['total_issued_amount']:,.2f}"])
+    ws.append(["Bekleyen Verilen Çek", stats["pending_issued_checks"]])
+    ws.append([])
+    
+    # Ödeme İstatistikleri
+    ws.append(["ÖDEME İSTATİSTİKLERİ", ""])
+    ws[f'A{ws.max_row}'].font = Font(bold=True, size=12)
+    ws.append(["Toplam Ödeme Sayısı", stats["total_payments"]])
+    
+    # Column widths
+    ws.column_dimensions['A'].width = 30
+    ws.column_dimensions['B'].width = 20
+    
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+    
+    return StreamingResponse(
+        output,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f"attachment; filename=dashboard_ozet_{datetime.now().strftime('%Y%m%d')}.xlsx"}
+    )
+
+async def export_dashboard_stats_docx(stats):
+    """Export dashboard stats to Word"""
+    doc = Document()
+    doc.add_heading('Dashboard İstatistikleri - Özet Rapor', 0)
+    doc.add_paragraph(f'Rapor Tarihi: {datetime.now().strftime("%d.%m.%Y %H:%M")}')
+    doc.add_paragraph('')
+    
+    # Fatura İstatistikleri
+    doc.add_heading('Fatura İstatistikleri', level=1)
+    doc.add_paragraph(f'Toplam Fatura Sayısı: {stats["total_invoices"]}')
+    doc.add_paragraph(f'Toplam Tutar: ₺{stats["total_amount"]:,.2f}')
+    doc.add_paragraph(f'Ödenen Tutar: ₺{stats["paid_amount"]:,.2f}')
+    doc.add_paragraph(f'Kalan Tutar: ₺{stats["outstanding_amount"]:,.2f}')
+    doc.add_paragraph(f'Ödenmemiş Fatura: {stats["unpaid_count"]}')
+    doc.add_paragraph(f'Kısmi Ödenmiş Fatura: {stats["partial_count"]}')
+    doc.add_paragraph(f'Ödenmiş Fatura: {stats["paid_count"]}')
+    doc.add_paragraph('')
+    
+    # Çek İstatistikleri
+    doc.add_heading('Çek İstatistikleri', level=1)
+    doc.add_paragraph(f'Alınan Çek Sayısı: {stats["total_received_checks"]}')
+    doc.add_paragraph(f'Alınan Çek Tutarı: ₺{stats["total_received_amount"]:,.2f}')
+    doc.add_paragraph(f'Bekleyen Alınan Çek: {stats["pending_received_checks"]}')
+    doc.add_paragraph(f'Verilen Çek Sayısı: {stats["total_issued_checks"]}')
+    doc.add_paragraph(f'Verilen Çek Tutarı: ₺{stats["total_issued_amount"]:,.2f}')
+    doc.add_paragraph(f'Bekleyen Verilen Çek: {stats["pending_issued_checks"]}')
+    doc.add_paragraph('')
+    
+    # Ödeme İstatistikleri
+    doc.add_heading('Ödeme İstatistikleri', level=1)
+    doc.add_paragraph(f'Toplam Ödeme Sayısı: {stats["total_payments"]}')
+    
+    output = BytesIO()
+    doc.save(output)
+    output.seek(0)
+    
+    return StreamingResponse(
+        output,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={"Content-Disposition": f"attachment; filename=dashboard_ozet_{datetime.now().strftime('%Y%m%d')}.docx"}
+    )
+
+async def export_dashboard_stats_pdf(stats):
+    """Export dashboard stats to PDF"""
+    output = BytesIO()
+    doc = SimpleDocTemplate(output, pagesize=A4)
+    elements = []
+    styles = getSampleStyleSheet()
+    
+    title_style = ParagraphStyle('CustomTitle', parent=styles['Heading1'], fontSize=20, textColor=colors.HexColor('#366092'))
+    elements.append(Paragraph('Dashboard İstatistikleri - Özet Rapor', title_style))
+    elements.append(Spacer(1, 12))
+    elements.append(Paragraph(f'Rapor Tarihi: {datetime.now().strftime("%d.%m.%Y %H:%M")}', styles['Normal']))
+    elements.append(Spacer(1, 20))
+    
+    # Fatura İstatistikleri
+    elements.append(Paragraph('Fatura İstatistikleri', styles['Heading2']))
+    elements.append(Spacer(1, 10))
+    
+    invoice_data = [
+        ['Metrik', 'Değer'],
+        ['Toplam Fatura Sayısı', str(stats["total_invoices"])],
+        ['Toplam Tutar', f"₺{stats['total_amount']:,.2f}"],
+        ['Ödenen Tutar', f"₺{stats['paid_amount']:,.2f}"],
+        ['Kalan Tutar', f"₺{stats['outstanding_amount']:,.2f}"],
+        ['Ödenmemiş', str(stats["unpaid_count"])],
+        ['Kısmi Ödenmiş', str(stats["partial_count"])],
+        ['Ödenmiş', str(stats["paid_count"])]
+    ]
+    
+    table = Table(invoice_data)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#366092')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+    ]))
+    elements.append(table)
+    elements.append(Spacer(1, 20))
+    
+    # Çek İstatistikleri
+    elements.append(Paragraph('Çek İstatistikleri', styles['Heading2']))
+    elements.append(Spacer(1, 10))
+    
+    check_data = [
+        ['Metrik', 'Değer'],
+        ['Alınan Çek Sayısı', str(stats["total_received_checks"])],
+        ['Alınan Çek Tutarı', f"₺{stats['total_received_amount']:,.2f}"],
+        ['Bekleyen Alınan Çek', str(stats["pending_received_checks"])],
+        ['Verilen Çek Sayısı', str(stats["total_issued_checks"])],
+        ['Verilen Çek Tutarı', f"₺{stats['total_issued_amount']:,.2f}"],
+        ['Bekleyen Verilen Çek', str(stats["pending_issued_checks"])]
+    ]
+    
+    table = Table(check_data)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#366092')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+    ]))
+    elements.append(table)
+    
+    doc.build(elements)
+    output.seek(0)
+    
+    return StreamingResponse(
+        output,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename=dashboard_ozet_{datetime.now().strftime('%Y%m%d')}.pdf"}
+    )
+
+# Logo management endpoints
+@api_router.post("/settings/logo")
+async def upload_logo(file: UploadFile = File(...), admin_id: str = Depends(get_current_admin_user)):
+    """Upload company logo (admin only)"""
+    try:
+        # Validate file type
+        if not file.content_type or not file.content_type.startswith('image/'):
+            raise HTTPException(status_code=400, detail="Sadece resim dosyaları yüklenebilir")
+        
+        if not file.filename.lower().endswith('.png'):
+            raise HTTPException(status_code=400, detail="Sadece PNG formatı desteklenmektedir")
+        
+        # Read file content
+        contents = await file.read()
+        
+        # Save to database as base64
+        logo_data = {
+            "id": "company_logo",
+            "filename": file.filename,
+            "content_type": file.content_type,
+            "data": base64.b64encode(contents).decode('utf-8'),
+            "uploaded_by": admin_id,
+            "uploaded_at": datetime.now(timezone.utc).isoformat()
+        }
+        
+        # Upsert (update if exists, insert if not)
+        await db.settings.update_one(
+            {"id": "company_logo"},
+            {"$set": logo_data},
+            upsert=True
+        )
+        
+        return {"message": "Logo başarıyla yüklendi", "filename": file.filename}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Logo yükleme hatası: {str(e)}")
+
+@api_router.get("/settings/logo")
+async def get_logo():
+    """Get company logo (public endpoint)"""
+    try:
+        logo = await db.settings.find_one({"id": "company_logo"}, {"_id": 0})
+        
+        if not logo:
+            raise HTTPException(status_code=404, detail="Logo bulunamadı")
+        
+        # Decode base64 and return image
+        image_data = base64.b64decode(logo["data"])
+        
+        return StreamingResponse(
+            BytesIO(image_data),
+            media_type=logo.get("content_type", "image/png"),
+            headers={"Content-Disposition": f'inline; filename="{logo.get("filename", "logo.png")}"'}
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Logo getirme hatası: {str(e)}")
+
+@api_router.delete("/settings/logo")
+async def delete_logo(admin_id: str = Depends(get_current_admin_user)):
+    """Delete company logo (admin only)"""
+    try:
+        result = await db.settings.delete_one({"id": "company_logo"})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Logo bulunamadı")
+        
+        return {"message": "Logo başarıyla silindi"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Logo silme hatası: {str(e)}")
+
 app.include_router(api_router)
 
 app.add_middleware(
