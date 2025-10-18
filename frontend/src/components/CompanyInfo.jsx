@@ -150,6 +150,11 @@ export default function CompanyInfo() {
           <Building2 className="w-8 h-8 text-blue-600" />
           <h1 className="text-3xl font-bold text-slate-900">Firma Bilgileri</h1>
         </div>
+        {!isAdmin && (
+          <div className="text-sm text-amber-600 bg-amber-50 px-4 py-2 rounded-lg border border-amber-200">
+            Sadece görüntüleme modu - Değişiklik yapmak için admin yetkisi gereklidir
+          </div>
+        )}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
