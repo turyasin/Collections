@@ -6,6 +6,8 @@ import Dashboard from "@/components/Dashboard";
 import Customers from "@/components/Customers";
 import Invoices from "@/components/Invoices";
 import Payments from "@/components/Payments";
+import Checks from "@/components/Checks";
+import WeeklySchedule from "@/components/WeeklySchedule";
 import Layout from "@/components/Layout";
 
 function App() {
