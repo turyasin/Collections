@@ -1174,7 +1174,7 @@ async def export_payments_pdf(payments):
     elements.append(Paragraph(f'Toplam Ödeme: {len(payments)}', styles['Normal']))
     elements.append(Spacer(1, 20))
     
-    data = [['Fatura No', 'Müşteri', 'Çek No', 'Çek Tarihi', 'Banka', 'Tutar (₺)', 'Oluşturan']]
+    data = [['Fatura No', 'Müşteri', 'Çek No', 'Çek Tarihi', 'Banka', 'Tutar (₺)', 'Periyot', 'Oluşturan']]
     for payment in payments:
         data.append([
             payment.get("invoice_number", "")[:15],
@@ -1183,6 +1183,7 @@ async def export_payments_pdf(payments):
             payment.get("check_date", ""),
             payment.get("bank_name", "")[:15],
             f"₺{payment.get('amount', 0):,.2f}",
+            payment.get("period_type", "Aylık"),
             payment.get("created_by_username", "")[:12]
         ])
     
