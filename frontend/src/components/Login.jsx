@@ -97,7 +97,7 @@ export default function Login({ onLogin }) {
 
           <div className="space-y-2">
             <Label htmlFor="password" data-testid="password-label">
-              Password
+              Şifre
             </Label>
             <Input
               id="password"
