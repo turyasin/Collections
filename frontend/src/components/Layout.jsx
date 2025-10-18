@@ -12,7 +12,7 @@ export default function Layout({ children, onLogout, user }) {
     { path: "/payments", label: "Ödemeler", icon: CreditCard },
     { path: "/checks", label: "Çekler", icon: Receipt },
     { path: "/weekly-schedule", label: "Haftalık Program", icon: CalendarDays },
-    { path: "/company-info", label: "Firma Bilgileri", icon: Building2, adminOnly: true },
+    { path: "/company-info", label: "Firma Bilgileri", icon: Building2 },
     { path: "/import-export", label: "İçe/Dışa Aktarım", icon: ArrowDownUp },
     { path: "/archive", label: "Arşiv", icon: Archive, adminOnly: true },
     { path: "/users", label: "Kullanıcılar", icon: UserCircle },
