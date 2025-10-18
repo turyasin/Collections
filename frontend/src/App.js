@@ -114,6 +114,18 @@ function App() {
               )
             }
           />
+          <Route
+            path="/users"
+            element={
+              isAuthenticated ? (
+                <Layout onLogout={handleLogout}>
+                  <Users />
+                </Layout>
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
         </Routes>
       </BrowserRouter>
     </div>
