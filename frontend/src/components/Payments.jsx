@@ -140,13 +140,18 @@ export default function Payments() {
     }
   };
 
+  // Get unique months and quarters from payments
+  const uniqueMonths = [...new Set(payments.map(pay => pay.month).filter(Boolean))].sort();
+  const uniqueQuarters = [...new Set(payments.map(pay => pay.quarter).filter(Boolean))].sort();
+
   const filteredPayments = payments.filter(
     (payment) => {
       const matchesSearch = (payment.customer_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
         payment.check_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (payment.invoice_number || "").toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesPeriod = periodFilter === "all" || payment.period_type === periodFilter;
-      return matchesSearch && matchesPeriod;
+      const matchesMonth = monthFilter === "all" || payment.month === monthFilter;
+      const matchesQuarter = quarterFilter === "all" || payment.quarter === quarterFilter;
+      return matchesSearch && matchesMonth && matchesQuarter;
     }
   );
 
