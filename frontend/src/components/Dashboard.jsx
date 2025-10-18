@@ -147,6 +147,10 @@ export default function Dashboard() {
             <div className="w-3 h-3 rounded bg-orange-100 border border-orange-300"></div>
             <span>Verilen Çek</span>
           </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 rounded bg-blue-100 border border-blue-300"></div>
+            <span>Ödeme</span>
+          </div>
         </div>
         
         <div className="grid grid-cols-7 gap-0 border border-slate-200">
