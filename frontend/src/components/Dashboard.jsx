@@ -224,7 +224,7 @@ export default function Dashboard() {
 
   const statCards = [
     {
-      title: "Toplam Alacak",
+      title: "Toplam Borç",
       value: `₺${stats?.outstanding_amount?.toFixed(2) || "0.00"}`,
       icon: DollarSign,
       color: "bg-red-500",
@@ -245,7 +245,7 @@ export default function Dashboard() {
       testId: "total-invoices",
     },
     {
-      title: "Ödenmemiş Faturalar",
+      title: "Tahsil Edilmemiş Faturalar",
       value: stats?.unpaid_count || 0,
       icon: AlertCircle,
       color: "bg-orange-500",
