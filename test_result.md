@@ -261,15 +261,18 @@ frontend:
 
   - task: "Export UI for Weekly Schedule page"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/components/WeeklySchedule.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added Export button only (no import needed for weekly schedule as it's dynamically generated). Users can export current 4-week schedule."
+      - working: true
+        agent: "testing"
+        comment: "UI TESTING COMPLETED - EXPORT-ONLY FUNCTIONALITY WORKING CORRECTLY. Export button visible and functional with green styling. Correctly NO Import button present (as expected for dynamically generated schedule). Export dialog opens with 3 format options. Turkish text 'Dışa Aktar' displayed correctly. Minor HTML validation warning noted but not affecting functionality."
 
 metadata:
   created_by: "main_agent"
