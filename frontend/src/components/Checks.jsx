@@ -87,6 +87,7 @@ export default function Checks() {
       due_date: check.due_date,
       bank_name: check.bank_name,
       payer_payee: check.payer_payee,
+      supplier_id: check.supplier_id || "",
       notes: check.notes || ""
     });
     setDialogOpen(true);
