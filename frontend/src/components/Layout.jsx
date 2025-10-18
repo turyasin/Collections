@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Users, FileText, CreditCard, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, FileText, CreditCard, Receipt, CalendarDays, LogOut } from "lucide-react";
 
 export default function Layout({ children, onLogout }) {
   const location = useLocation();
