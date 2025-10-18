@@ -325,7 +325,7 @@ export default function Payments() {
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <table className="custom-table">
           <thead>
-            <tr><th>Fatura #</th><th>Müşteri</th><th>Çek No</th><th>Çek Tarihi</th><th>Banka</th><th>Tutar</th><th>Ay</th><th>Çeyrek</th><th>Ödeme Tarihi</th><th>Ekleyen</th><th>İşlemler</th></tr>
+            <tr><th>Fatura #</th><th>Müşteri</th><th>Ödeme Yöntemi</th><th>Çek/Kart Detayı</th><th>Tutar</th><th>Ay</th><th>Çeyrek</th><th>Ödeme Tarihi</th><th>Ekleyen</th><th>İşlemler</th></tr>
           </thead>
           <tbody>
             {filteredPayments.length > 0 ? (
@@ -333,9 +333,17 @@ export default function Payments() {
                 <tr key={payment.id} data-testid={`payment-row-${payment.id}`}>
                   <td className="font-semibold text-slate-900">{payment.invoice_number || "N/A"}</td>
                   <td className="text-slate-600">{payment.customer_name || "N/A"}</td>
-                  <td className="text-slate-900 font-semibold">{payment.check_number}</td>
-                  <td className="text-slate-600">{new Date(payment.check_date).toLocaleDateString()}</td>
-                  <td className="text-slate-600">{payment.bank_name}</td>
+                  <td className="text-slate-900 font-semibold">{payment.payment_method || "Çek"}</td>
+                  <td className="text-slate-600">
+                    {payment.payment_method === "Çek" ? (
+                      <div className="text-xs">
+                        <div>{payment.check_number}</div>
+                        <div className="text-slate-500">{payment.bank_name}</div>
+                      </div>
+                    ) : (
+                      "—"
+                    )}
+                  </td>
                   <td className="text-green-600 font-bold">₺{payment.amount.toFixed(2)}</td>
                   <td className="text-slate-600">{payment.month || "—"}</td>
                   <td className="text-slate-600">{payment.quarter || "—"}</td>
@@ -349,7 +357,7 @@ export default function Payments() {
                 </tr>
               ))
             ) : (
-              <tr><td colSpan="11" className="text-center py-8 text-slate-500">Ödeme bulunamadı</td></tr>
+              <tr><td colSpan="10" className="text-center py-8 text-slate-500">Ödeme bulunamadı</td></tr>
             )}
           </tbody>
         </table>
