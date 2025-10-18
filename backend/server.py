@@ -116,6 +116,8 @@ class Payment(BaseModel):
     check_date: str
     bank_name: str
     amount: float
+    created_by: Optional[str] = None
+    created_by_username: Optional[str] = None
     payment_date: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
