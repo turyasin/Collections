@@ -290,6 +290,7 @@ export default function Payments() {
                   <td className="text-slate-600">{payment.bank_name}</td>
                   <td className="text-green-600 font-bold">₺{payment.amount.toFixed(2)}</td>
                   <td className="text-slate-600">{new Date(payment.payment_date).toLocaleDateString()}</td>
+                  <td className="text-slate-600 text-sm">{payment.created_by_username || "—"}</td>
                   <td>
                     <Button size="sm" variant="outline" data-testid={`delete-payment-${payment.id}`} className="text-red-600 hover:bg-red-50" onClick={() => handleDelete(payment.id)}>
                       <Trash2 className="w-4 h-4" />
