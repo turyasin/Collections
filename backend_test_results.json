@@ -1,15 +1,15 @@
 {
   "summary": {
-    "total_tests": 53,
-    "passed_tests": 50,
-    "success_rate": "94.3%",
-    "timestamp": "2025-10-18T17:30:23.988579"
+    "total_tests": 65,
+    "passed_tests": 52,
+    "success_rate": "80.0%",
+    "timestamp": "2025-10-18T18:14:17.176128"
   },
   "detailed_results": [
     {
       "test": "User Registration",
       "success": true,
-      "details": "User created with email: test_173016@example.com",
+      "details": "User created with email: test_181410@example.com",
       "response_data": null
     },
     {
@@ -27,7 +27,7 @@
     {
       "test": "Create Customer",
       "success": true,
-      "details": "Customer created with ID: 0423a890-f6ad-4424-a837-38c8f93603a2",
+      "details": "Customer created with ID: 028916da-436b-4899-9f6c-43f749424020",
       "response_data": null
     },
     {
@@ -45,31 +45,31 @@
     {
       "test": "Create Invoice",
       "success": true,
-      "details": "Invoice created with ID: d9588491-1eb2-41db-b659-13927f867b19",
+      "details": "Invoice created with ID: 431e70b4-1fcd-48ef-8c71-191dc45647ef",
       "response_data": null
     },
     {
       "test": "Get Invoices",
       "success": true,
-      "details": "Retrieved 6 invoices",
+      "details": "Retrieved 13 invoices",
       "response_data": null
     },
     {
       "test": "Invoice Status Filter",
       "success": true,
-      "details": "Retrieved 4 unpaid invoices",
+      "details": "Retrieved 9 unpaid invoices",
       "response_data": null
     },
     {
       "test": "Create Check",
       "success": true,
-      "details": "Check created with ID: 68a14ca5-4189-41ae-b446-d845c18f0862",
+      "details": "Check created with ID: f32113dc-a456-433e-9f2c-5290cc5c1f00",
       "response_data": null
     },
     {
       "test": "Create Payment",
       "success": true,
-      "details": "Payment created with ID: 23633a31-6740-4a0e-9699-4d2a39481687",
+      "details": "Payment created with ID: 9d2d8eb6-c9ef-4f7a-9feb-d78552a46200",
       "response_data": null
     },
     {
@@ -81,85 +81,85 @@
     {
       "test": "Get Payments",
       "success": true,
-      "details": "Retrieved 2 payments",
+      "details": "Retrieved 3 payments",
       "response_data": null
     },
     {
       "test": "Dashboard Stats",
       "success": true,
-      "details": "All required fields present. Total invoices: 6",
+      "details": "All required fields present. Total invoices: 13",
       "response_data": null
     },
     {
       "test": "Export Invoices XLSX",
       "success": true,
-      "details": "Excel file exported successfully (6035 bytes)",
+      "details": "Excel file exported successfully (6834 bytes)",
       "response_data": null
     },
     {
       "test": "Export Invoices DOCX",
       "success": true,
-      "details": "Word file exported successfully (37040 bytes)",
+      "details": "Word file exported successfully (37225 bytes)",
       "response_data": null
     },
     {
       "test": "Export Invoices PDF",
       "success": true,
-      "details": "PDF file exported successfully (2743 bytes)",
+      "details": "PDF file exported successfully (3301 bytes)",
       "response_data": null
     },
     {
       "test": "Export Checks XLSX",
       "success": true,
-      "details": "Excel file exported successfully (5937 bytes)",
+      "details": "Excel file exported successfully (6216 bytes)",
       "response_data": null
     },
     {
       "test": "Export Checks DOCX",
       "success": true,
-      "details": "Word file exported successfully (37061 bytes)",
+      "details": "Word file exported successfully (37107 bytes)",
       "response_data": null
     },
     {
       "test": "Export Checks PDF",
       "success": true,
-      "details": "PDF file exported successfully (2784 bytes)",
+      "details": "PDF file exported successfully (2987 bytes)",
       "response_data": null
     },
     {
       "test": "Export Payments XLSX",
       "success": true,
-      "details": "Excel file exported successfully (5496 bytes)",
+      "details": "Excel file exported successfully (5674 bytes)",
       "response_data": null
     },
     {
       "test": "Export Payments DOCX",
       "success": true,
-      "details": "Word file exported successfully (36869 bytes)",
+      "details": "Word file exported successfully (36946 bytes)",
       "response_data": null
     },
     {
       "test": "Export Payments PDF",
       "success": true,
-      "details": "PDF file exported successfully (2411 bytes)",
+      "details": "PDF file exported successfully (2567 bytes)",
       "response_data": null
     },
     {
       "test": "Export Weekly Schedule XLSX",
       "success": true,
-      "details": "Excel file exported successfully (6390 bytes)",
+      "details": "Excel file exported successfully (6445 bytes)",
       "response_data": null
     },
     {
       "test": "Export Weekly Schedule DOCX",
       "success": true,
-      "details": "Word file exported successfully (36976 bytes)",
+      "details": "Word file exported successfully (36983 bytes)",
       "response_data": null
     },
     {
       "test": "Export Weekly Schedule PDF",
       "success": true,
-      "details": "PDF file exported successfully (3202 bytes)",
+      "details": "PDF file exported successfully (3241 bytes)",
       "response_data": null
     },
     {
@@ -189,19 +189,19 @@
     {
       "test": "Export Dashboard Stats XLSX",
       "success": true,
-      "details": "Excel file exported successfully (5447 bytes)",
+      "details": "Excel file exported successfully (5453 bytes)",
       "response_data": null
     },
     {
       "test": "Export Dashboard Stats DOCX",
       "success": true,
-      "details": "Word file exported successfully (36867 bytes)",
+      "details": "Word file exported successfully (36869 bytes)",
       "response_data": null
     },
     {
       "test": "Export Dashboard Stats PDF",
       "success": true,
-      "details": "PDF file exported successfully (2518 bytes)",
+      "details": "PDF file exported successfully (2520 bytes)",
       "response_data": null
     },
     {
@@ -213,7 +213,7 @@
     {
       "test": "Create Non-Admin User",
       "success": true,
-      "details": "Non-admin user created: nonadmin_173019@example.com",
+      "details": "Non-admin user created: nonadmin_181414@example.com",
       "response_data": null
     },
     {
@@ -237,79 +237,151 @@
     {
       "test": "Admin Login for Period Tests",
       "success": true,
-      "details": "Admin login not available, continuing with regular user token for period type tests",
+      "details": "Successfully logged in as admin user with password: adminpassword",
       "response_data": null
     },
     {
       "test": "Existing Invoices Period Type",
-      "success": true,
-      "details": "All 8 existing invoices have period_type='Ayl\u0131k'",
+      "success": false,
+      "details": "Migration issue: 15 missing period_type, 15 not 'Ayl\u0131k'",
       "response_data": null
     },
     {
       "test": "Existing Payments Period Type",
-      "success": true,
-      "details": "All 4 existing payments have period_type='Ayl\u0131k'",
+      "success": false,
+      "details": "Migration issue: 5 missing period_type, 5 not 'Ayl\u0131k'",
       "response_data": null
     },
     {
       "test": "Create Invoice Quarterly Period",
-      "success": true,
-      "details": "Invoice created with period_type='3 Ayl\u0131k', ID: 80b3793c-ef8f-43cd-82b6-568f8715b918",
+      "success": false,
+      "details": "Period type not set correctly: None",
       "response_data": null
     },
     {
       "test": "Update Invoice Yearly Period",
-      "success": true,
-      "details": "Invoice period_type updated to 'Y\u0131ll\u0131k'",
+      "success": false,
+      "details": "No quarterly invoice ID available",
       "response_data": null
     },
     {
       "test": "Invoice Default Period Type",
-      "success": true,
-      "details": "Invoice defaults to period_type='Ayl\u0131k'",
+      "success": false,
+      "details": "Default period type incorrect: None",
       "response_data": null
     },
     {
       "test": "Create Payment Quarterly Period",
-      "success": true,
-      "details": "Payment created with period_type='3 Ayl\u0131k', ID: a5121e39-0b22-407a-8fde-33da3190b335",
+      "success": false,
+      "details": "No quarterly invoice ID available",
       "response_data": null
     },
     {
       "test": "Payment Default Period Type",
-      "success": true,
-      "details": "Payment defaults to period_type='Ayl\u0131k'",
+      "success": false,
+      "details": "Default period type incorrect: None",
       "response_data": null
     },
     {
       "test": "Period Type Validation",
-      "success": true,
-      "details": "All period types accepted: ['Ayl\u0131k', '3 Ayl\u0131k', 'Y\u0131ll\u0131k']",
+      "success": false,
+      "details": "Failed period types: ['Ayl\u0131k', '3 Ayl\u0131k', 'Y\u0131ll\u0131k']",
       "response_data": null
     },
     {
       "test": "Export Invoices Includes Period Type",
       "success": true,
-      "details": "Invoice export working (6724 bytes) - period_type field should be included",
+      "details": "Invoice export working (7462 bytes) - period_type field should be included",
       "response_data": null
     },
     {
       "test": "Export Payments Includes Period Type",
       "success": true,
-      "details": "Payment export working (5919 bytes) - period_type field should be included",
+      "details": "Payment export working (5987 bytes) - period_type field should be included",
       "response_data": null
     },
     {
       "test": "Restore Original Token",
+      "success": true,
+      "details": "Restored original user token",
+      "response_data": null
+    },
+    {
+      "test": "Admin Login for Month/Quarter Tests",
+      "success": true,
+      "details": "Successfully logged in as admin user",
+      "response_data": null
+    },
+    {
+      "test": "All Invoices Have Month/Quarter",
       "success": false,
-      "details": "No original token to restore",
+      "details": "Missing fields: 2 without month, 2 without quarter",
+      "response_data": null
+    },
+    {
+      "test": "All Payments Have Month/Quarter",
+      "success": false,
+      "details": "Missing fields: 2 without month, 2 without quarter",
+      "response_data": null
+    },
+    {
+      "test": "Invoice Month/Quarter March",
+      "success": true,
+      "details": "Correct calculation: month='Mart 2025', quarter='Q1 2025'",
+      "response_data": null
+    },
+    {
+      "test": "Invoice Month/Quarter July",
+      "success": true,
+      "details": "Correct calculation: month='Temmuz 2025', quarter='Q3 2025'",
+      "response_data": null
+    },
+    {
+      "test": "Invoice Update Recalculation",
+      "success": true,
+      "details": "Correct recalculation: month='Aral\u0131k 2025', quarter='Q4 2025'",
+      "response_data": null
+    },
+    {
+      "test": "Payment Month/Quarter Calculation",
+      "success": true,
+      "details": "Correct calculation: month='Ekim 2025', quarter='Q4 2025'",
+      "response_data": null
+    },
+    {
+      "test": "Quarter Calculation Validation",
+      "success": true,
+      "details": "All quarter calculations correct (Q1-Q4)",
+      "response_data": null
+    },
+    {
+      "test": "Turkish Month Names Validation",
+      "success": true,
+      "details": "All 12 Turkish month names correct",
+      "response_data": null
+    },
+    {
+      "test": "No Period Type in Responses",
+      "success": true,
+      "details": "period_type field successfully removed from all responses",
+      "response_data": null
+    },
+    {
+      "test": "Data Migration Verification",
+      "success": false,
+      "details": "Only 36/38 invoices have correct calculations (94.7%)",
+      "response_data": null
+    },
+    {
+      "test": "Restore Original Token",
+      "success": true,
+      "details": "Restored original user token",
       "response_data": null
     },
     {
       "test": "Payment Deletion & Status Recalculation",
       "success": false,
-      "details": "Status not recalculated. Status: partial, Paid: $500.0",
+      "details": "Status not recalculated. Status: partial, Paid: $1000.0",
       "response_data": null
     },
     {
