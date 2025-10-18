@@ -133,7 +133,7 @@ export default function Dashboard() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-green-600">${payment.amount.toFixed(2)}</p>
+                  <p className="font-bold text-green-600">₺{payment.amount.toFixed(2)}</p>
                   <p className="text-xs text-slate-500">
                     {new Date(payment.payment_date).toLocaleDateString()}
                   </p>
