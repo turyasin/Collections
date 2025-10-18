@@ -455,8 +455,13 @@ async def create_payment(payment: PaymentCreate, user_id: str = Depends(get_curr
     if not invoice:
         raise HTTPException(status_code=404, detail="Invoice not found")
     
+    # Get current user info
+    current_user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    
     payment_obj = Payment(**payment.model_dump())
     payment_obj.invoice_number = invoice["invoice_number"]
+    payment_obj.created_by = user_id
+    payment_obj.created_by_username = current_user.get("username", "Unknown") if current_user else "Unknown"
     
     customer = await db.customers.find_one({"id": invoice["customer_id"]}, {"_id": 0})
     if customer:
