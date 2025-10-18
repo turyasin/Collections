@@ -28,8 +28,21 @@ export default function CompanyInfo() {
   });
 
   useEffect(() => {
+    checkAdminStatus();
     fetchCompanyInfo();
   }, []);
+
+  const checkAdminStatus = async () => {
+    try {
+      const res = await axios.get(`${API}/users/me`, getAuthHeaders());
+      setIsAdmin(res.data.is_admin || false);
+      if (!res.data.is_admin) {
+        toast.error("Bu sayfaya erişim yetkiniz yok");
+      }
+    } catch (error) {
+      console.error("Failed to check admin status", error);
+    }
+  };
 
   const fetchCompanyInfo = async () => {
     try {
