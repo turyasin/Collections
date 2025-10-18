@@ -178,6 +178,7 @@ export default function CompanyInfo() {
                 id="tax_number"
                 value={formData.tax_number}
                 onChange={(e) => setFormData({ ...formData, tax_number: e.target.value })}
+                disabled={!isAdmin}
               />
             </div>
             <div className="space-y-2">
@@ -186,6 +187,7 @@ export default function CompanyInfo() {
                 id="tax_office"
                 value={formData.tax_office}
                 onChange={(e) => setFormData({ ...formData, tax_office: e.target.value })}
+                disabled={!isAdmin}
               />
             </div>
             <div className="space-y-2">
@@ -194,6 +196,7 @@ export default function CompanyInfo() {
                 id="phone"
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                disabled={!isAdmin}
               />
             </div>
             <div className="space-y-2 md:col-span-2">
@@ -203,6 +206,7 @@ export default function CompanyInfo() {
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                disabled={!isAdmin}
               />
             </div>
             <div className="space-y-2 md:col-span-2">
@@ -211,6 +215,7 @@ export default function CompanyInfo() {
                 id="address"
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                disabled={!isAdmin}
               />
             </div>
           </div>
