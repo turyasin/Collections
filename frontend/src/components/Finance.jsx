@@ -51,6 +51,16 @@ export default function Finance() {
           <h1 className="text-3xl font-bold text-slate-900 mb-2 mt-2">Finans</h1>
           <p className="text-slate-600">Faturalar, ödemeler ve çekleri yönetin</p>
         </div>
+        {currentUser?.is_admin && (
+          <Button
+            onClick={handleArchive}
+            variant="outline"
+            className="flex items-center gap-2 border-slate-300 hover:bg-slate-50"
+          >
+            <Archive className="w-4 h-4" />
+            Arşivle
+          </Button>
+        )}
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
