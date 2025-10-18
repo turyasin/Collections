@@ -219,6 +219,13 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
+async def get_current_admin_user(user_id: str = Depends(get_current_user)):
+    """Check if current user is admin"""
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user or not user.get("is_admin", False):
+        raise HTTPException(status_code=403, detail="Admin yetkisi gerekli")
+    return user_id
+
 # Email notification functions
 async def send_invoice_reminder_email(invoice_number: str, customer_name: str, amount: float, due_date: str):
     """Send email reminder for upcoming invoice due date"""
