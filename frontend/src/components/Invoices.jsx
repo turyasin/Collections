@@ -275,6 +275,17 @@ export default function Invoices() {
                   <p className="text-xs text-slate-500">Ay ve çeyrek otomatik hesaplanacaktır</p>
                 </div>
                 <div className="space-y-2">
+                  <Label htmlFor="currency">Para Birimi *</Label>
+                  <Select value={formData.currency} onValueChange={(value) => setFormData({ ...formData, currency: value })} required>
+                    <SelectTrigger data-testid="currency-select"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="TRY">TRY (₺)</SelectItem>
+                      <SelectItem value="USD">USD ($)</SelectItem>
+                      <SelectItem value="EUR">EUR (€)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
                   <Label htmlFor="notes">Notlar</Label>
                   <Input id="notes" data-testid="invoice-notes-input" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} />
                 </div>
