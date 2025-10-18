@@ -57,6 +57,28 @@ ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'turyasin@gmail.com')
 # Scheduler
 scheduler = AsyncIOScheduler(timezone=pytz.timezone('Europe/Istanbul'))
 
+# Helper functions for date calculations
+def get_month_year(date_str: str) -> str:
+    """Convert date string to 'Month YYYY' format in Turkish"""
+    try:
+        date_obj = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+        month_names = {
+            1: "Ocak", 2: "Şubat", 3: "Mart", 4: "Nisan", 5: "Mayıs", 6: "Haziran",
+            7: "Temmuz", 8: "Ağustos", 9: "Eylül", 10: "Ekim", 11: "Kasım", 12: "Aralık"
+        }
+        return f"{month_names[date_obj.month]} {date_obj.year}"
+    except:
+        return "N/A"
+
+def get_quarter_year(date_str: str) -> str:
+    """Convert date string to 'QX YYYY' format"""
+    try:
+        date_obj = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+        quarter = (date_obj.month - 1) // 3 + 1
+        return f"Q{quarter} {date_obj.year}"
+    except:
+        return "N/A"
+
 # Create the main app
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
