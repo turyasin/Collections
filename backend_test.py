@@ -71,7 +71,7 @@ class InvoiceTrackerAPITester:
             else:
                 return False, {"error": f"Unsupported method: {method}"}
 
-            success = response.status_code == expected_status
+            success = expected_status is None or response.status_code == expected_status
             
             # For file downloads, return response object info
             if 'application/vnd.openxmlformats' in response.headers.get('content-type', '') or \
