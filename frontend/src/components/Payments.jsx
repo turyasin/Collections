@@ -277,19 +277,26 @@ export default function Payments() {
                     </SelectContent>
                   </Select>
                 </div>
-                {(formData.payment_method === "Havale/EFT" || formData.payment_method === "Nakit") && bankAccounts.length > 0 && (
+                {(formData.payment_method === "Havale/EFT" || formData.payment_method === "Nakit") && (
                   <div className="space-y-2">
                     <Label htmlFor="bank_account">Banka Hesabı (Gelen Ödeme)</Label>
-                    <Select value={formData.bank_account_id} onValueChange={(value) => setFormData({ ...formData, bank_account_id: value })}>
-                      <SelectTrigger data-testid="bank-account-select"><SelectValue placeholder="Hesap seçin (opsiyonel)" /></SelectTrigger>
-                      <SelectContent>
-                        {bankAccounts.map((account) => (
-                          <SelectItem key={account.id} value={account.id}>
-                            {account.bank_name} - {account.currency} - {account.iban.slice(-4)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    {bankAccounts.length > 0 ? (
+                      <Select value={formData.bank_account_id} onValueChange={(value) => setFormData({ ...formData, bank_account_id: value })}>
+                        <SelectTrigger data-testid="bank-account-select"><SelectValue placeholder="Hesap seçin (opsiyonel)" /></SelectTrigger>
+                        <SelectContent>
+                          {bankAccounts.map((account) => (
+                            <SelectItem key={account.id} value={account.id}>
+                              {account.bank_name} - {account.currency} - {account.iban.slice(-4)}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <div className="text-sm text-amber-600 bg-amber-50 p-3 rounded border border-amber-200">
+                        <p>Henüz banka hesabı tanımlanmamış.</p>
+                        <p className="mt-1">Firma Bilgileri sayfasından banka hesaplarınızı ekleyebilirsiniz.</p>
+                      </div>
+                    )}
                   </div>
                 )}
                 {formData.payment_method === "Çek" && (
