@@ -58,6 +58,10 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
 
+class UserUpdate(BaseModel):
+    is_admin: Optional[bool] = None
+    receive_notifications: Optional[bool] = None
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
