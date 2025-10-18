@@ -24,6 +24,7 @@ export default function Dashboard() {
   useEffect(() => {
     fetchStats();
     fetchCalendarData();
+    fetchInvoicesAndPayments();
   }, []);
 
   const fetchStats = async () => {
