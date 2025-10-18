@@ -161,6 +161,67 @@ export default function Layout({ children, onLogout, user }) {
               )}
             </div>
           )}
+          
+          {/* Şifre Değiştir Butonu */}
+          <Dialog open={passwordDialogOpen} onOpenChange={setPasswordDialogOpen}>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full justify-start mb-2 border-slate-200 hover:bg-slate-50"
+              >
+                <KeyRound className="w-5 h-5 mr-3" />
+                Şifre Değiştir
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Şifre Değiştir</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handlePasswordChange} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="current-password">Mevcut Şifre</Label>
+                  <Input
+                    id="current-password"
+                    type="password"
+                    value={passwordFormData.currentPassword}
+                    onChange={(e) => setPasswordFormData({ ...passwordFormData, currentPassword: e.target.value })}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="new-password">Yeni Şifre</Label>
+                  <Input
+                    id="new-password"
+                    type="password"
+                    value={passwordFormData.newPassword}
+                    onChange={(e) => setPasswordFormData({ ...passwordFormData, newPassword: e.target.value })}
+                    required
+                    minLength={6}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="confirm-password">Yeni Şifre (Tekrar)</Label>
+                  <Input
+                    id="confirm-password"
+                    type="password"
+                    value={passwordFormData.confirmPassword}
+                    onChange={(e) => setPasswordFormData({ ...passwordFormData, confirmPassword: e.target.value })}
+                    required
+                    minLength={6}
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button type="button" variant="outline" onClick={() => setPasswordDialogOpen(false)}>
+                    İptal
+                  </Button>
+                  <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+                    Değiştir
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
+          
           <Button
             onClick={onLogout}
             data-testid="logout-button"
