@@ -126,30 +126,6 @@ function App() {
               )
             }
           />
-          <Route
-            path="/import-export"
-            element={
-              isAuthenticated ? (
-                <Layout onLogout={handleLogout}>
-                  <ImportExport />
-                </Layout>
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              isAuthenticated ? (
-                <Layout onLogout={handleLogout}>
-                  <Settings />
-                </Layout>
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
         </Routes>
       </BrowserRouter>
     </div>
