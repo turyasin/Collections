@@ -107,7 +107,7 @@ export default function Invoices() {
           <DialogTrigger asChild>
             <Button data-testid="add-invoice-button" className="bg-blue-600 hover:bg-blue-700"><Plus className="w-4 h-4 mr-2" />Add Invoice</Button>
           </DialogTrigger>
-          <DialogContent data-testid="invoice-dialog">
+          <DialogContent data-testid="invoice-dialog" aria-describedby="invoice-dialog-description">
             <DialogHeader><DialogTitle>{editingInvoice ? "Edit Invoice" : "Create New Invoice"}</DialogTitle></DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
