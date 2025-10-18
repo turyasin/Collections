@@ -72,7 +72,7 @@ export default function Invoices() {
 
   const handleEdit = (invoice) => {
     setEditingInvoice(invoice);
-    setFormData({ customer_id: invoice.customer_id, invoice_number: invoice.invoice_number, amount: invoice.amount.toString(), due_date: invoice.due_date, notes: invoice.notes || "" });
+    setFormData({ customer_id: invoice.customer_id, invoice_number: invoice.invoice_number, amount: invoice.amount.toString(), due_date: invoice.due_date, period_type: invoice.period_type || "Aylık", notes: invoice.notes || "" });
     setDialogOpen(true);
   };
 
