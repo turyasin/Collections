@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { Loader2, Receipt } from "lucide-react";
 
@@ -12,11 +13,21 @@ const API = `${BACKEND_URL}/api`;
 export default function Login({ onLogin }) {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    // Load remembered email
+    const rememberedEmail = localStorage.getItem("rememberedEmail");
+    if (rememberedEmail) {
+      setFormData(prev => ({ ...prev, email: rememberedEmail }));
+      setRememberMe(true);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,11 +41,21 @@ export default function Login({ onLogin }) {
 
       const response = await axios.post(`${API}${endpoint}`, payload);
       localStorage.setItem("token", response.data.token);
-      toast.success(isLogin ? "Login successful!" : "Account created!");
+      
+      // Handle remember me
+      if (isLogin) {
+        if (rememberMe) {
+          localStorage.setItem("rememberedEmail", formData.email);
+        } else {
+          localStorage.removeItem("rememberedEmail");
+        }
+      }
+      
+      toast.success(isLogin ? "Giriş başarılı!" : "Hesap oluşturuldu!");
       onLogin();
     } catch (error) {
       toast.error(
-        error.response?.data?.detail || "An error occurred. Please try again."
+        error.response?.data?.detail || "Bir hata oluştu. Lütfen tekrar deneyin."
       );
     } finally {
       setLoading(false);
