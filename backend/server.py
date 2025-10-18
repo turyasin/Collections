@@ -145,7 +145,6 @@ class InvoiceCreate(BaseModel):
     invoice_number: str
     amount: float
     due_date: str
-    period_type: str = "Aylık"  # "Aylık", "3 Aylık", "Yıllık"
     notes: Optional[str] = None
 
 class InvoiceUpdate(BaseModel):
