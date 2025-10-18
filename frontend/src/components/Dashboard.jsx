@@ -96,7 +96,8 @@ export default function Dashboard() {
     const filteredPayments = payments.filter(pay => {
       const matchesMonth = monthFilter === "all" || pay.month === monthFilter;
       const matchesQuarter = quarterFilter === "all" || pay.quarter === quarterFilter;
-      return matchesMonth && matchesQuarter;
+      const matchesBank = bankFilter === "all" || pay.bank_account_id === bankFilter;
+      return matchesMonth && matchesQuarter && matchesBank;
     });
 
     const totalInvoiceAmount = filteredInvoices.reduce((sum, inv) => sum + inv.amount, 0);
