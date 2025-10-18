@@ -128,11 +128,11 @@ function App() {
             }
           />
           <Route
-            path="/settings"
+            path="/import-export"
             element={
               isAuthenticated ? (
                 <Layout onLogout={handleLogout}>
-                  <Settings />
+                  <ImportExport />
                 </Layout>
               ) : (
                 <Navigate to="/login" replace />
