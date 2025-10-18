@@ -1,15 +1,15 @@
 {
   "summary": {
-    "total_tests": 45,
-    "passed_tests": 39,
-    "success_rate": "86.7%",
-    "timestamp": "2025-10-18T11:25:21.402141"
+    "total_tests": 41,
+    "passed_tests": 38,
+    "success_rate": "92.7%",
+    "timestamp": "2025-10-18T11:26:15.100348"
   },
   "detailed_results": [
     {
       "test": "User Registration",
       "success": true,
-      "details": "User created with email: test_112516@example.com",
+      "details": "User created with email: test_112610@example.com",
       "response_data": null
     },
     {
@@ -27,7 +27,7 @@
     {
       "test": "Create Customer",
       "success": true,
-      "details": "Customer created with ID: 8f27246b-00e6-405f-a4d6-0440ccf064ab",
+      "details": "Customer created with ID: e97092c2-bb16-4d59-806f-86858258634e",
       "response_data": null
     },
     {
@@ -45,31 +45,31 @@
     {
       "test": "Create Invoice",
       "success": true,
-      "details": "Invoice created with ID: 65aea4f6-cbba-4ea5-9ce5-21ad6fdb1437",
+      "details": "Invoice created with ID: 01170399-7686-47b9-bcae-ead737fd672d",
       "response_data": null
     },
     {
       "test": "Get Invoices",
       "success": true,
-      "details": "Retrieved 11 invoices",
+      "details": "Retrieved 13 invoices",
       "response_data": null
     },
     {
       "test": "Invoice Status Filter",
       "success": true,
-      "details": "Retrieved 6 unpaid invoices",
+      "details": "Retrieved 7 unpaid invoices",
       "response_data": null
     },
     {
       "test": "Create Check",
       "success": true,
-      "details": "Check created with ID: 2f9ce2ee-2ac1-47b2-a80d-46a807295442",
+      "details": "Check created with ID: cca2b0c4-44e9-4169-93bf-1ea276c72f9f",
       "response_data": null
     },
     {
       "test": "Create Payment",
       "success": true,
-      "details": "Payment created with ID: 79e9b45f-b336-48bf-bd77-40d2d2775646",
+      "details": "Payment created with ID: c69247de-e9e2-4ee5-b26d-41966a30bea1",
       "response_data": null
     },
     {
@@ -87,79 +87,79 @@
     {
       "test": "Dashboard Stats",
       "success": true,
-      "details": "All required fields present. Total invoices: 11",
+      "details": "All required fields present. Total invoices: 13",
       "response_data": null
     },
     {
       "test": "Export Invoices XLSX",
       "success": true,
-      "details": "Excel file exported successfully (6506 bytes)",
+      "details": "Excel file exported successfully (6709 bytes)",
       "response_data": null
     },
     {
       "test": "Export Invoices DOCX",
       "success": true,
-      "details": "Word file exported successfully (37077 bytes)",
+      "details": "Word file exported successfully (37093 bytes)",
       "response_data": null
     },
     {
       "test": "Export Invoices PDF",
       "success": true,
-      "details": "PDF file exported successfully (2973 bytes)",
+      "details": "PDF file exported successfully (3082 bytes)",
       "response_data": null
     },
     {
       "test": "Export Checks XLSX",
       "success": true,
-      "details": "Excel file exported successfully (6519 bytes)",
+      "details": "Excel file exported successfully (6800 bytes)",
       "response_data": null
     },
     {
       "test": "Export Checks DOCX",
       "success": true,
-      "details": "Word file exported successfully (37087 bytes)",
+      "details": "Word file exported successfully (37126 bytes)",
       "response_data": null
     },
     {
       "test": "Export Checks PDF",
       "success": true,
-      "details": "PDF file exported successfully (3111 bytes)",
+      "details": "PDF file exported successfully (3254 bytes)",
       "response_data": null
     },
     {
       "test": "Export Payments XLSX",
       "success": true,
-      "details": "Excel file exported successfully (5468 bytes)",
+      "details": "Excel file exported successfully (5470 bytes)",
       "response_data": null
     },
     {
       "test": "Export Payments DOCX",
       "success": true,
-      "details": "Word file exported successfully (36857 bytes)",
+      "details": "Word file exported successfully (36856 bytes)",
       "response_data": null
     },
     {
       "test": "Export Payments PDF",
       "success": true,
-      "details": "PDF file exported successfully (2397 bytes)",
+      "details": "PDF file exported successfully (2398 bytes)",
       "response_data": null
     },
     {
       "test": "Export Weekly Schedule XLSX",
       "success": true,
-      "details": "Excel file exported successfully (6462 bytes)",
+      "details": "Excel file exported successfully (6502 bytes)",
       "response_data": null
     },
     {
       "test": "Export Weekly Schedule DOCX",
       "success": true,
-      "details": "Word file exported successfully (36961 bytes)",
+      "details": "Word file exported successfully (36965 bytes)",
       "response_data": null
     },
     {
       "test": "Export Weekly Schedule PDF",
       "success": true,
-      "details": "PDF file exported successfully (3302 bytes)",
+      "details": "PDF file exported successfully (3531 bytes)",
       "response_data": null
     },
     {
@@ -189,13 +189,13 @@
     {
       "test": "Export Dashboard Stats XLSX",
       "success": true,
-      "details": "Excel file exported successfully (5448 bytes)",
+      "details": "Excel file exported successfully (5450 bytes)",
       "response_data": null
     },
     {
       "test": "Export Dashboard Stats DOCX",
       "success": true,
-      "details": "Word file exported successfully (36869 bytes)",
+      "details": "Word file exported successfully (36868 bytes)",
       "response_data": null
     },
     {
@@ -207,35 +207,13 @@
     {
       "test": "Get Logo (Public)",
       "success": false,
-      "details": "Unexpected response: {'detail': 'Logo bulunamad\u0131'}",
-      "response_data": {
-        "detail": "Logo bulunamad\u0131"
-      }
-    },
-    {
-      "test": "Logo Upload (Admin)",
-      "success": false,
-      "details": "No admin token available - skipping admin test",
-      "response_data": null
-    },
-    {
-      "test": "Get Logo (Public)",
-      "success": false,
-      "details": "Unexpected response: {'detail': 'Logo bulunamad\u0131'}",
-      "response_data": {
-        "detail": "Logo bulunamad\u0131"
-      }
-    },
-    {
-      "test": "Logo Upload Non-PNG",
-      "success": false,
-      "details": "No admin token available - skipping admin test",
+      "details": "Invalid logo response: {'detail': 'Logo bulunamad\u0131'}",
       "response_data": null
     },
     {
       "test": "Create Non-Admin User",
       "success": true,
-      "details": "Non-admin user created: nonadmin_112520@example.com",
+      "details": "Non-admin user created: nonadmin_112614@example.com",
       "response_data": null
     },
     {
@@ -251,15 +229,9 @@
       "response_data": null
     },
     {
-      "test": "Logo Delete (Admin)",
+      "test": "Logo Management Admin Tests",
       "success": false,
-      "details": "No admin token available - skipping admin test",
-      "response_data": null
-    },
-    {
-      "test": "Get Logo After Deletion",
-      "success": true,
-      "details": "Correctly returned 404 after logo deletion",
+      "details": "Admin tests skipped - no admin credentials available. Endpoints exist and properly reject non-admin users.",
       "response_data": null
     },
     {
