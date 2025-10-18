@@ -764,6 +764,605 @@ async def get_weekly_payment_schedule(weeks: int = 4, user_id: str = Depends(get
     
     return schedule
 
+# Helper functions for export
+async def export_invoices_xlsx(invoices):
+    """Export invoices to Excel format"""
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Faturalar"
+    
+    # Headers
+    headers = ["ID", "Müşteri ID", "Müşteri Adı", "Fatura No", "Tutar (₺)", "Ödenen (₺)", "Vade Tarihi", "Durum", "Notlar", "Oluşturan", "Oluşturma Tarihi"]
+    ws.append(headers)
+    
+    # Style headers
+    for cell in ws[1]:
+        cell.font = Font(bold=True, color="FFFFFF")
+        cell.fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
+        cell.alignment = Alignment(horizontal="center")
+    
+    # Data rows
+    for inv in invoices:
+        ws.append([
+            inv.get("id", ""),
+            inv.get("customer_id", ""),
+            inv.get("customer_name", ""),
+            inv.get("invoice_number", ""),
+            inv.get("amount", 0),
+            inv.get("paid_amount", 0),
+            inv.get("due_date", ""),
+            inv.get("status", ""),
+            inv.get("notes", ""),
+            inv.get("created_by_username", ""),
+            inv.get("created_at", "")
+        ])
+    
+    # Auto-adjust column widths
+    for column in ws.columns:
+        max_length = 0
+        column_letter = column[0].column_letter
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(str(cell.value))
+            except:
+                pass
+        adjusted_width = min(max_length + 2, 50)
+        ws.column_dimensions[column_letter].width = adjusted_width
+    
+    # Save to BytesIO
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+    
+    return StreamingResponse(
+        output,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f"attachment; filename=faturalar_{datetime.now().strftime('%Y%m%d')}.xlsx"}
+    )
+
+async def export_invoices_docx(invoices):
+    """Export invoices to Word format"""
+    doc = Document()
+    doc.add_heading('Faturalar Raporu', 0)
+    doc.add_paragraph(f'Rapor Tarihi: {datetime.now().strftime("%d.%m.%Y %H:%M")}')
+    doc.add_paragraph(f'Toplam Fatura: {len(invoices)}')
+    doc.add_paragraph('')
+    
+    for inv in invoices:
+        doc.add_heading(f'Fatura No: {inv.get("invoice_number", "")}', level=2)
+        doc.add_paragraph(f'Müşteri: {inv.get("customer_name", "")}')
+        doc.add_paragraph(f'Tutar: ₺{inv.get("amount", 0):,.2f}')
+        doc.add_paragraph(f'Ödenen: ₺{inv.get("paid_amount", 0):,.2f}')
+        doc.add_paragraph(f'Vade Tarihi: {inv.get("due_date", "")}')
+        doc.add_paragraph(f'Durum: {inv.get("status", "")}')
+        if inv.get("notes"):
+            doc.add_paragraph(f'Notlar: {inv.get("notes", "")}')
+        doc.add_paragraph(f'Oluşturan: {inv.get("created_by_username", "")}')
+        doc.add_paragraph('')
+    
+    output = BytesIO()
+    doc.save(output)
+    output.seek(0)
+    
+    return StreamingResponse(
+        output,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={"Content-Disposition": f"attachment; filename=faturalar_{datetime.now().strftime('%Y%m%d')}.docx"}
+    )
+
+async def export_invoices_pdf(invoices):
+    """Export invoices to PDF format"""
+    output = BytesIO()
+    doc = SimpleDocTemplate(output, pagesize=landscape(A4))
+    elements = []
+    styles = getSampleStyleSheet()
+    
+    # Title
+    title_style = ParagraphStyle('CustomTitle', parent=styles['Heading1'], fontSize=20, textColor=colors.HexColor('#366092'))
+    elements.append(Paragraph('Faturalar Raporu', title_style))
+    elements.append(Spacer(1, 12))
+    elements.append(Paragraph(f'Rapor Tarihi: {datetime.now().strftime("%d.%m.%Y %H:%M")}', styles['Normal']))
+    elements.append(Paragraph(f'Toplam Fatura: {len(invoices)}', styles['Normal']))
+    elements.append(Spacer(1, 20))
+    
+    # Table data
+    data = [['Fatura No', 'Müşteri', 'Tutar (₺)', 'Ödenen (₺)', 'Vade', 'Durum', 'Oluşturan']]
+    for inv in invoices:
+        data.append([
+            inv.get("invoice_number", ""),
+            inv.get("customer_name", "")[:20],
+            f"₺{inv.get('amount', 0):,.2f}",
+            f"₺{inv.get('paid_amount', 0):,.2f}",
+            inv.get("due_date", ""),
+            inv.get("status", ""),
+            inv.get("created_by_username", "")[:15]
+        ])
+    
+    table = Table(data)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#366092')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+    ]))
+    
+    elements.append(table)
+    doc.build(elements)
+    output.seek(0)
+    
+    return StreamingResponse(
+        output,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename=faturalar_{datetime.now().strftime('%Y%m%d')}.pdf"}
+    )
+
+async def export_checks_xlsx(checks):
+    """Export checks to Excel format"""
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Çekler"
+    
+    # Headers
+    headers = ["ID", "Tür", "Çek No", "Tutar (₺)", "Vade Tarihi", "Banka", "Alıcı/Veren", "Durum", "Notlar", "Oluşturan", "Oluşturma Tarihi"]
+    ws.append(headers)
+    
+    # Style headers
+    for cell in ws[1]:
+        cell.font = Font(bold=True, color="FFFFFF")
+        cell.fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
+        cell.alignment = Alignment(horizontal="center")
+    
+    # Data rows
+    for check in checks:
+        check_type_tr = "Alınan" if check.get("check_type") == "received" else "Verilen"
+        ws.append([
+            check.get("id", ""),
+            check_type_tr,
+            check.get("check_number", ""),
+            check.get("amount", 0),
+            check.get("due_date", ""),
+            check.get("bank_name", ""),
+            check.get("payer_payee", ""),
+            check.get("status", ""),
+            check.get("notes", ""),
+            check.get("created_by_username", ""),
+            check.get("created_at", "")
+        ])
+    
+    # Auto-adjust column widths
+    for column in ws.columns:
+        max_length = 0
+        column_letter = column[0].column_letter
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(str(cell.value))
+            except:
+                pass
+        adjusted_width = min(max_length + 2, 50)
+        ws.column_dimensions[column_letter].width = adjusted_width
+    
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+    
+    return StreamingResponse(
+        output,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f"attachment; filename=cekler_{datetime.now().strftime('%Y%m%d')}.xlsx"}
+    )
+
+async def export_checks_docx(checks):
+    """Export checks to Word format"""
+    doc = Document()
+    doc.add_heading('Çekler Raporu', 0)
+    doc.add_paragraph(f'Rapor Tarihi: {datetime.now().strftime("%d.%m.%Y %H:%M")}')
+    doc.add_paragraph(f'Toplam Çek: {len(checks)}')
+    doc.add_paragraph('')
+    
+    for check in checks:
+        check_type_tr = "Alınan Çek" if check.get("check_type") == "received" else "Verilen Çek"
+        doc.add_heading(f'{check_type_tr} - {check.get("check_number", "")}', level=2)
+        doc.add_paragraph(f'Tutar: ₺{check.get("amount", 0):,.2f}')
+        doc.add_paragraph(f'Vade Tarihi: {check.get("due_date", "")}')
+        doc.add_paragraph(f'Banka: {check.get("bank_name", "")}')
+        doc.add_paragraph(f'Alıcı/Veren: {check.get("payer_payee", "")}')
+        doc.add_paragraph(f'Durum: {check.get("status", "")}')
+        if check.get("notes"):
+            doc.add_paragraph(f'Notlar: {check.get("notes", "")}')
+        doc.add_paragraph(f'Oluşturan: {check.get("created_by_username", "")}')
+        doc.add_paragraph('')
+    
+    output = BytesIO()
+    doc.save(output)
+    output.seek(0)
+    
+    return StreamingResponse(
+        output,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={"Content-Disposition": f"attachment; filename=cekler_{datetime.now().strftime('%Y%m%d')}.docx"}
+    )
+
+async def export_checks_pdf(checks):
+    """Export checks to PDF format"""
+    output = BytesIO()
+    doc = SimpleDocTemplate(output, pagesize=landscape(A4))
+    elements = []
+    styles = getSampleStyleSheet()
+    
+    title_style = ParagraphStyle('CustomTitle', parent=styles['Heading1'], fontSize=20, textColor=colors.HexColor('#366092'))
+    elements.append(Paragraph('Çekler Raporu', title_style))
+    elements.append(Spacer(1, 12))
+    elements.append(Paragraph(f'Rapor Tarihi: {datetime.now().strftime("%d.%m.%Y %H:%M")}', styles['Normal']))
+    elements.append(Paragraph(f'Toplam Çek: {len(checks)}', styles['Normal']))
+    elements.append(Spacer(1, 20))
+    
+    data = [['Tür', 'Çek No', 'Tutar (₺)', 'Vade', 'Banka', 'Alıcı/Veren', 'Durum', 'Oluşturan']]
+    for check in checks:
+        check_type_tr = "Alınan" if check.get("check_type") == "received" else "Verilen"
+        data.append([
+            check_type_tr,
+            check.get("check_number", ""),
+            f"₺{check.get('amount', 0):,.2f}",
+            check.get("due_date", ""),
+            check.get("bank_name", "")[:15],
+            check.get("payer_payee", "")[:15],
+            check.get("status", ""),
+            check.get("created_by_username", "")[:12]
+        ])
+    
+    table = Table(data)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#366092')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+    ]))
+    
+    elements.append(table)
+    doc.build(elements)
+    output.seek(0)
+    
+    return StreamingResponse(
+        output,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename=cekler_{datetime.now().strftime('%Y%m%d')}.pdf"}
+    )
+
+async def export_payments_xlsx(payments):
+    """Export payments to Excel format"""
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Ödemeler"
+    
+    headers = ["ID", "Fatura ID", "Fatura No", "Müşteri", "Çek No", "Çek Tarihi", "Banka", "Tutar (₺)", "Oluşturan", "Ödeme Tarihi"]
+    ws.append(headers)
+    
+    for cell in ws[1]:
+        cell.font = Font(bold=True, color="FFFFFF")
+        cell.fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
+        cell.alignment = Alignment(horizontal="center")
+    
+    for payment in payments:
+        ws.append([
+            payment.get("id", ""),
+            payment.get("invoice_id", ""),
+            payment.get("invoice_number", ""),
+            payment.get("customer_name", ""),
+            payment.get("check_number", ""),
+            payment.get("check_date", ""),
+            payment.get("bank_name", ""),
+            payment.get("amount", 0),
+            payment.get("created_by_username", ""),
+            payment.get("payment_date", "")
+        ])
+    
+    for column in ws.columns:
+        max_length = 0
+        column_letter = column[0].column_letter
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(str(cell.value))
+            except:
+                pass
+        adjusted_width = min(max_length + 2, 50)
+        ws.column_dimensions[column_letter].width = adjusted_width
+    
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+    
+    return StreamingResponse(
+        output,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f"attachment; filename=odemeler_{datetime.now().strftime('%Y%m%d')}.xlsx"}
+    )
+
+async def export_payments_docx(payments):
+    """Export payments to Word format"""
+    doc = Document()
+    doc.add_heading('Ödemeler Raporu', 0)
+    doc.add_paragraph(f'Rapor Tarihi: {datetime.now().strftime("%d.%m.%Y %H:%M")}')
+    doc.add_paragraph(f'Toplam Ödeme: {len(payments)}')
+    doc.add_paragraph('')
+    
+    for payment in payments:
+        doc.add_heading(f'Ödeme - {payment.get("check_number", "")}', level=2)
+        doc.add_paragraph(f'Fatura No: {payment.get("invoice_number", "")}')
+        doc.add_paragraph(f'Müşteri: {payment.get("customer_name", "")}')
+        doc.add_paragraph(f'Tutar: ₺{payment.get("amount", 0):,.2f}')
+        doc.add_paragraph(f'Çek Tarihi: {payment.get("check_date", "")}')
+        doc.add_paragraph(f'Banka: {payment.get("bank_name", "")}')
+        doc.add_paragraph(f'Oluşturan: {payment.get("created_by_username", "")}')
+        doc.add_paragraph('')
+    
+    output = BytesIO()
+    doc.save(output)
+    output.seek(0)
+    
+    return StreamingResponse(
+        output,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={"Content-Disposition": f"attachment; filename=odemeler_{datetime.now().strftime('%Y%m%d')}.docx"}
+    )
+
+async def export_payments_pdf(payments):
+    """Export payments to PDF format"""
+    output = BytesIO()
+    doc = SimpleDocTemplate(output, pagesize=landscape(A4))
+    elements = []
+    styles = getSampleStyleSheet()
+    
+    title_style = ParagraphStyle('CustomTitle', parent=styles['Heading1'], fontSize=20, textColor=colors.HexColor('#366092'))
+    elements.append(Paragraph('Ödemeler Raporu', title_style))
+    elements.append(Spacer(1, 12))
+    elements.append(Paragraph(f'Rapor Tarihi: {datetime.now().strftime("%d.%m.%Y %H:%M")}', styles['Normal']))
+    elements.append(Paragraph(f'Toplam Ödeme: {len(payments)}', styles['Normal']))
+    elements.append(Spacer(1, 20))
+    
+    data = [['Fatura No', 'Müşteri', 'Çek No', 'Çek Tarihi', 'Banka', 'Tutar (₺)', 'Oluşturan']]
+    for payment in payments:
+        data.append([
+            payment.get("invoice_number", "")[:15],
+            payment.get("customer_name", "")[:20],
+            payment.get("check_number", ""),
+            payment.get("check_date", ""),
+            payment.get("bank_name", "")[:15],
+            f"₺{payment.get('amount', 0):,.2f}",
+            payment.get("created_by_username", "")[:12]
+        ])
+    
+    table = Table(data)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#366092')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+    ]))
+    
+    elements.append(table)
+    doc.build(elements)
+    output.seek(0)
+    
+    return StreamingResponse(
+        output,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename=odemeler_{datetime.now().strftime('%Y%m%d')}.pdf"}
+    )
+
+async def export_weekly_schedule_xlsx(schedule):
+    """Export weekly schedule to Excel format"""
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Haftalık Plan"
+    
+    ws.append(["Haftalık Ödeme Planı"])
+    ws.merge_cells('A1:H1')
+    ws['A1'].font = Font(bold=True, size=16)
+    ws['A1'].alignment = Alignment(horizontal="center")
+    ws.append([])
+    
+    for week in schedule:
+        ws.append([f"{week.week_label} ({week.date_range})"])
+        ws.merge_cells(f'A{ws.max_row}:H{ws.max_row}')
+        ws[f'A{ws.max_row}'].font = Font(bold=True, color="FFFFFF")
+        ws[f'A{ws.max_row}'].fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
+        
+        ws.append(["Alınan Çekler", "", "", "", "", "", "", ""])
+        headers_row = ws.max_row
+        ws.append(["Çek No", "Tutar (₺)", "Vade", "Banka", "Veren", "Durum", "", ""])
+        for check in week.received_checks:
+            ws.append([
+                check.check_number,
+                check.amount,
+                check.due_date,
+                check.bank_name,
+                check.payer_payee,
+                check.status,
+                "",
+                ""
+            ])
+        
+        ws.append(["Verilen Çekler", "", "", "", "", "", "", ""])
+        ws.append(["Çek No", "Tutar (₺)", "Vade", "Banka", "Alan", "Durum", "", ""])
+        for check in week.issued_checks:
+            ws.append([
+                check.check_number,
+                check.amount,
+                check.due_date,
+                check.bank_name,
+                check.payer_payee,
+                check.status,
+                "",
+                ""
+            ])
+        
+        ws.append(["Vadesi Gelen Faturalar", "", "", "", "", "", "", ""])
+        ws.append(["Fatura No", "Müşteri", "Tutar (₺)", "Vade", "", "", "", ""])
+        for invoice in week.invoices_due:
+            ws.append([
+                invoice.invoice_number,
+                invoice.customer_name,
+                invoice.amount,
+                invoice.due_date,
+                "",
+                "",
+                "",
+                ""
+            ])
+        
+        ws.append(["Toplam Alacak:", f"₺{week.total_receivable:,.2f}", "Toplam Borç:", f"₺{week.total_payable:,.2f}", "", "", "", ""])
+        ws[f'A{ws.max_row}'].font = Font(bold=True)
+        ws[f'C{ws.max_row}'].font = Font(bold=True)
+        ws.append([])
+    
+    for column in ws.columns:
+        max_length = 0
+        column_letter = column[0].column_letter
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(str(cell.value))
+            except:
+                pass
+        adjusted_width = min(max_length + 2, 50)
+        ws.column_dimensions[column_letter].width = adjusted_width
+    
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+    
+    return StreamingResponse(
+        output,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f"attachment; filename=haftalik_plan_{datetime.now().strftime('%Y%m%d')}.xlsx"}
+    )
+
+async def export_weekly_schedule_docx(schedule):
+    """Export weekly schedule to Word format"""
+    doc = Document()
+    doc.add_heading('Haftalık Ödeme Planı', 0)
+    doc.add_paragraph(f'Rapor Tarihi: {datetime.now().strftime("%d.%m.%Y %H:%M")}')
+    doc.add_paragraph('')
+    
+    for week in schedule:
+        doc.add_heading(f'{week.week_label} ({week.date_range})', level=1)
+        
+        doc.add_heading('Alınan Çekler', level=2)
+        for check in week.received_checks:
+            doc.add_paragraph(f'• Çek No: {check.check_number} - ₺{check.amount:,.2f} - {check.due_date} - {check.bank_name}')
+        
+        doc.add_heading('Verilen Çekler', level=2)
+        for check in week.issued_checks:
+            doc.add_paragraph(f'• Çek No: {check.check_number} - ₺{check.amount:,.2f} - {check.due_date} - {check.bank_name}')
+        
+        doc.add_heading('Vadesi Gelen Faturalar', level=2)
+        for invoice in week.invoices_due:
+            doc.add_paragraph(f'• Fatura No: {invoice.invoice_number} - {invoice.customer_name} - ₺{invoice.amount:,.2f} - {invoice.due_date}')
+        
+        doc.add_paragraph('')
+        doc.add_paragraph(f'Toplam Alacak: ₺{week.total_receivable:,.2f}')
+        doc.add_paragraph(f'Toplam Borç: ₺{week.total_payable:,.2f}')
+        doc.add_paragraph('')
+    
+    output = BytesIO()
+    doc.save(output)
+    output.seek(0)
+    
+    return StreamingResponse(
+        output,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={"Content-Disposition": f"attachment; filename=haftalik_plan_{datetime.now().strftime('%Y%m%d')}.docx"}
+    )
+
+async def export_weekly_schedule_pdf(schedule):
+    """Export weekly schedule to PDF format"""
+    output = BytesIO()
+    doc = SimpleDocTemplate(output, pagesize=landscape(A4))
+    elements = []
+    styles = getSampleStyleSheet()
+    
+    title_style = ParagraphStyle('CustomTitle', parent=styles['Heading1'], fontSize=20, textColor=colors.HexColor('#366092'))
+    elements.append(Paragraph('Haftalık Ödeme Planı', title_style))
+    elements.append(Spacer(1, 12))
+    elements.append(Paragraph(f'Rapor Tarihi: {datetime.now().strftime("%d.%m.%Y %H:%M")}', styles['Normal']))
+    elements.append(Spacer(1, 20))
+    
+    for week in schedule:
+        elements.append(Paragraph(f'{week.week_label} ({week.date_range})', styles['Heading2']))
+        elements.append(Spacer(1, 10))
+        
+        # Received checks table
+        if week.received_checks:
+            elements.append(Paragraph('Alınan Çekler:', styles['Heading3']))
+            data = [['Çek No', 'Tutar (₺)', 'Vade', 'Banka', 'Durum']]
+            for check in week.received_checks:
+                data.append([
+                    check.check_number,
+                    f"₺{check.amount:,.2f}",
+                    check.due_date,
+                    check.bank_name[:20],
+                    check.status
+                ])
+            table = Table(data)
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#366092')),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black)
+            ]))
+            elements.append(table)
+            elements.append(Spacer(1, 10))
+        
+        # Issued checks table
+        if week.issued_checks:
+            elements.append(Paragraph('Verilen Çekler:', styles['Heading3']))
+            data = [['Çek No', 'Tutar (₺)', 'Vade', 'Banka', 'Durum']]
+            for check in week.issued_checks:
+                data.append([
+                    check.check_number,
+                    f"₺{check.amount:,.2f}",
+                    check.due_date,
+                    check.bank_name[:20],
+                    check.status
+                ])
+            table = Table(data)
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#366092')),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black)
+            ]))
+            elements.append(table)
+            elements.append(Spacer(1, 10))
+        
+        elements.append(Paragraph(f'Toplam Alacak: ₺{week.total_receivable:,.2f}', styles['Normal']))
+        elements.append(Paragraph(f'Toplam Borç: ₺{week.total_payable:,.2f}', styles['Normal']))
+        elements.append(Spacer(1, 20))
+    
+    doc.build(elements)
+    output.seek(0)
+    
+    return StreamingResponse(
+        output,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename=haftalik_plan_{datetime.now().strftime('%Y%m%d')}.pdf"}
+    )
+
 # Export/Import endpoints
 @api_router.get("/export/invoices")
 async def export_invoices(format: str = "xlsx", user_id: str = Depends(get_current_user)):
