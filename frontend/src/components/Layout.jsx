@@ -121,7 +121,7 @@ export default function Layout({ children, onLogout, user }) {
         >
           <Menu className="w-6 h-6 text-slate-700" />
         </button>
-        <h1 className="ml-3 text-xl font-bold text-slate-900">Ödeme Takip</h1>
+        <h1 className="ml-3 text-xl font-bold text-slate-900">Nakit Akışı Takibi</h1>
       </div>
 
       {/* Overlay for mobile */}
@@ -151,8 +151,8 @@ export default function Layout({ children, onLogout, user }) {
         </div>
 
         <div className="p-6">
-          <h1 className="text-2xl font-bold text-slate-900">Ödeme Takip</h1>
-          <p className="text-sm text-slate-600 mt-1">Ödeme Yönetimi</p>
+          <h1 className="text-2xl font-bold text-slate-900">Nakit Akışı Takibi</h1>
+          <p className="text-sm text-slate-600 mt-1">Finans Yönetimi</p>
         </div>
 
         <nav className="px-3 space-y-1">
