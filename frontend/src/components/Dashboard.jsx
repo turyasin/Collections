@@ -452,7 +452,7 @@ export default function Dashboard() {
       {renderCalendar()}
 
       <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-        <h2 className="text-xl font-bold text-slate-900 mb-4">Son Ödemeler</h2>
+        <h2 className="text-xl font-bold text-slate-900 mb-4">Gerçekleşen Tahsilatlar</h2>
         {stats?.recent_payments?.length > 0 ? (
           <div className="space-y-3">
             {stats.recent_payments.map((payment) => (
