@@ -489,6 +489,9 @@ class ChangePasswordRequest(BaseModel):
     current_password: str
     new_password: str
 
+class ChangeUsernameRequest(BaseModel):
+    new_username: str
+
 @api_router.post("/users/change-password")
 async def change_password(request: ChangePasswordRequest, user_id: str = Depends(get_current_user)):
     """Change current user's password"""
@@ -515,6 +518,31 @@ async def change_password(request: ChangePasswordRequest, user_id: str = Depends
     )
     
     return {"message": "Şifre başarıyla değiştirildi"}
+
+@api_router.post("/users/change-username")
+async def change_username(request: ChangeUsernameRequest, user_id: str = Depends(get_current_user)):
+    """Change current user's username"""
+    # Get user from database
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Validate new username
+    if len(request.new_username) < 3:
+        raise HTTPException(status_code=400, detail="Kullanıcı adı en az 3 karakter olmalıdır")
+    
+    # Check if username already exists
+    existing_user = await db.users.find_one({"username": request.new_username})
+    if existing_user and existing_user["id"] != user_id:
+        raise HTTPException(status_code=400, detail="Bu kullanıcı adı zaten kullanılıyor")
+    
+    # Update username
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": {"username": request.new_username}}
+    )
+    
+    return {"message": "Kullanıcı adı başarıyla değiştirildi"}
 
 @api_router.put("/users/{target_user_id}", response_model=User)
 async def update_user(target_user_id: str, user_update: UserUpdate, admin_id: str = Depends(get_current_admin_user)):
