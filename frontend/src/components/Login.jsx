@@ -67,9 +67,7 @@ export default function Login({ onLogin }) {
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl shadow-xl animate-fade-in">
         <div className="text-center space-y-2">
           <div className="flex justify-center mb-4">
-            <div className="p-3 bg-blue-600 rounded-xl">
-              <Receipt className="w-8 h-8 text-white" />
-            </div>
+            <img src="/logo.png" alt="Logo" className="w-20 h-20 object-contain" />
           </div>
           <h1 className="text-3xl font-bold text-slate-900">
             Nakit Akışı Takibi
