@@ -251,6 +251,54 @@ export default function Layout({ children, onLogout, user }) {
             </DialogContent>
           </Dialog>
           
+          {/* Kullanıcı Adı Değiştir Butonu */}
+          <Dialog open={usernameDialogOpen} onOpenChange={setUsernameDialogOpen}>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full justify-start mb-2 border-slate-200 hover:bg-slate-50"
+              >
+                <UserCircle className="w-5 h-5 mr-3" />
+                Kullanıcı Adı Değiştir
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Kullanıcı Adı Değiştir</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleUsernameChange} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="current-username">Mevcut Kullanıcı Adı</Label>
+                  <Input
+                    id="current-username"
+                    value={user?.username || ""}
+                    disabled
+                    className="bg-slate-100"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="new-username">Yeni Kullanıcı Adı</Label>
+                  <Input
+                    id="new-username"
+                    value={usernameFormData.newUsername}
+                    onChange={(e) => setUsernameFormData({ newUsername: e.target.value })}
+                    required
+                    minLength={3}
+                    placeholder="En az 3 karakter"
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button type="button" variant="outline" onClick={() => setUsernameDialogOpen(false)}>
+                    İptal
+                  </Button>
+                  <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+                    Değiştir
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
+          
           <Button
             onClick={onLogout}
             data-testid="logout-button"
