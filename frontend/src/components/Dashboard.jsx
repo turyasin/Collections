@@ -208,7 +208,7 @@ export default function Dashboard() {
     return (
       <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-slate-900">Tahsilat Takvimi</h2>
+          <h2 className="text-xl font-bold text-slate-900">Ödeme Takvimi</h2>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}>
               <ChevronLeft className="w-4 h-4" />
