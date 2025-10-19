@@ -72,10 +72,10 @@ export default function Login({ onLogin }) {
             </div>
           </div>
           <h1 className="text-3xl font-bold text-slate-900">
-            Ödeme Takip
+            Nakit Akışı Takibi
           </h1>
           <p className="text-slate-600">
-            Faturaları yönetin ve çek ödemelerini takip edin
+            Nakit akışını yönetin ve finans işlemlerini takip edin
           </p>
         </div>
 
