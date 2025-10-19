@@ -121,7 +121,8 @@ export default function Layout({ children, onLogout, user }) {
         >
           <Menu className="w-6 h-6 text-slate-700" />
         </button>
-        <h1 className="ml-3 text-xl font-bold text-slate-900">Nakit Akışı Takibi</h1>
+        <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain ml-3" />
+        <h1 className="ml-2 text-xl font-bold text-slate-900">Nakit Akışı Takibi</h1>
       </div>
 
       {/* Overlay for mobile */}
