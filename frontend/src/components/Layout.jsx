@@ -150,9 +150,12 @@ export default function Layout({ children, onLogout, user }) {
           </button>
         </div>
 
-        <div className="p-6">
-          <h1 className="text-2xl font-bold text-slate-900">Nakit Akışı Takibi</h1>
-          <p className="text-sm text-slate-600 mt-1">Finans Yönetimi</p>
+        <div className="p-6 flex items-center gap-3">
+          <img src="/logo.png" alt="Logo" className="w-12 h-12 object-contain" />
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">Nakit Akışı Takibi</h1>
+            <p className="text-sm text-slate-600 mt-1">Finans Yönetimi</p>
+          </div>
         </div>
 
         <nav className="px-3 space-y-1">
