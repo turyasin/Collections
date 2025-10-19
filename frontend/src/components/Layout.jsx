@@ -19,10 +19,14 @@ export default function Layout({ children, onLogout, user }) {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
+  const [usernameDialogOpen, setUsernameDialogOpen] = useState(false);
   const [passwordFormData, setPasswordFormData] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
+  });
+  const [usernameFormData, setUsernameFormData] = useState({
+    newUsername: "",
   });
 
   const toggleSidebar = () => {
@@ -31,6 +35,32 @@ export default function Layout({ children, onLogout, user }) {
 
   const closeSidebar = () => {
     setIsSidebarOpen(false);
+  };
+
+  const handleUsernameChange = async (e) => {
+    e.preventDefault();
+    
+    if (usernameFormData.newUsername.length < 3) {
+      toast.error("Kullanıcı adı en az 3 karakter olmalıdır");
+      return;
+    }
+    
+    try {
+      await axios.post(`${API}/users/change-username`, {
+        new_username: usernameFormData.newUsername,
+      }, getAuthHeaders());
+      
+      toast.success("Kullanıcı adı başarıyla değiştirildi. Lütfen yeniden giriş yapın.");
+      setUsernameDialogOpen(false);
+      setUsernameFormData({ newUsername: "" });
+      
+      // Logout user to refresh
+      setTimeout(() => {
+        onLogout();
+      }, 1500);
+    } catch (error) {
+      toast.error(error.response?.data?.detail || "Kullanıcı adı değiştirme başarısız");
+    }
   };
 
   const handlePasswordChange = async (e) => {
